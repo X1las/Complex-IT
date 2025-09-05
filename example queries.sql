@@ -49,3 +49,18 @@ SELECT s2.supervisor
 FROM super s1, super s2
 WHERE s1.person = 'Bob'
 AND s1.supervisor = s2.person;
+
+-- Like example, uses regular expressions
+SELECT name
+FROM instructor
+WHERE name LIKE '%r%';
+
+SELECT name
+FROM instructor
+WHERE name LIKE '_i%';
+
+-- Tuple comparison example
+SELECT name, course_id
+FROM instructor, teaches
+WHERE (instructor.ID, teaches.course_id) = ('10101', 'CS-101');
+
