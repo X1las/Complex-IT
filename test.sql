@@ -1,1 +1,1 @@
-PROJ
+select * from teaches;
