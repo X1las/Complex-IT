@@ -1,1 +1,1 @@
-select * from teaches;
+select dept_name from instructor as FOO;
