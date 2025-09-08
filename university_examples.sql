@@ -64,3 +64,56 @@ SELECT name, course_id
 FROM instructor, teaches
 WHERE (instructor.ID, teaches.course_id) = ('10101', 'CS-101');
 
+SELECT name FROM instructor where name LIKE '%A%'
+INTERSECT
+SELECT name FROM instructor WHERE name LIKE '%a%';
+
+SELECT dept_name, avg_salary
+FROM (
+    SELECT dept_name, AVG(salary) AS avg_salary
+    FROM instructor
+    GROUP BY dept_name
+)
+WHERE avg_salary > 42000;
+
+-- Database modification keywords
+-- DELETE
+-- INSERT
+-- UPDATE
+-- DROP
+
+SELECT *
+FROM course
+NATURAL JOIN takes;
+
+SELECT *
+FROM course
+INNER JOIN takes ON course.course_id = takes.course_id;
+
+SELECT *
+FROM course
+FULL OUTER JOIN takes ON course.course_id = takes.course_id;
+
+SELECT *
+FROM course
+LEFT JOIN takes ON course.course_id = takes.course_id;
+
+SELECT * 
+FROM course
+RIGHT JOIN takes ON course.course_id = takes.course_id;
+
+SELECT *
+FROM course
+NATURAL LEFT OUTER JOIN prereq;
+
+SELECT *
+FROM course
+NATURAL RIGHT OUTER JOIN prereq;
+
+SELECT *
+FROM course
+NATURAL FULL OUTER JOIN prereq;
+
+SELECT title, prereq_id
+FROM course
+JOIN prereq USING (course_id);

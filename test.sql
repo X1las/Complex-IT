@@ -1,1 +1,0 @@
-select dept_name from instructor as FOO;

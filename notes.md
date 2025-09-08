@@ -1,6 +1,10 @@
 # Additional Reading
 
 - Natural Join on multiple tables
+- Look into Join Types
+- Look into Join Conditions
+- Look at table conditions/constraints when next making a table
+- Remember to brush up on unique data types in SQL
 
 # Database Theory
 
