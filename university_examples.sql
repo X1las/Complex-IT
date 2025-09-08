@@ -117,3 +117,4 @@ NATURAL FULL OUTER JOIN prereq;
 SELECT title, prereq_id
 FROM course
 JOIN prereq USING (course_id);
+

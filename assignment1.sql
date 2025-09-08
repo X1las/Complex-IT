@@ -18,6 +18,35 @@ GROUP BY takes.id
 HAVING SUM (course.credits) > 85;
 
 SELECT student.name
-FROM student join takes on student.id = takes.id join course on takes.course_id = course.course_id
+FROM student 
+JOIN takes ON student.id = takes.id 
+JOIN course ON takes.course_id = course.course_id
 WHERE course.dept_name = 'Languages' AND takes.grade = 'A+';
 
+SELECT id
+FROM instructor
+WHERE id 
+NOT IN (SELECT id FROM teaches)
+AND dept_name = 'Marketing';
+
+SELECT id, name
+FROM instructor
+WHERE dept_name = 'Marketing'
+AND id NOT IN (SELECT id FROM teaches);
+
+SELECT course_id, sec_id, semester, year, count (id)
+FROM takes
+WHERE year = '2009'
+GROUP BY sec_id, semester, year, course_id
+ORDER BY count (id) DESC;
+
+SELECT MAX (sect), min (sect)
+FROM (SELECT count(id) as sect FROM takes GROUP BY sec_id, course_id);
+
+WITH temp (sect) AS (
+    SELECT count(id) 
+    FROM takes 
+    GROUP BY sec_id, course_id
+)
+SELECT MAX (sect), min (sect)
+FROM temp;
