@@ -10,13 +10,23 @@ where
     and credits = 3;
 
 -- Assignment 3
+-- (Solution 1)
 SELECT takes.course_id, course.title
 FROM takes, course
 WHERE
     takes.course_id = course.course_id
     AND ID = '30397';
 
+-- (Solution 2)
+SELECT DISTINCT t.course_id, c.title
+FROM takes AS t
+JOIN course AS c USING (course_id)
+WHERE t.id = '30397'
+ORDER BY t.course_id;
+
+
 -- Assignment 4
+-- (Solution 1)
 SELECT takes.course_id, course.title, SUM(course.credits)
 FROM takes, course
 WHERE
@@ -26,7 +36,16 @@ GROUP BY
     takes.course_id,
     course.title;
 
+-- (Solution 2)
+SELECT t.course_id, c.title, SUM(c.credits) AS sum
+FROM takes AS t
+JOIN course AS c USING (course_id)
+WHERE t.id = '30397'
+GROUP BY t.course_id, c.title
+ORDER BY t.course_id;
+
 -- Assignment 5
+-- (Solution 1)
 SELECT takes.id, SUM(course.credits) as credits_sum
 FROM takes, course
 WHERE
@@ -36,16 +55,33 @@ GROUP BY
 HAVING
     SUM(course.credits) > 85;
 
+-- (Solution 2)
+SELECT t.id, SUM(c.credits) AS sum
+FROM takes AS t
+JOIN course AS c USING (course_id)
+GROUP BY t.id
+HAVING SUM(c.credits) > 85
+
 -- Assignment 6
+-- (Solution 1)
 SELECT student.name
 FROM student
-    JOIN takes ON student.id = takes.id
-    JOIN course ON takes.course_id = course.course_id
-WHERE
-    course.dept_name = 'Languages'
-    AND takes.grade = 'A+';
+JOIN takes ON student.id = takes.id
+JOIN course ON takes.course_id = course.course_id
+WHERE course.dept_name = 'Languages'
+AND takes.grade = 'A+';
+
+-- (Solution 2)
+SELECT DISTINCT s.name
+FROM takes AS t
+JOIN course AS c USING (course_id)
+JOIN student AS s ON s.id = t.id
+WHERE c.dept_name = 'Languages'
+AND (t.grade) = 'A+'
+ORDER BY s.name;
 
 -- Assignment 7
+-- (Solution 1)
 SELECT id
 FROM instructor
 WHERE
@@ -54,6 +90,14 @@ WHERE
         FROM teaches
     )
     AND dept_name = 'Marketing';
+
+-- (Solution 2)
+SELECT i.id
+FROM instructor AS i
+WHERE i.dept_name = 'Marketing'
+AND NOT EXISTS (
+SELECT id FROM teaches AS te WHERE te.id = i.id)
+ORDER BY i.id;
 
 -- Assignment 8
 SELECT id, name
