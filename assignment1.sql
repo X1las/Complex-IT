@@ -213,3 +213,25 @@ LEFT OUTER JOIN (
     GROUP BY id) as temp
 ON student.id = temp.id
 WHERE tot_cred = sum;
+
+-- Assignment 18
+UPDATE student
+SET tot_cred = (
+    SELECT SUM(credits)
+    FROM takes
+    LEFT OUTER JOIN course ON takes.course_id = course.course_id
+    WHERE takes.id = student.id
+    GROUP BY takes.id
+);
+
+-- Assignment 19
+SELECT student.id, tot_cred, sum
+FROM student
+LEFT OUTER JOIN (
+    SELECT id, sum (credits) as sum
+    FROM takes
+    LEFT OUTER JOIN course ON takes.course_id = course.course_id
+    GROUP BY id) as temp
+ON student.id = temp.id
+WHERE tot_cred != sum;
+
