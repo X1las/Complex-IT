@@ -98,7 +98,9 @@ WITH
 SELECT MAX(sect), min(sect)
 FROM temp;
 
--- Assignment 11
+-- Assignment 11 
+--11 a
+-- Solution 1
 SELECT
     course_id,
     sec_id,
@@ -151,7 +153,24 @@ HAVING
                     course_id, sec_id, semester, year
             ) AS sub
     );
+--solution 2
+SELECT course_id, sec_id, semester, year, COUNT(id) AS enroll
+FROM takes
+GROUP BY course_id, sec_id, semester, year
+HAVING COUNT(id) = (SELECT MAX(enrollmentCount)
+FROM (SELECT COUNT(id) AS enrollmentCount
+        FROM takes
+        GROUP BY course_id, sec_id, semester, year
+    ) AS sub
+); 
+--11B
 
+    WITH max_enrollment(id) AS
+(SELECT MAX (id)
+from takes)
+select course_id, sec_id, semester, year
+from takes, max_enrollment
+where takes.id = max_enrollment.id;
 -- Assignment 12
 SELECT max(sect), min(sect)
 FROM (
