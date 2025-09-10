@@ -235,3 +235,6 @@ LEFT OUTER JOIN (
 ON student.id = temp.id
 WHERE tot_cred != sum;
 
+
+
+
