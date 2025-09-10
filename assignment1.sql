@@ -164,7 +164,6 @@ FROM (
             section.sec_id, section.course_id
     );
 
-
 -- Assignment 13
 SELECT DISTINCT
     id,
@@ -190,3 +189,27 @@ WHERE NOT EXISTS (
 );
 
 -- Assignment 15
+INSERT INTO student (id, name, dept_name, tot_cred)
+SELECT i.id, i.name, i.dept_name, 0
+FROM instructor AS i
+WHERE NOT EXISTS (
+SELECT 1 FROM student AS s WHERE s.id = i.id
+);
+
+-- Assignment 16
+DELETE FROM student s
+WHERE EXISTS (SELECT id FROM instructor i WHERE i.id = s.id)
+AND NOT EXISTS (
+    SELECT id FROM takes t WHERE t.id = s.id
+);
+
+-- Assignment 17
+SELECT student.id, tot_cred, sum
+FROM student
+LEFT OUTER JOIN (
+    SELECT id, sum (credits) as sum
+    FROM takes
+    LEFT OUTER JOIN course ON takes.course_id = course.course_id
+    GROUP BY id) as temp
+ON student.id = temp.id
+WHERE tot_cred = sum;
