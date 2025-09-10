@@ -298,6 +298,18 @@ LEFT OUTER JOIN (
 ON student.id = temp.id
 WHERE tot_cred != sum;
 
+-- Assignment 20
+UPDATE instructor i
+SET salary = 29001 + 10000 * (
+  SELECT COUNT(DISTINCT (course_id, sec_id, semester, year))
+  FROM teaches t
+  WHERE t.id = i.id
+);
 
+-- Assignment 21
+SELECT id, name, salary
+FROM instructor
+ORDER BY name
+LIMIT 10;
 
 
