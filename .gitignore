@@ -1,0 +1,50 @@
+# Ignore all files by default
+*
+
+# But keep .tex files
+!*.tex
+
+# But keep .pdf files
+!*.pdf
+
+# But keep .sql files
+!*.sql
+
+# But keep .md files
+!*.md
+
+# But keep C# files
+!*.cs
+
+# But keep C# project files
+!*.csproj
+!*.sln
+
+# But keep JSON configuration files
+!*.json
+
+# Keep directories so we can traverse into them
+!*/
+
+# Keep this .gitignore file itself
+!.gitignore
+
+# Keep README files
+!README*
+!readme*
+
+# LaTeX auxiliary files to ignore (even though we're keeping .tex and .pdf)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
