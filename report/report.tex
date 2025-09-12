@@ -9,8 +9,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{hyperref}
-\usepackage{listings}
-\usepackage{xcolor}
+\usepackage{minted}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{tocloft}
@@ -21,79 +20,12 @@
 \usepackage{url}
 \usepackage{cite}
 
-% Page geometry
-\geometry{left=3cm, right=3cm, top=3cm, bottom=3cm}
-
-% Fix header height issue
-\setlength{\headheight}{14.5pt}
-
-% Code listing style
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
-}
-
-\lstset{style=mystyle}
-
-% Header and footer
-\pagestyle{fancy}
-\fancyhf{}
-\rhead{\thepage}
-\lhead{Full-Stack Project Report}
-\renewcommand{\headrulewidth}{0.4pt}
-
-% Hyperlink setup
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,      
-    urlcolor=cyan,
-    citecolor=black,
-}
-
-% Title page information
-\title{
-    \LARGE \textbf{Full-Stack Computer Science Project} \\
-    \Large \textit{Project Report}
-}
-\author{
-    Your Name \\
-    Student ID: XXXXXXXX \\
-    \texttt{your.email@university.edu}
-}
-\date{\today}
-
+\title{Full-Stack Computer Science Project Report}
+\author{Jonas W., Malte, Joachin}
 \begin{document}
 
 % Title page
 \maketitle
-\thispagestyle{empty}
-
-\newpage
-
-% Abstract
-\begin{abstract}
-This report presents a comprehensive overview of a full-stack computer science project, detailing the design, implementation, and evaluation of a web application system. The project encompasses frontend development, backend architecture, database design, and deployment strategies. Key technologies include [list your main technologies here]. The system addresses [briefly describe the problem your project solves] and demonstrates proficiency in modern software development practices.
-\end{abstract}
 
 \newpage
 
@@ -101,406 +33,60 @@ This report presents a comprehensive overview of a full-stack computer science p
 \tableofcontents
 \newpage
 
-% List of Figures (optional)
-\listoffigures
-\newpage
-
-% List of Tables (optional)
-\listoftables
-\newpage
-
-\section{Introduction}
-
-\subsection{Project Overview}
-This section provides a high-level overview of the project, including its purpose, scope, and main objectives.
-
-\subsection{Problem Statement}
-Describe the specific problem or need that your project addresses. Include:
+\section{System Architecture}
+The system follows a three-tier architecture consisting of:
 \begin{itemize}
-    \item Background context
-    \item Specific challenges to be solved
-    \item Target audience
-    \item Success criteria
+\item Frontend: User interface layer
+\item Backend: Application logic and API services  
+\item Database: Data persistence layer
 \end{itemize}
-
-\subsection{Project Objectives}
-\begin{enumerate}
-    \item Primary objective 1
-    \item Primary objective 2
-    \item Secondary objectives
-\end{enumerate}
-
-\subsection{Report Structure}
-This report is organized as follows: Section~\ref{sec:literature} reviews related work, Section~\ref{sec:methodology} describes the development methodology, Section~\ref{sec:system-design} presents the system architecture, Section~\ref{sec:implementation} details the implementation, Section~\ref{sec:testing} covers testing strategies, Section~\ref{sec:results} presents results and evaluation, and Section~\ref{sec:conclusion} concludes with lessons learned and future work.
-
-\section{Literature Review and Related Work}
-\label{sec:literature}
-
-\subsection{Existing Solutions}
-Review existing solutions in the problem domain. Compare and contrast different approaches.
-
-\subsection{Technology Stack Analysis}
-Discuss the technologies chosen for the project:
-\begin{itemize}
-    \item Frontend frameworks and libraries
-    \item Backend technologies and frameworks
-    \item Database management systems
-    \item Development tools and environments
-    \item Deployment and hosting platforms
-\end{itemize}
-
-\subsection{Best Practices and Design Patterns}
-Describe relevant software engineering principles and patterns applied in the project.
-
-\section{Methodology}
-\label{sec:methodology}
-
-\subsection{Development Approach}
-Describe your development methodology (Agile, Waterfall, etc.) and justify your choice.
-
-\subsection{Project Management}
-\begin{itemize}
-    \item Timeline and milestones
-    \item Risk assessment and mitigation strategies
-    \item Version control and collaboration tools
-    \item Testing strategies
-\end{itemize}
-
-\subsection{Quality Assurance}
-Outline your approach to ensuring code quality, including:
-\begin{itemize}
-    \item Code review processes
-    \item Automated testing
-    \item Continuous integration/deployment
-    \item Documentation standards
-\end{itemize}
-
-\section{System Design and Architecture}
-\label{sec:system-design}
-
-\subsection{System Architecture Overview}
-Provide a high-level architecture diagram and explanation of the system components.
-
-\begin{figure}[H]
-    \centering
-    % \includegraphics[width=0.8\textwidth]{images/system-architecture.png}
-    \caption{System Architecture Diagram}
-    \label{fig:system-architecture}
-\end{figure}
-
-\subsection{Frontend Design}
-\subsubsection{User Interface Design}
-Describe the UI/UX design principles and wireframes.
-
-\subsubsection{Frontend Architecture}
-Detail the frontend component structure, state management, and routing.
-
-\subsection{Backend Design}
-\subsubsection{API Design}
-Document the REST API endpoints or GraphQL schema.
-
-\subsubsection{Business Logic}
-Explain the core business logic and service layer architecture.
-
-\subsubsection{Authentication and Authorization}
-Describe the security implementation for user authentication and access control.
-
-\subsection{Database Design}
-\subsubsection{Entity Relationship Diagram}
-\begin{figure}[H]
-    \centering
-    % \includegraphics[width=0.9\textwidth]{images/erd-diagram.png}
-    \caption{Entity Relationship Diagram}
-    \label{fig:erd}
-\end{figure}
-
-\subsubsection{Database Schema}
-Provide detailed table structures and relationships.
-
-\subsubsection{Data Flow}
-Explain how data flows through the system from frontend to backend to database.
 
 \section{Implementation}
-\label{sec:implementation}
 
-\subsection{Frontend Implementation}
-\subsubsection{Key Components}
-Describe the main frontend components and their functionality.
+\subsection{Backend Development}
+The backend is implemented using Node.js and Express framework:
 
-\begin{lstlisting}[caption=Example React Component]
-// Example React Component
-import React, { useState } from 'react';
+\begin{minted}{Csharp}
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
-const UserProfile = ({ user }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  
-  return (
-    <div className="user-profile">
-      <h2>{user.name}</h2>
-      <p>{user.email}</p>
-      {isEditing && (
-        <button onClick={() => setIsEditing(false)}>
-          Save Changes
-        </button>
-      )}
-    </div>
-  );
-};
-
-export default UserProfile;
-\end{lstlisting}
-
-\subsubsection{State Management}
-Explain how application state is managed (Redux, Context API, etc.).
-
-\subsubsection{Responsive Design}
-Describe how the application adapts to different screen sizes and devices.
-
-\subsection{Backend Implementation}
-\subsubsection{Server Setup}
-Detail the server configuration and middleware setup.
-
-\begin{lstlisting}[caption=Express Server Setup]
-// Express Server Setup
-const express = require('express');
-const cors = require('cors');
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Routes
-app.get('/api/users', (req, res) => {
-  res.json({ message: 'Users endpoint' });
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
 });
+var app = builder.Build();
+app.UseCors("AllowAll");
+app.MapGet("/api/users", () => new { Message = "Users endpoint" });
+app.Run();
+\end{minted}
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-\end{lstlisting}
+\subsection{Database Design}
+Database implementation using SQL:
 
-\subsubsection{API Endpoints}
-Document key API endpoints with examples.
+\begin{minted}{sql}
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-\subsubsection{Database Integration}
-Explain the ORM/ODM usage and database connection management.
+INSERT INTO users (username, email) 
+VALUES ('john_doe', 'john@example.com');
+\end{minted}
 
-\subsection{Security Implementation}
-\begin{itemize}
-    \item Input validation and sanitization
-    \item Authentication mechanisms
-    \item Authorization and role-based access control
-    \item Data encryption and protection
-    \item CORS and other security headers
-\end{itemize}
-
-\subsection{Performance Optimization}
-Describe optimization techniques implemented:
-\begin{itemize}
-    \item Frontend optimization (code splitting, lazy loading)
-    \item Backend optimization (caching, query optimization)
-    \item Database indexing and query optimization
-\end{itemize}
-
-\section{Testing and Quality Assurance}
-\label{sec:testing}
-
-\subsection{Testing Strategy}
-Outline your comprehensive testing approach.
-
-\subsection{Unit Testing}
-\begin{itemize}
-    \item Frontend component testing
-    \item Backend function testing
-    \item Test coverage metrics
-\end{itemize}
-
-\begin{lstlisting}[caption=Example Unit Test]
-// Example Unit Test using Jest
-describe('User Authentication', () => {
-  test('should authenticate user with valid credentials', async () => {
-    const userData = {
-      email: 'test@example.com',
-      password: 'password123'
-    };
-    
-    const result = await authenticateUser(userData);
-    
-    expect(result.success).toBe(true);
-    expect(result.token).toBeDefined();
-    expect(result.user.email).toBe(userData.email);
-  });
-  
-  test('should reject invalid credentials', async () => {
-    const userData = {
-      email: 'test@example.com',
-      password: 'wrongpassword'
-    };
-    
-    const result = await authenticateUser(userData);
-    
-    expect(result.success).toBe(false);
-    expect(result.error).toBe('Invalid credentials');
-  });
-});
-\end{lstlisting}
-
-\subsection{Integration Testing}
-\begin{itemize}
-    \item API endpoint testing
-    \item Database integration testing
-    \item End-to-end workflow testing
-\end{itemize}
-
-\subsection{User Acceptance Testing}
-Describe user testing procedures and feedback incorporation.
-
-\subsection{Performance Testing}
-\begin{itemize}
-    \item Load testing results
-    \item Performance benchmarks
-    \item Optimization outcomes
-\end{itemize}
-
-\section{Deployment and DevOps}
-\label{sec:deployment}
-
-\subsection{Deployment Architecture}
-Describe your deployment setup and infrastructure.
-
-\subsection{Continuous Integration/Continuous Deployment}
-\begin{itemize}
-    \item CI/CD pipeline setup
-    \item Automated testing in deployment
-    \item Environment management (development, staging, production)
-\end{itemize}
-
-\subsection{Monitoring and Logging}
-\begin{itemize}
-    \item Application monitoring tools
-    \item Error tracking and logging
-    \item Performance monitoring
-\end{itemize}
-
-\section{Results and Evaluation}
-\label{sec:results}
-
-\subsection{Functional Requirements Evaluation}
-Assess how well the system meets the original functional requirements.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{@{}lcc@{}}
-\toprule
-Requirement & Target & Achieved \\ \midrule
-Feature 1 & 100\% & 95\% \\
-Feature 2 & 100\% & 100\% \\
-Feature 3 & 100\% & 90\% \\
-\bottomrule
-\end{tabular}
-\caption{Functional Requirements Achievement}
-\label{tab:functional-requirements}
-\end{table}
-
-\subsection{Non-Functional Requirements Evaluation}
-\begin{itemize}
-    \item Performance metrics
-    \item Security assessment
-    \item Usability evaluation
-    \item Scalability analysis
-\end{itemize}
-
-\subsection{User Feedback}
-Present results from user testing and feedback sessions.
-
-\subsection{Performance Metrics}
-\begin{table}[H]
-\centering
-\begin{tabular}{@{}lcc@{}}
-\toprule
-Metric & Target & Achieved \\ \midrule
-Page Load Time & <2s & 1.5s \\
-API Response Time & <500ms & 300ms \\
-Concurrent Users & 100 & 150 \\
-\bottomrule
-\end{tabular}
-\caption{Performance Metrics}
-\label{tab:performance-metrics}
-\end{table}
-
-\section{Challenges and Solutions}
-\label{sec:challenges}
-
-\subsection{Technical Challenges}
-Describe major technical challenges encountered and how they were resolved.
-
-\subsection{Project Management Challenges}
-Discuss any project management or timeline challenges and solutions.
-
-\subsection{Learning Outcomes}
-Reflect on what was learned during the project development process.
-
-\section{Future Work and Improvements}
-\label{sec:future-work}
-
-\subsection{Planned Enhancements}
-\begin{itemize}
-    \item Additional features to be implemented
-    \item Performance improvements
-    \item Scalability enhancements
-    \item User experience improvements
-\end{itemize}
-
-\subsection{Technical Debt}
-Acknowledge any technical debt and plans for addressing it.
-
-\subsection{Scalability Considerations}
-Discuss how the system could be scaled for larger user bases or data volumes.
-
-\section{Conclusion}
-\label{sec:conclusion}
-
-\subsection{Project Summary}
-Summarize the key achievements and deliverables of the project.
-
-\subsection{Objectives Assessment}
-Evaluate how well the original objectives were met.
-
-\subsection{Personal Reflection}
-Reflect on the development experience, skills gained, and lessons learned.
-
-\subsection{Final Thoughts}
-Conclude with thoughts on the project's success and potential impact.
-
-% References
-\bibliographystyle{plain}
-\bibliography{references}
-% Note: Create a references.bib file for your bibliography
+\subsection{Frontend Development}
 
 % Appendices
 \appendix
 
-\section{Code Repository}
-\label{app:code-repo}
-Link to the project repository: \url{https://github.com/username/project-name}
 
-\section{Installation and Setup Guide}
-\label{app:installation}
-Provide step-by-step instructions for setting up the development environment and running the application.
-
-\section{API Documentation}
-\label{app:api-docs}
-Include detailed API documentation or link to external documentation.
-
-\section{Database Schema Details}
-\label{app:db-schema}
-Provide complete database schema with all table definitions.
-
-\section{User Manual}
-\label{app:user-manual}
-Include screenshots and instructions for using the application.
 
 \end{document}
