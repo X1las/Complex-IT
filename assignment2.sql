@@ -79,4 +79,25 @@ $$;
 SELECT * FROM department_activities('Comp. Sci.');
 
 -- Question 5
-create OR REPLACE FUNCTION activities(name VARCHAR(20))
+CREATE OR REPLACE FUNCTION activities(input VARCHAR(20))
+RETURNs TABLE (
+    department_name VARCHAR(20),
+    instructor_name VARCHAR(100),
+    course_title VARCHAR(100),
+    semester VARCHAR(6),
+    year NUMERIC(4,0)
+)
+LANGUAGE sql
+AS $$
+    SELECT department.dept_name, instructor.name, course.title, teaches.semester, teaches.year
+    FROM instructor
+    JOIN teaches ON instructor.id = teaches.id
+    JOIN course ON teaches.course_id = course.course_id
+    JOIN department ON course.dept_name = department.dept_name
+    WHERE department.dept_name = input OR department.building = input;
+$$;
+
+SELECT * FROM activities('Comp. Sci.');
+SELECT * FROM department;
+SELECT * FROM activities('Chandler');
+
