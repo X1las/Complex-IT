@@ -166,32 +166,81 @@ $$;
 SELECT followed_courses_by ('Bocchi');
 
 -- Question 7
-CREATE OR REPLACE FUNCTION followed_courses_by(student_name VARCHAR(20))
+CREATE OR REPLACE FUNCTION followed_courses_by_2(student_name VARCHAR(20))
+RETURNS TEXT
+LANGUAGE plpgsql
+AS
+$$ 
+DECLARE 
+rec record;
+ret text := '';
+BEGIN
+    FOR rec IN SELECT DISTINCT instructor.name as instructor_name
+        FROM instructor
+        JOIN teaches ON instructor.id = teaches.id
+        JOIN takes ON takes.course_id = teaches.course_id
+        JOIN student ON student.id = takes.id
+        WHERE student.name = student_name
+    LOOP
+        IF ret = '' THEN
+            ret := rec.instructor_name;
+        ELSE
+            ret := ret || ', ' || rec.instructor_name;
+        END IF;
+    END LOOP;
+
+    RETURN ret;
+END;
+$$;
+
+SELECT followed_courses_by_2('Bocchi');
+
+-- Question 8
+CREATE OR REPLACE FUNCTION followed_courses_by_3(student_name VARCHAR(20))
 RETURNS TEXT
 LANGUAGE plpgsql
 AS
 $$
-DECLARE 
-rec TEXT DEFAULT '';
-temp record;
-cur CURSOR FOR 
-    SELECT DISTINCT instructor.name 
-    FROM instructor
-    JOIN teaches ON instructor.id = teaches.id
-    JOIN takes ON takes.course_id = teaches.course_id
-    JOIN student ON student.id = takes.id
-    WHERE student.name = student_name;
 BEGIN
-    OPEN cur;
-    LOOP FETCH cur INTO temp;
-        EXIT WHEN NOT FOUND;
-        IF rec = '' THEN
-            rec := temp;
-        ELSE
-            rec := rec || ', ' || temp;
-        END IF;
-    END LOOP;
-    CLOSE cur;
-    RETURN rec;
+    RETURN (SELECT string_agg(instructor_name, ', ') FROM (SELECT DISTINCT instructor.name as instructor_name
+        FROM instructor
+        JOIN teaches ON instructor.id = teaches.id
+        JOIN takes ON takes.course_id = teaches.course_id
+        JOIN student ON student.id = takes.id
+        WHERE student.name = student_name));
 END;
 $$;
+
+SELECT followed_courses_by_3('Bocchi');
+
+-- Question 9
+CREATE OR REPLACE FUNCTION followed_courses_by_3(student_name VARCHAR(20))
+RETURNS TEXT
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    RETURN (SELECT string_agg(instructor_name, ', ') FROM ((
+        SELECT DISTINCT instructor.name as instructor_name
+        FROM advisor
+        JOIN student ON advisor.s_id = student.id
+        JOIN instructor ON advisor.i_id = instructor.id
+        WHERE student.name = student_name
+    ) 
+    UNION 
+    (
+        SELECT DISTINCT instructor.name as instructor_name
+        FROM instructor
+        JOIN teaches ON instructor.id = teaches.id
+        JOIN takes ON takes.course_id = teaches.course_id
+        JOIN student ON student.id = takes.id
+        WHERE student.name = student_name
+    ))); 
+END;
+$$;
+
+SELECT * FROM student;
+SELECT followed_courses_by_2('Glaho');
+SELECT followed_courses_by_3('Glaho');
+
+-- Question 10
