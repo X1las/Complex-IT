@@ -14,10 +14,10 @@ SELECT course_count ('12345');
 
 SELECT course_count ('35');
 
-SELECT id, course_count (id) FROM student;
+SELECT id, course_count (id) FROM student LIMIT 10;
 
 -- Alternative solution
-create or replace function course_count(sid varchar(8))
+create or replace function course_count_alt(sid varchar(8))
 returns integer as $$
 declare
     cnt integer;
@@ -43,9 +43,9 @@ BEGIN
 END;
 $$;
 
-SELECT course_count2 ('12345', 'Comp. Sci.');
+SELECT course_count2 ('12345', 'Comp. Sci.') LIMIT 10;
 
-SELECT id, name, course_count2 (id, 'Comp. Sci.') FROM student;
+SELECT id, name, course_count2 (id, 'Comp. Sci.') FROM student LIMIT 10;
 
 -- Question 3
 CREATE OR REPLACE FUNCTION course_count_both(student_id VARCHAR(5), department_id VARCHAR(12) DEFAULT NULL)
@@ -78,11 +78,11 @@ $BODY$
 $BODY$
 LANGUAGE plpgsql;
 
-SELECT id, name, course_count_both (id, 'Comp. Sci.') FROM student;
+SELECT id, name, course_count_both (id, 'Comp. Sci.') FROM student LIMIT 10;
 
-SELECT id, name, course_count_both (id) FROM student;
+SELECT id, name, course_count_both (id) FROM student LIMIT 10;
 
-SELECT id, name, course_count_both2 (id) FROM student;
+SELECT id, name, course_count_both2 (id) FROM student LIMIT 10;
 
 -- Could potentially also be done using IF statements
 -- but this is more concise and efficient as it requires one query
@@ -104,7 +104,7 @@ AS $$
     WHERE course.dept_name = department_id;
 $$;
 
-SELECT * FROM department_activities ('Comp. Sci.');
+SELECT * FROM department_activities ('Comp. Sci.') LIMIT 10;
 
 -- Question 5
 CREATE OR REPLACE FUNCTION activities(input VARCHAR(20))
@@ -125,11 +125,11 @@ AS $$
     WHERE department.dept_name = input OR department.building = input;
 $$;
 
-SELECT * FROM activities ('Comp. Sci.');
+SELECT * FROM activities ('Comp. Sci.') LIMIT 10;
 
-SELECT * FROM department;
+SELECT * FROM department LIMIT 10;
 
-SELECT * FROM activities ('Candlestick');
+SELECT * FROM activities ('Candlestick') LIMIT 10;
 
 -- Question 6
 DROP FUNCTION IF EXISTS followed_courses_by;
@@ -163,7 +163,7 @@ BEGIN
 END;
 $$;
 
-SELECT followed_courses_by ('Bocchi');
+SELECT followed_courses_by ('Bocchi') LIMIT 10;
 
 -- Question 7
 CREATE OR REPLACE FUNCTION followed_courses_by_2(student_name VARCHAR(20))
@@ -193,7 +193,7 @@ BEGIN
 END;
 $$;
 
-SELECT followed_courses_by_2('Bocchi');
+SELECT followed_courses_by_2('Bocchi') LIMIT 10;
 
 -- Question 8
 CREATE OR REPLACE FUNCTION followed_courses_by_3(student_name VARCHAR(20))
@@ -211,7 +211,7 @@ BEGIN
 END;
 $$;
 
-SELECT followed_courses_by_3('Bocchi');
+SELECT followed_courses_by_3('Bocchi') LIMIT 10;
 
 -- Question 9
 CREATE OR REPLACE FUNCTION followed_courses_by_3(student_name VARCHAR(20))
@@ -239,8 +239,8 @@ BEGIN
 END;
 $$;
 
-SELECT * FROM student;
-SELECT followed_courses_by_2('Glaho');
-SELECT followed_courses_by_3('Glaho');
+SELECT * FROM student LIMIT 10;
+SELECT followed_courses_by_2('Glaho') LIMIT 10;
+SELECT followed_courses_by_3('Glaho') LIMIT 10;
 
 -- Question 10
