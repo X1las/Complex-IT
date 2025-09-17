@@ -83,4 +83,16 @@
 
 ## Storage Manager
 
-- 
+# Entity Relations
+
+- Cardinality refers to the number of entities relating to each other, it is denoted by a straight line in one of three ways:
+    - One to One
+    - One to Many (Denoted by an Arrow at the end point)
+    - Many to One (Denoted by an Arrow at the starting point)
+
+- Specialization is like class diagrams, you define a general set of attributes for others tables to inherit
+    - Inheritance can be Disjointed or Overlapping
+        - Disjointed means inheritance can be either or
+        - Overlapping means inheritance can be both
+    - Specialization is defined by an empty/hollow arrow from the specialization to the inheritant
+
