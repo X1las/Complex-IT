@@ -9,4 +9,13 @@
 
 ### Generate SQL output file
 
-psql -h newtlike.com -p 5432 -d rucdb -U testdb -f assignment2.sql -P pager=off > results.txt
+Generates output:
+psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f DOCUMENT.sql -P pager=off > results.txt 
+
+Creates database:
+psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f university_large.sql
+
+Create movies db:
+psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f wi_backup.sql
+psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f imdb_backup.sql
+psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f omdb_data_backup.sql
