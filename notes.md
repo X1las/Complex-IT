@@ -5,6 +5,8 @@
 - Look up decomposition
 - Look up functional dependency
 - Look up BCNF
+- Look up different indexings 
+    - Not that important
 
 # Database Theory
 
