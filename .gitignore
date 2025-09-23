@@ -26,6 +26,10 @@
 # Keep directories so we can traverse into them
 !*/
 
+# Keep svg and drawio
+!*.svg
+!*.drawio.svg
+
 # Keep this .gitignore file itself
 !.gitignore
 
