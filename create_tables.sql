@@ -26,7 +26,8 @@ DROP TABLE IF EXISTS dvd_release CASCADE;
 DROP TABLE IF EXISTS regions CASCADE;
 DROP TABLE IF EXISTS title_websites CASCADE;
 DROP TABLE IF EXISTS title_posters CASCADE;
-
+DROP TABLE IF EXISTS production_titles CASCADE;
+DROP TABLE IF EXISTS title_maturity_ratings CASCADE;
 
 CREATE TABLE users (
     username VARCHAR(16) NOT NULL,
@@ -100,8 +101,8 @@ CREATE TABLE attends (
     title_id VARCHAR(10) NOT NULL,
     crew_id VARCHAR(10) NOT NULL,
     crew_role VARCHAR(50) NOT NULL,
-    job VARCHAR(80),
-    crew_character VARCHAR(80),
+    job VARCHAR(256),
+    crew_character TEXT,
     PRIMARY KEY (title_id, crew_id, crew_role),
     FOREIGN KEY (title_id) REFERENCES titles (id),
     FOREIGN KEY (crew_id) REFERENCES crew (id)
@@ -174,6 +175,14 @@ CREATE TABLE productions (
     PRIMARY KEY (production)
 );
 
+CREATE TABLE production_titles (
+    title_id VARCHAR(10) NOT NULL,
+    production VARCHAR(80) NOT NULL,
+    PRIMARY KEY (title_id, production),
+    FOREIGN KEY (title_id) REFERENCES titles (id),
+    FOREIGN KEY (production) REFERENCES productions (production)
+);
+
 -- RUN MÆHHHHH
 CREATE TABLE title_posters (
     title_id VARCHAR(10) NOT NULL,
@@ -192,6 +201,14 @@ CREATE TABLE title_websites (
 CREATE TABLE maturity_ratings (
     maturity_rating VARCHAR(10),
     PRIMARY KEY (maturity_rating)
+);
+
+CREATE TABLE title_maturity_ratings (
+    title_id VARCHAR(10) NOT NULL,
+    maturity_rating VARCHAR(10) NOT NULL,
+    PRIMARY KEY (title_id, maturity_rating),
+    FOREIGN KEY (title_id) REFERENCES titles (id),
+    FOREIGN KEY (maturity_rating) REFERENCES maturity_ratings (maturity_rating)
 );
 
 CREATE TABLE genres (
