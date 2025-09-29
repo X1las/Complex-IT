@@ -263,3 +263,15 @@ FROM temp_attends AS ta
 WHERE attends.title_id = ta.title_id
 AND attends.crew_id = ta.crew_id
 AND attends.crew_role = ta.crew_role;
+
+INSERT INTO movie_ratings
+SELECT
+    tr.tconst as titles_id,
+    tr.averagerating as user_rating,
+    tr.numvotes as num_user_ratings,
+    CAST(om.imdbrating AS double precision) AS critics_rating,
+    CAST(replace(om.imdbvotes, ',', '') AS integer) AS num_critics_ratings
+FROM title_ratings tr
+JOIN omdb_data om ON tr.tconst = om.tconst
+WHERE om.imdbrating != 'N/A'
+  AND om.imdbvotes != 'N/A';
