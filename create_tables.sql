@@ -62,10 +62,7 @@ CREATE TABLE user_history (
 CREATE TABLE user_ratings (
     username VARCHAR(16) NOT NULL,
     title_id TEXT NOT NULL,
-    rating INTEGER CHECK (
-        rating >= 0
-        AND rating <= 10
-    ) NOT NULL,
+    rating INTEGER CHECK (rating BETWEEN 1 AND 10) NOT NULL,
     PRIMARY KEY (username, title_id),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
@@ -87,6 +84,16 @@ CREATE TABLE movie_ratings (
     num_critics_ratings INT,
     PRIMARY KEY (titles_id),
     FOREIGN KEY (titles_id) REFERENCES titles (id)
+);
+
+-- Needs to be ran to create first instance of this table
+CREATE TABLE IF NOT EXISTS rating_history (
+  username   VARCHAR(16) NOT NULL,
+  title_id   TEXT        NOT NULL,
+  rating     INTEGER     NOT NULL CHECK (rating BETWEEN 1 AND 10),
+  rated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  FOREIGN KEY (username) REFERENCES users (username),
+  FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
 CREATE TABLE crew (

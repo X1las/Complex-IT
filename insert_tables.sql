@@ -295,3 +295,42 @@ FROM title_ratings tr
 JOIN omdb_data om ON tr.tconst = om.tconst
 WHERE om.imdbrating != 'N/A'
   AND om.imdbvotes != 'N/A';
+
+SELECT t.title,
+    ROUND((SUM(mr.user_rating * mr.num_user_ratings)::numeric
+    + SUM(mr.critics_rating * mr.num_critics_ratings)::NUMERIC) 
+    / NULLIF(SUM(mr.num_user_ratings + mr.num_critics_ratings),0),2) as weighted_rating
+from movie_ratings mr
+JOIN titles t on t.id = mr.titles_id 
+GROUP BY t.title;
+
+-- 1-D.6
+-- NEEDS A TEST
+CREATE OR REPLACE VIEW title_cast ASC
+SELECT
+    tp.tconst as title_id,
+    tp.nconst as person_id,
+    nb.primaryname,
+    tp.category
+FROM title_principals tp
+JOIN name_basics nb ON tp.nconst = nb.const
+WHERE tp.category IN ('actor', 'actress');
+
+-- 1.d-7
+
+ALTER TABLE crew ADD COLUMN IF NOT EXISTS average_rating DOUBLE PRECISION;
+UPDATE crew
+SET average_rating = subquery.avg_rating
+FROM (
+    SELECT 
+        a.crew_role, 
+        c.id,
+        ROUND(CAST(AVG(mr.user_rating) AS NUMERIC), 2) AS avg_rating
+    FROM attends a
+    JOIN crew c ON a.crew_id = c.id
+    JOIN movie_ratings mr ON a.title_id = mr.titles_id
+    GROUP BY a.crew_role,c.id
+    ORDER BY avg_rating DESC
+) AS subquery
+WHERE crew.id = subquery.id;
+
