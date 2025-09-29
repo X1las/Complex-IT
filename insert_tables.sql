@@ -178,6 +178,26 @@ WHERE website != 'N/A'
 AND website IS NOT NULL
 AND website != '';
 
+INSERT INTO genres (genre)
+SELECT DISTINCT genre
+FROM (
+    SELECT unnest(string_to_array(genres, ',')) AS genre
+    FROM title_basics
+) AS split
+WHERE genre IS NOT NULL
+AND genre != 'N/A'
+AND genre != '';
+
+INSERT INTO title_genres (title_id, genre)
+SELECT tconst, genre
+FROM (
+    SELECT tconst, unnest(string_to_array(genres, ',')) AS genre
+    FROM title_basics
+) AS title_split
+WHERE genre IS NOT NULL
+AND genre != 'N/A'
+AND genre != '';
+
 DO $$
 DECLARE
     r RECORD;
