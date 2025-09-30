@@ -158,17 +158,16 @@ CREATE TABLE production_titles (
 
 CREATE TABLE title_posters (
     title_id VARCHAR(10) NOT NULL,
-    poster VARCHAR(180),
-    PRIMARY KEY (poster, title_id)
+    poster VARCHAR(180) NOT NULL,
+    PRIMARY KEY (poster, title_id),
     FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
 -- findes ikke atm sep 26 12:22 skal bruges og website skal droppes
 CREATE TABLE title_websites (
-    title_id VARCHAR(10),
-    website VARCHAR(100),
-    poster VARCHAR(180),
-    PRIMARY KEY (website, title_id)
+    title_id VARCHAR(10) NOT NULL,
+    website VARCHAR(100) NOT NULL,
+    PRIMARY KEY (website, title_id),
     FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
@@ -196,7 +195,7 @@ CREATE TABLE title_genres (
     PRIMARY KEY (title_id, genre),
     FOREIGN KEY (title_id) REFERENCES titles (id),
     FOREIGN KEY (genre) REFERENCES genres (genre)
-)
+);
 
 CREATE TABLE title_awards (
     title_id VARCHAR(10) NOT NULL,
@@ -217,6 +216,15 @@ CREATE TABLE title_regions (
     PRIMARY KEY (title_id, region),
     FOREIGN KEY (title_id) REFERENCES titles (id),
     FOREIGN KEY (region) REFERENCES regions (region)
+);
+
+CREATE TABLE word_index (
+    title_id VARCHAR(10) NOT NULL,
+    word TEXT NOT NULL,
+    field VARCHAR(1) NOT NULL,
+    lexeme TEXT,
+    PRIMARY KEY (word, title_id, field),
+    FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
 -- Insert into tables
@@ -242,6 +250,15 @@ SELECT
     isadult
 FROM title_basics
 FULL OUTER JOIN omdb_data ON title_basics.tconst = omdb_data.tconst;
+
+INSERT INTO word_index (title_id, word, field, lexeme)
+SELECT
+    tconst,
+    word,
+    field,
+    lexeme
+FROM wi
+WHERE tconst IN (SELECT id FROM titles);
 
 INSERT INTO series
 SELECT

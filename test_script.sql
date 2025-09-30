@@ -1,9 +1,5 @@
-\o test_results.txt
-\pset pager off
-\timing on
-
 -- Pick a sample movie id
-SELECT id FROM titles WHERE titletype='movie' LIMIT 1 \gset
+SELECT id FROM titles WHERE titletype='movie' LIMIT 1
 
 -- Ensure clean start
 DELETE FROM user_ratings WHERE username='test_user_1' AND title_id=:'id';
@@ -72,5 +68,3 @@ SELECT * FROM word_to_words_query(ARRAY['love','war'], 10, TRUE) LIMIT 10;
 -- Cleanup shim user
 DELETE FROM bookmarks WHERE username='0';
 DELETE FROM users WHERE username='0';
-
-\o
