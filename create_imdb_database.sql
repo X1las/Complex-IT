@@ -187,7 +187,7 @@ CREATE TABLE title_genres (
     PRIMARY KEY (title_id, genre),
     FOREIGN KEY (title_id) REFERENCES titles (id),
     FOREIGN KEY (genre) REFERENCES genres (genre)
-)
+);
 
 CREATE TABLE title_awards (
     title_id VARCHAR(10) NOT NULL,

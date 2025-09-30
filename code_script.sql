@@ -292,7 +292,6 @@ BEGIN
   GROUP BY t2.title
   ORDER BY shared_genres DESC
   LIMIT 20;
- 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
