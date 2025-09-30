@@ -1,8 +1,4 @@
 -- Drop all tables if they exist
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS user_history CASCADE;
-DROP TABLE IF EXISTS user_ratings CASCADE;
-DROP TABLE IF EXISTS bookmarks CASCADE;
 DROP TABLE IF EXISTS titles CASCADE;
 DROP TABLE IF EXISTS movie_ratings CASCADE;
 DROP TABLE IF EXISTS attends CASCADE;
@@ -29,14 +25,18 @@ DROP TABLE IF EXISTS title_websites CASCADE;
 DROP TABLE IF EXISTS title_posters CASCADE;
 DROP TABLE IF EXISTS production_titles CASCADE;
 DROP TABLE IF EXISTS title_maturity_ratings CASCADE;
+DROP TABLE IF EXISTS imdb_ratings CASCADE;
+
+DROP TABLE omdb_data;
+DROP TABLE title_basics;
+DROP TABLE title_akas;
+DROP TABLE title_basics;
+DROP TABLE name_basics;
+DROP TABLE title_episode;
+DROP TABLE title_principals;
+DROP TABLE title_ratings;
 
 -- Create tables
-CREATE TABLE users (
-    username VARCHAR(16) NOT NULL,
-    pswd VARCHAR(64) NOT NULL,
-    usertype VARCHAR(1),
-    PRIMARY KEY (username)
-);
 
 CREATE TABLE titles (
     id VARCHAR(12) NOT NULL,
@@ -49,53 +49,17 @@ CREATE TABLE titles (
     release_date VARCHAR(80),
     originaltitle TEXT,
     isadult BOOLEAN,
+    rating DOUBLE PRECISION,
+    votes INT,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE user_history (
-    username VARCHAR(16) NOT NULL,
-    date_time DATE NOT NULL,
-    title_id TEXT NOT NULL,
-    PRIMARY KEY (username, date_time),
-    FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (title_id) REFERENCES titles (id)
-);
-
-CREATE TABLE user_ratings (
-    username VARCHAR(16) NOT NULL,
-    title_id TEXT NOT NULL,
-    rating INTEGER CHECK (rating BETWEEN 1 AND 10) NOT NULL,
-    PRIMARY KEY (username, title_id),
-    FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (title_id) REFERENCES titles (id)
-);
-
-CREATE TABLE bookmarks (
-    username VARCHAR(16) NOT NULL,
-    title_id VARCHAR(10) NOT NULL,
-    PRIMARY KEY (username, title_id),
-    FOREIGN KEY (username) REFERENCES users (username),
-    FOREIGN KEY (title_id) REFERENCES titles (id)
-);
-
-CREATE TABLE movie_ratings (
+CREATE TABLE imdb_ratings (
     titles_id VARCHAR NOT NULL,
-    user_rating FLOAT,
+    user_rating DOUBLE PRECISION,
     num_user_ratings INT,
-    critics_rating FLOAT,
-    num_critics_ratings INT,
     PRIMARY KEY (titles_id),
     FOREIGN KEY (titles_id) REFERENCES titles (id)
-);
-
--- Needs to be ran to create first instance of this table
-CREATE TABLE IF NOT EXISTS rating_history (
-  username   VARCHAR(16) NOT NULL,
-  title_id   TEXT        NOT NULL,
-  rating     INTEGER     NOT NULL CHECK (rating BETWEEN 1 AND 10),
-  rated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
-  FOREIGN KEY (username) REFERENCES users (username),
-  FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
 CREATE TABLE crew (
@@ -192,11 +156,11 @@ CREATE TABLE production_titles (
     FOREIGN KEY (production) REFERENCES productions (production)
 );
 
--- RUN MÆHHHHH
 CREATE TABLE title_posters (
     title_id VARCHAR(10) NOT NULL,
     poster VARCHAR(180),
     PRIMARY KEY (poster, title_id)
+    FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
 -- findes ikke atm sep 26 12:22 skal bruges og website skal droppes
@@ -205,6 +169,7 @@ CREATE TABLE title_websites (
     website VARCHAR(100),
     poster VARCHAR(180),
     PRIMARY KEY (website, title_id)
+    FOREIGN KEY (title_id) REFERENCES titles (id)
 );
 
 CREATE TABLE maturity_ratings (
@@ -540,14 +505,9 @@ WHERE attends.title_id = ta.title_id
 AND attends.crew_id = ta.crew_id
 AND attends.crew_role = ta.crew_role;
 
-INSERT INTO movie_ratings
+INSERT INTO imdb_ratings (titles_id, user_rating, num_user_ratings)
 SELECT
-    tr.tconst as titles_id,
-    tr.averagerating as user_rating,
-    tr.numvotes as num_user_ratings,
-    CAST(om.imdbrating AS double precision) AS critics_rating,
-    CAST(replace(om.imdbvotes, ',', '') AS integer) AS num_critics_ratings
-FROM title_ratings tr
-JOIN omdb_data om ON tr.tconst = om.tconst
-WHERE om.imdbrating != 'N/A'
-  AND om.imdbvotes != 'N/A';
+    tconst,
+    averagerating,
+    numvotes
+FROM title_ratings;
