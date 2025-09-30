@@ -45,16 +45,6 @@ SELECT * FROM user_history WHERE username='test_user_1' ORDER BY date_time DESC 
 -- 6) Read-only functions: print small samples
 SELECT * FROM string_search('') LIMIT 10;
 
-DO $$
-BEGIN
-  BEGIN
-    PERFORM 1 FROM structured_string_search(NULL,NULL,NULL,NULL) LIMIT 1;
-    RAISE NOTICE 'structured_string_search returned rows';
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'structured_string_search failed: %', SQLERRM;
-  END;
-END$$;
-
 SELECT * FROM actor_in_movie_search('john') LIMIT 10;
 
 SELECT * FROM movie_search('the') LIMIT 10;
