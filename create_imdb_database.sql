@@ -1,3 +1,4 @@
+-- Active: 1756753311901@@newtlike.com@5432@rucdb
 -- Drop all tables if they exist
 DROP TABLE IF EXISTS titles CASCADE;
 DROP TABLE IF EXISTS movie_ratings CASCADE;
@@ -833,11 +834,10 @@ person_titles AS (
   WHERE crew_id IN (SELECT id FROM persons)
 ),
 title_words AS (
-  SELECT LOWER(wi.word) AS word
-  FROM word_index wi
-  JOIN person_titles pt ON wi.tconst = pt.title_id
+  SELECT LOWER(word_index.word) AS word
+  FROM word_index
+  JOIN person_titles pt ON word_index.title_id = pt.title_id
 )
-
 SELECT word, COUNT(*)::int AS frequency
 FROM title_words
 GROUP BY word
@@ -859,12 +859,12 @@ AS $$
   kw_count AS (
     SELECT COUNT(*) AS cnt FROM kw
   ),
-  matching_titles AS (
+  matching_titles AS (  
   -- find titles (wi.tconst) that contain all provided keywords (using inverted index)
-    SELECT wi.tconst AS title_id
-    FROM word_index wi
-    JOIN kw ON LOWER(wi.word) = kw.word
-    GROUP BY wi.tconst
+    SELECT word_index.title_id AS title_id
+    FROM word_index
+    JOIN kw ON LOWER(word_index.word) = kw.word
+    GROUP BY word_index.title_id
     HAVING COUNT(DISTINCT kw.word) = (SELECT cnt FROM kw_count)
   )
   SELECT 
@@ -898,10 +898,10 @@ keywords_count AS (
 ),
 title_matches AS (
   -- count how many distinct keywords match each title via the inverted index
-  SELECT wi.tconst, COUNT(DISTINCT LOWER (keywords.word)) AS matches
-  FROM word_index wi
-  JOIN keywords ON LOWER(wi.word) = keywords.word
-  GROUP BY wi.tconst
+  SELECT word_index.title_id, COUNT(DISTINCT LOWER (keywords.word)) AS matches
+  FROM word_index
+  JOIN keywords ON LOWER(word_index.word) = keywords.word
+  GROUP BY word_index.title_id
 )
 SELECT
   t.id,
@@ -910,7 +910,7 @@ SELECT
   (SELECT cnt FROM keywords_count) AS total_keywords,
   (tm.matches::DOUBLE PRECISION / GREATEST((SELECT cnt FROM keywords_count),1)) AS score
   FROM title_matches tm
-  JOIN titles t ON t.id = tm.tconst
+  JOIN titles t ON t.id = tm.title_id
   WHERE (SELECT cnt FROM keywords_count) > 0
   ORDER BY tm.matches DESC, score DESC, t.title ASC
   LIMIT max_results;
@@ -933,18 +933,18 @@ keywords_count AS (
 ),
 -- titles that contain all provided 
 matching_titles AS (
-  SELECT wi.tconst as title_id
-  FROM word_index wi
-  JOIN keywords ON LOWER(wi.word) = keywords.word
-  GROUP BY wi.tconst
+  SELECT word_index.title_id
+  FROM word_index
+  JOIN keywords ON LOWER(word_index.word) = keywords.word
+  GROUP BY word_index.title_id
   HAVING COUNT(DISTINCT keywords.word) = (SELECT cnt FROM keywords_count)
     AND (SELECT cnt FROM keywords_count) > 0
 ),
 -- collect words for all matching titles
 words_for_matches AS (
-  SELECT LOWER(wi.word) AS word, wi.tconst AS title_id
-  FROM word_index wi
-  JOIN matching_titles mt ON wi.tconst = mt.title_id
+  SELECT LOWER(word_index.word) AS word, word_index.title_id
+  FROM word_index
+  JOIN matching_titles mt ON word_index.title_id = mt.title_id
 )
 SELECT 
   words_for_matches.word, 

@@ -135,8 +135,6 @@ EXECUTE PROCEDURE update_title_ratings();
 CREATE OR REPLACE FUNCTION structured_string_search ("ti" TEXT, "p" TEXT, "ch" TEXT, "pn" TEXT) 
 RETURNS TABLE ("id" VARCHAR, "title" VARCHAR) AS $BODY$
 BEGIN
-  --     INSERT INTO search_history (search_string)
-  --     VALUES (search_text);
   
   RETURN QUERY SELECT
     t.id,
@@ -162,8 +160,6 @@ $BODY$ LANGUAGE plpgsql VOLATILE
 CREATE
 OR REPLACE FUNCTION actor_in_movie_search ("actor" TEXT) RETURNS TABLE ("t.title" VARCHAR) AS $BODY$
 BEGIN
-  --     INSERT INTO search_history (search_string)
-  --     VALUES (search_text);
   RETURN QUERY SELECT DISTINCT
     t.title
   FROM
@@ -182,9 +178,6 @@ CREATE
 OR REPLACE FUNCTION movie_search (movie TEXT) RETURNS TABLE (Actors VARCHAR) 
 AS $$
 BEGIN
-  --     INSERT INTO search_history (search_string)
-  --     VALUES (search_text);
-  --     VALUES timestamp;
   RETURN QUERY SELECT
     c.full_name
   FROM
@@ -268,8 +261,6 @@ RETURNS TABLE (
   ) 
 AS $$
 BEGIN
-  --     INSERT INTO search_history (search_string)
-  --     VALUES (search_text);
   RETURN QUERY SELECT
     c.full_name,
     c.average_rating
@@ -289,8 +280,6 @@ $$ LANGUAGE plpgsql VOLATILE
 CREATE OR REPLACE FUNCTION similar_movie("movie" text)
   RETURNS TABLE("title" varchar, "shared_genres" int4) AS $BODY$
 BEGIN
-  --     INSERT INTO search_history (search_string)
-  --     VALUES (search_text);
 
   RETURN QUERY
   SELECT t2.title, COUNT(DISTINCT g2.genre)::integer AS shared_genres
