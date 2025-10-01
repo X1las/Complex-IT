@@ -24,3 +24,4 @@ psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f omdb_data_backup.sql
 dotnet-sdk 9
 Xunit
 CJTP
+
