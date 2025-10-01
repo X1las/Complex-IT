@@ -1,11 +1,12 @@
-using System;
-using Xunit;
+﻿using System;
 
-string? s1 = null;
-string? s2 = s1 ?? "Default Value";
-string? s3 = s1 ??= "Default Value";
-
-public static num int operator +(num a, num b)
+namespace Assignment3
 {
-    return a + b;
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello Web Service :-)");
+        }
+    }
 }
