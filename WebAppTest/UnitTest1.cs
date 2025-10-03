@@ -1,8 +1,8 @@
 ﻿﻿using System;
 using Xunit;
+using Assignment3;
 
 namespace Assignment3TestSuite;
-
 
 public class PartITests
 {
@@ -11,7 +11,10 @@ public class PartITests
     /// Testing UrlParser class
     /// 
     ////////////////////////////////////////////////////////// 
-
+    /// 
+    /// Tests for UrlParser class
+    
+    
     [Fact]
     public void UrlParser_ValidUrlWithoutId_ShouldParseCorrectly()
     {
@@ -208,9 +211,9 @@ public class PartITests
         Assert.Equal("1 Ok", result.Status);
     }
 
-    
 
-    
+
+
 
 
 
@@ -330,5 +333,4 @@ public class PartITests
         // Assert
         Assert.False(result);
     }
-
 }

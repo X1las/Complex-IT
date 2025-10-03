@@ -4,9 +4,29 @@ namespace Assignment3
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            Console.WriteLine("Hello Web Service :-)");
+            Console.WriteLine("Hello, World!");
         }
+    }
+
+    public class UrlParser
+    {
+
+    }
+
+    public class RequestValidator
+    {
+
+    }
+
+    public class Request
+    {
+
+    }
+
+    public class CategoryService
+    {
+
     }
 }
