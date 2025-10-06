@@ -1,7 +1,5 @@
-using System.Net.Sockets;
-using System.Net;
-using System.Text;
-namespace Server
+/*
+namespace Assignment3
 {
     public static class ServerProgram
     {
@@ -13,3 +11,4 @@ namespace Server
         }
     }
 }
+*/

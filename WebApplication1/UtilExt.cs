@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Util;
+namespace Assignment3;
 public static class UtilExt
 {
     public static string Read(this TcpClient client )
@@ -19,3 +15,4 @@ public static class UtilExt
         return Encoding.UTF8.GetString(buffer, 0, readCount);
     }
 }
+

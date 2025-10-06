@@ -1,11 +1,19 @@
 using System.Net.Sockets;
 using System.Net;
-using System.Text;
 
-var client = new TcpClient();
+namespace Assignment3;
 
-client.Connect(IPAddress.Loopback, 5000);
+class Client
+{
+    public static void Main()
+    {
+        var client = new TcpClient();
 
-var msg = client.Read();
+        client.Connect(IPAddress.Loopback, 5000);
 
-Console.WriteLine(msg);
+        var msg = client.Read();
+
+        Console.WriteLine(msg);
+        client.Close();
+    }
+}
