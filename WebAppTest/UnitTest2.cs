@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Assignment3TestSuite;
+namespace Assignment3;
 
 public class Response
 {

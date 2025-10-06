@@ -2,7 +2,7 @@
 using Xunit;
 using Assignment3;
 
-namespace Assignment3TestSuite;
+namespace Assignment3;
 
 public class PartITests
 {
@@ -11,7 +11,6 @@ public class PartITests
     /// Testing UrlParser class
     /// 
     ////////////////////////////////////////////////////////// 
-
     
     [Fact]
     public void UrlParser_ValidUrlWithoutId_ShouldParseCorrectly()
