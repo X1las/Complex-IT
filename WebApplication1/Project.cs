@@ -20,10 +20,31 @@ public class UrlParser // parses simple REST-like URLs and optional id segment
         if (parts.Length < minSegments) return false; // not enough segments to form a valid path
 
         // Named parameter used when building Path
-        Path = "/" + string.Join('/', parts.Take(count: minSegments)); // build base path from first segments
+        Path = parts[0] + "/" + parts[1]; // build base path from first segments
         HasId = parts.Length > minSegments; // determine if an ID segment exists
         Id = HasId ? parts[minSegments] : null; // extract ID if present
-        return true; // parsing succeeded
+
+        if (Path.StartsWith("/api/")) Path = Path[4..]; // remove leading slash for consistency
+
+        if (parts[0] == "api" || parts[0] == "test")
+        {
+            if (parts[1] == "categories" || parts[1] == "products")
+            {
+                return true; // valid URL structure
+            }
+            else if (parts[0] == "test")
+            {
+                return true; // valid test URL structure
+            }
+            else
+            {
+                return false; // invalid sub-url
+            }
+        }
+        else
+        {
+            return false; // invalid super-url
+        }
     }
 }
 

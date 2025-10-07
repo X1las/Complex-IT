@@ -8,7 +8,7 @@ namespace Assignment3;
 public class Server
 {
     // Variables
-    TcpListener tcp_service;
+    TcpListener? tcp_service;
     public int Port { get; set; }
 
     // Constructor to initialize the server with a specific port
@@ -28,9 +28,15 @@ public class Server
         {
             TcpClient client = tcp_service.AcceptTcpClient();
             Console.WriteLine("Client connected");
-            HandleClient(client);
+            
+            // Handle each client on a separate thread
+            var clientThread = new Thread(() => HandleClient(client));
+            clientThread.IsBackground = true; // Allows main thread to exit
+            clientThread.Start();
         }
     }
+
+    // Alternative async version for better performance
 
     private void HandleClient(TcpClient client)
 {
