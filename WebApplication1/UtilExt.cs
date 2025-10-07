@@ -2,6 +2,7 @@
 using System.Text;
 
 namespace Assignment3;
+/*
 public static class UtilExt
 {
     public static string Read(this TcpClient client )
@@ -16,3 +17,4 @@ public static class UtilExt
     }
 }
 
+*/
