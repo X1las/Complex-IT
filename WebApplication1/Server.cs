@@ -119,11 +119,11 @@ public class Server
             response.Body = request.Body;
         }
 
-        if (request?.Method?.ToLower() == "read" && request.Path == "/api/categories")
-        {
-            CategoryService categories = new();
-            response.Body = JsonSerializer.Serialize(categories.GetCategories());
-        }
+        // if (request?.Method?.ToLower() == "read" && request.Path == "/api/categories")
+        // {
+        //     CategoryService categories = new();
+        //     response.Body = JsonSerializer.Serialize(categories.GetCategories());
+        // }
 
         Console.WriteLine($"Response Status: {response.Status}");
         
