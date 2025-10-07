@@ -6,19 +6,23 @@ namespace Assignment3;
 
 public class Server
 {
+    // Variables
+    TcpListener tcp_service;
     public int Port { get; set; }
+
+    // Constructor to initialize the server with a specific port
     public Server(int port)
     {
         Port = port;
     }
 
-    TcpListener tcp_service;
+    // Method to start the server and listen for incoming connections
     public void Start()
     {
         tcp_service = new TcpListener(System.Net.IPAddress.Loopback, Port);
         tcp_service.Start();
         Console.WriteLine($"Server started on port {Port}");
-        // Simulate server running
+
         while (true)
         {
             TcpClient client = tcp_service.AcceptTcpClient();
@@ -30,7 +34,7 @@ public class Server
     private void HandleClient(TcpClient client)
     {
         var stream = client.GetStream();
-        var msg = "Hello form server";
+        var msg = "Hello from server";
         stream.Write(Encoding.UTF8.GetBytes(msg));
 
     }
