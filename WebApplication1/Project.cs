@@ -1,10 +1,12 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Assignment3;
 
 // UrlParser Class to parse URLs with optional ID segments
 public class UrlParser // parses simple REST-like URLs and optional id segment
 {
+    string[] ValidUrls = ["api/categories","api/products","test"];
     public bool HasId { get; set; } // true when an ID segment exists in the URL
     public string Path { get; set; } = ""; // normalized base path (e.g. "/api/categories")
     public string? Id { get; set; } // optional id segment as string
@@ -27,12 +29,25 @@ public class UrlParser // parses simple REST-like URLs and optional id segment
 // Simple Request and Response classes for RequestValidator class
 public class Request
 {
-    public string? Method, Path, Date, Body;
+    [JsonPropertyName("method")]
+    public string? Method { get; set; }
+
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
+
+    [JsonPropertyName("date")]
+    public string? Date { get; set; }
+
+    [JsonPropertyName("body")]
+    public string? Body { get; set; }
 } // simple DTO for incoming request fields
 public class Response
 {
-    public string Status = "";
-    public string? Body;
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = "";
+
+    [JsonPropertyName("body")]
+    public string? Body { get; set; }
 } // simple DTO for validator response status
 
 public class RequestValidator // validates basic request semantics and JSON body when required
