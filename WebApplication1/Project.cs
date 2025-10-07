@@ -32,6 +32,7 @@ public class Request
 public class Response
 {
     public string Status = "";
+    public string? Body;
 } // simple DTO for validator response status
 
 public class RequestValidator // validates basic request semantics and JSON body when required

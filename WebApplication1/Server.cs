@@ -1,7 +1,6 @@
 using TcpListener = System.Net.Sockets.TcpListener;
 using TcpClient = System.Net.Sockets.TcpClient;
 using System.Text;
-using System.Net;
 using System.Text.Json;
 
 namespace Assignment3;
@@ -35,31 +34,39 @@ public class Server
 
     private void HandleClient(TcpClient client)
     {
+        
         var stream = client.GetStream();
         var buffer = new byte[1024];
         int count = stream.Read(buffer, 0, buffer.Length);
         if (count == 0) return;
 
         var json = Encoding.UTF8.GetString(buffer, 0, count);
-        var request = JsonSerializer.Deserialize<Request>(json);
-
-        Response response;
-
-        var validator = new RequestValidator();
+        
+        var response = new Response();
+        
         try
         {
+            var request = JsonSerializer.Deserialize<Request>(json);
+            var validator = new RequestValidator();
             response = validator.ValidateRequest(request);
+        }
+        catch (JsonException)
+        {
+            response.Status = "4 Bad Request";
+            response.Body = "Invalid JSON";
         }
         catch (Exception ex)
         {
-            response = new Response
-            {
-                Status = "5",
-                Body = ex.Message
-            };
+            response.Status = "5 Internal Error";
+            response.Body = ex.Message;
         }
 
-
-        stream.Write(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)));
+        // Send response back to client
+        var responseBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response));
+        stream.Write(responseBytes, 0, responseBytes.Length);
+        stream.Flush(); // Ensure data is sent immediately
     }
+
+
+
 }
