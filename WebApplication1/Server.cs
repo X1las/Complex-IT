@@ -58,11 +58,11 @@ public class Server
         var json = Encoding.UTF8.GetString(buffer, 0, count);
         Console.WriteLine($"Decoded JSON: {json}");
         var response = new Response();
-        
+        Request? request = null;
         
         try
         {
-            var request = JsonSerializer.Deserialize<Request>(json);
+            request = JsonSerializer.Deserialize<Request>(json);
             Console.WriteLine("Deserialized request object. " + request?.Method + " " + request?.Path);
                 if (request == null)
                 {
@@ -74,25 +74,59 @@ public class Server
                 {
                     var validator = new RequestValidator();
                     Console.WriteLine("Validating request...");
-                    UrlParser parser = new UrlParser();
-                    if (!parser.ParseUrl(request.Path ?? ""))
+                    response = validator.ValidateRequest(request);
+                    
+                    if (response.Status != "1 Ok")
                     {
-                        response.Status = "5 Not Found";
+                        Console.WriteLine("Request validation failed.");
                     }
                     else
                     {
-                        response = validator.ValidateRequest(request);
+                        UrlParser parser = new UrlParser();
+                
+               
+                        var parsed = parser.ParseUrl(request.Path?.Trim('/') ?? "");
+
+                        if (!parsed && request.Method?.ToLower() != "echo")
+                        {
+                            response.Status = "5 Not Found";
+                        }
+                        else if (!int.TryParse(parser.Id, out int isAnInt))
+                        {
+                            response.Status = "4 Bad Request";
+                        }
+                        else if (parser.HasId && request.Method?.ToLower() == "create")
+                        {
+                            response.Status = "4 Bad Request";
+                            Console.WriteLine("Create method should not have an ID in the URL.");
+                        }
                     }
                     Console.WriteLine($"Validation result: {response.Status}");
+                    Console.WriteLine($"Response method: {request.Method}");
                 }
 
-        }
-        catch (JsonException)
+            }
+            catch (JsonException)
+            {
+                response.Status = "4 Bad Request";
+                response.Body = "Invalid JSON";
+            }
+        if (response.Status == "1 Ok")
+        {  
+        if (request?.Method?.ToLower() == "echo")
         {
-            response.Status = "4 Bad Request";
-            response.Body = "Invalid JSON";
+            response.Status = "";
+            response.Body = request.Body;
         }
 
+        if (request?.Method?.ToLower() == "read" && request.Path == "/api/categories")
+        {
+            CategoryService categories = new();
+            response.Body = JsonSerializer.Serialize(categories.GetCategories());
+        }
+
+        Console.WriteLine($"Response Status: {response.Status}");
+        
         // Send response back to client
         var responseJson = JsonSerializer.Serialize(response);
         var responseBytes = Encoding.UTF8.GetBytes(responseJson);
@@ -100,7 +134,5 @@ public class Server
         stream.Flush();
     }
 }
-
-
-
+}
 }
