@@ -6,8 +6,6 @@ namespace Assignment3;
 // UrlParser Class to parse URLs with optional ID segments
 public class UrlParser // parses simple REST-like URLs and optional id segment
 {
-    string[] ValidSuperUrls = ["api","test"];
-    string[] ValidSubUrls = ["categories","products"];
     public bool HasId { get; set; } // true when an ID segment exists in the URL
     public string Path { get; set; } = ""; // normalized base path (e.g. "/api/categories")
     public string? Id { get; set; } // optional id segment as string

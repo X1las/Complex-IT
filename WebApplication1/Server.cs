@@ -89,15 +89,15 @@ public class Server
 
                         if (!parsed && request.Method?.ToLower() != "echo")
                         {
-                            response.Status = "5 Not Found";
+                            response.Status = "5 Not found";
                         }
                         else if (!int.TryParse(parser.Id, out int isAnInt))
                         {
-                            response.Status = "4 Bad Request";
+                            response.Status = "4 Bad request";
                         }
                         else if (parser.HasId && request.Method?.ToLower() == "create")
                         {
-                            response.Status = "4 Bad Request";
+                            response.Status = "4 Bad request";
                             Console.WriteLine("Create method should not have an ID in the URL.");
                         }
                     }
