@@ -13,7 +13,7 @@ public class Response
     public string Body { get; set; }
 }
 
-public class Category
+public class tCategory
 {
     [JsonPropertyName("cid")]
     public int Id { get; set; }
@@ -55,7 +55,7 @@ public class PartIITests
         var response = client.ReadResponse();
 
         var expectedResponse = new Response { Status = "5 Not found" };
-
+        Console.WriteLine(expectedResponse.ToString());
         Assert.Equal(expectedResponse.ToJson().ToLower(), response.ToJson().ToLower());
     }
 
@@ -289,8 +289,6 @@ public class PartIITests
 
         Assert.Equal(expectedResponse.ToJson().ToLower(), response.ToJson().ToLower());
     }
-
-
 
     /* Read tests */
 

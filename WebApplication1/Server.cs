@@ -8,7 +8,7 @@ namespace Assignment3;
 public class Server
 {
     // Variables
-    TcpListener tcp_service;
+    TcpListener? tcp_service;
     public int Port { get; set; }
 
     // Constructor to initialize the server with a specific port
@@ -28,44 +28,152 @@ public class Server
         {
             TcpClient client = tcp_service.AcceptTcpClient();
             Console.WriteLine("Client connected");
-            HandleClient(client);
+            
+            // Handle each client on a separate thread
+            var clientThread = new Thread(() => HandleClient(client));
+            clientThread.IsBackground = true; // Allows main thread to exit
+            clientThread.Start();
         }
     }
 
+    // Alternative async version for better performance
+
     private void HandleClient(TcpClient client)
+{
+    using (client) // Add proper disposal
     {
-        
         var stream = client.GetStream();
+        Console.WriteLine("Handling client request...");
         var buffer = new byte[1024];
+        Console.WriteLine("Reading data from client...");
         int count = stream.Read(buffer, 0, buffer.Length);
-        if (count == 0) return;
+        Console.WriteLine($"Read {count} bytes from client.");
+
+        if (count == 0)
+        {
+            Console.WriteLine("No data received from client.");
+            return;
+        }
 
         var json = Encoding.UTF8.GetString(buffer, 0, count);
-        
+        Console.WriteLine($"Decoded JSON: {json}");
         var response = new Response();
+        Request? request = null;
         
         try
         {
-            var request = JsonSerializer.Deserialize<Request>(json);
-            var validator = new RequestValidator();
-            response = validator.ValidateRequest(request);
-        }
-        catch (JsonException)
+            request = JsonSerializer.Deserialize<Request>(json);
+            Console.WriteLine("Deserialized request object. " + request?.Method + " " + request?.Path);
+                if (request == null)
+                {
+                    response.Status = "4 Bad Request";
+                    response.Body = "Invalid Request";
+                    Console.WriteLine("Request object is null.");
+                }
+                else
+                {
+                    var validator = new RequestValidator();
+                    Console.WriteLine("Validating request...");
+                    response = validator.ValidateRequest(request);
+                    
+                    if (response.Status != "1 Ok")
+                    {
+                        Console.WriteLine("Request validation failed.");
+                    }
+                    else
+                    {
+                        UrlParser parser = new UrlParser();
+
+                        var parsed = parser.ParseUrl(request.Path ?? "");
+
+                        if (!parsed && request.Method?.ToLower() != "echo")
+                        {
+                            response.Status = "5 Not Found";
+                        }
+                        else if (!int.TryParse(parser.Id, out int isAnInt))
+                        {
+                            response.Status = "4 Bad Request";
+                        }
+                        else if (parser.HasId && request.Method?.ToLower() == "create")
+                        {
+                            response.Status = "4 Bad Request";
+                            Console.WriteLine("Create method should not have an ID in the URL.");
+                        }
+                    }
+                    Console.WriteLine($"Validation result: {response.Status}");
+                    Console.WriteLine($"Response method: {request.Method}");
+                }
+
+            }
+            catch (JsonException)
+            {
+                response.Status = "4 Bad Request";
+                response.Body = "Invalid JSON";
+            }
+        
+        if (request.Method?.ToLower() == "echo" && response.Status != "0 missing body")
         {
-            response.Status = "4 Bad Request";
-            response.Body = "Invalid JSON";
-        }
-        catch (Exception ex)
-        {
-            response.Status = "5 Internal Error";
-            response.Body = ex.Message;
+            response.Status = "";
+            response.Body = request.Body;
         }
 
+            Console.WriteLine($"Response Status: {response.Status}");
+
+
+//  if (request.Method?.ToLower() == "read" && request.Path == "/api/categories")
+//             {}
+//                 var categories = CategoryService();
+//                 response.Body = JsonSerializer.Serialize(categories.GetCategories());
+//                 response.Status = "1 Ok";
+
+//             }
+
+
+
+
+
+            if (request.Method?.ToLower() == "read" && request.Path == "/api/categories")
+            {
+
+
+
+                var tomlist = JsonSerializer.Serialize(request.Body);
+                var initialCategories = JsonSerializer.Deserialize<List<Category>>(json);
+
+
+                //var initialCategories = JsonSerializer.Deserialize<List<Category>>(request.Body);
+                var service = new CategoryService(initialCategories ?? new List<Category>());
+
+
+                //var categories = new CategoryService(new List<Category>());
+                //var categories = CategoryService();
+                response.Body = JsonSerializer.Serialize(service.GetCategories());
+                response.Status = "1 Ok";
+
+            }
+            
+
+/*        
+if (request.Method?.ToLower() == "read" && request.Path == "/api/categories")
+{
+    var initialCategories = JsonSerializer.Deserialize<List<Category>>(request.Body);
+    var service = new CategoryService(initialCategories ?? new());
+
+    var response = new
+    {
+        Status = "1 Ok",
+        Body = JsonSerializer.Serialize(service.GetCategories())
+    };
+}
+*/
+
         // Send response back to client
-        var responseBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response));
+            var responseJson = JsonSerializer.Serialize(response);
+        var responseBytes = Encoding.UTF8.GetBytes(responseJson);
         stream.Write(responseBytes, 0, responseBytes.Length);
-        stream.Flush(); // Ensure data is sent immediately
+        stream.Flush();
     }
+}
 
 
 
