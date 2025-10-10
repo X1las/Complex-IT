@@ -6,7 +6,7 @@ namespace ExerciseClasses;
 public class Attributes
 {
     [Key]
-     public string attribute { get; set; }
+    public string attribute { get; set; }
 }
 
 public class NorthWindContext : DbContext
