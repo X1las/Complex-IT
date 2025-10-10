@@ -12,3 +12,4 @@ foreach (var attribute in attributes)
 {
     Console.WriteLine(attribute.attribute);
 }
+
