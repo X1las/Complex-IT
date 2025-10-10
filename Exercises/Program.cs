@@ -1,23 +1,14 @@
 ﻿using Npgsql;
+using ExerciseClasses;
 
-var connectionString = "Host=newtlike.com;Port=5432;Database=rucdb;Username=rucdb;Password=testdb;Trust Server Certificate=true";
+/*var connectionString = "Host=newtlike.com;Port=5432;Database=rucdb;Username=rucdb;Password=testdb";
 
-try
+var connection = new NpgsqlConnection(connectionString);
+connection.Open();*/
+
+var db = new NorthWindContext();
+var attributes = db.Attributes.ToList();
+foreach (var attribute in attributes)
 {
-    var connection = new NpgsqlConnection(connectionString);
-    connection.Open();
-
-    Console.WriteLine("Connected to the database successfully.");
-
-    connection.Close();
-
+    Console.WriteLine(attribute.attribute);
 }
-catch (Exception ex)
-{
-    Console.WriteLine($"Error connecting to the database: {ex.Message}");
-}
-
-
-Thread.Sleep(1000);
-
-Console.WriteLine("Connection closed.");
