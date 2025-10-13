@@ -37,18 +37,6 @@
 !README*
 !readme*
 
-# LaTeX auxiliary files to ignore (even though we're keeping .tex and .pdf)
-*.aux
-*.bbl
-*.blg
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.toc
-*.lof
-*.lot
-*.synctex.gz
-*.nav
-*.snm
-*.vrb
+# Ignore obj and bin folders completely (override the !*/ rule)
+obj/
+bin/
