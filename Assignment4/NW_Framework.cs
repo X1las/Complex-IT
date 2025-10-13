@@ -37,6 +37,20 @@ public class Product
 }
 
 /*
+
+Joachim:
+public class Product
+{
+    public required int productId { get; set; }
+    public required string productName { get; set; }
+    public required int SupplierId { get; set; }
+    public required int CategoryId { get; set; }
+    public required string quantityperunit { get; set; }
+    public required int UnitPrice { get; set; }
+    public required int UnitsInStock { get; set; }
+    public required Category Category { get; set; }
+}
+
 public class Product
 {
     public required int productId { get; set; }
