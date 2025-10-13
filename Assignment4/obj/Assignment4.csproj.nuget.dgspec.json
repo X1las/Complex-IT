@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication1\\WebApplication1.csproj": {}
+    "C:\\Users\\malth\\OneDrive\\code\\asiment4\\Complex-IT\\Assignment4\\Assignment4.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication1\\WebApplication1.csproj": {
+    "C:\\Users\\malth\\OneDrive\\code\\asiment4\\Complex-IT\\Assignment4\\Assignment4.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication1\\WebApplication1.csproj",
-        "projectName": "WebApplication1",
-        "projectPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication1\\WebApplication1.csproj",
-        "packagesPath": "C:\\Users\\mto\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication1\\obj\\",
+        "projectUniqueName": "C:\\Users\\malth\\OneDrive\\code\\asiment4\\Complex-IT\\Assignment4\\Assignment4.csproj",
+        "projectName": "Assignment4",
+        "projectPath": "C:\\Users\\malth\\OneDrive\\code\\asiment4\\Complex-IT\\Assignment4\\Assignment4.csproj",
+        "packagesPath": "C:\\Users\\malth\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\malth\\OneDrive\\code\\asiment4\\Complex-IT\\Assignment4\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mto\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\malth\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -43,6 +43,16 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -1,6 +1,11 @@
 ﻿using Assignment4;
 using Npgsql;
-
+namespace Assignment4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
 var connectionString = "host=localhost;db=northwind;uid=;pwd=";
 
 var connection = new NpgsqlConnection(connectionString);
@@ -14,7 +19,7 @@ cmd.Connection = connection;
 cmd.CommandText = @"
     select * from categories;
     select * from products;
-    select * from orders;
+    select * from orders;Assignment4/StartService.cs
     select * from orderdetails;
 ";
 
@@ -53,3 +58,7 @@ while (reader.Read())
 
 reader.Close();
 connection.Close();
+
+  }
+    }
+}
