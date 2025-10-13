@@ -1,0 +1,23 @@
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\AdoExample.exe
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\AdoExample.deps.json
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\AdoExample.runtimeconfig.json
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\AdoExample.dll
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\AdoExample.pdb
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\bin\Debug\net9.0\Npgsql.dll
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.csproj.AssemblyReference.cache
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.AssemblyInfoInputs.cache
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.AssemblyInfo.cs
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.csproj.CoreCompileInputs.cache
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.sourcelink.json
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.csproj.Up2Date
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.dll
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\refint\AdoExample.dll
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.pdb
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.genruntimeconfig.cache
+C:\Users\Dorph\Excersises_Laptop\Assignment 4\Assignment4p1\AdoExample\obj\Debug\net9.0\ref\AdoExample.dll
+E:\Assignments\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.dll
+E:\Assignments\Assignment4p1\AdoExample\obj\Debug\net9.0\refint\AdoExample.dll
+E:\Assignments\Assignment4p1\AdoExample\obj\Debug\net9.0\AdoExample.pdb
