@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 
-namespace EfExample;
+namespace Assignment4;
 public class NorthwindContext : DbContext
 {
     public DbSet<Category> Categories { get; set; }
