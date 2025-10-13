@@ -1,13 +1,8 @@
 # Complex IT Systems Repository
 
-## Required Packages
+## Notes
 
-### Latex
-- texlive
-- texlive-extras
-- python3 pygments
-
-### Generate SQL output file
+### SQL Output Files
 
 Generates output:
 psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f DOCUMENT.sql -P pager=off > results.txt 
@@ -23,4 +18,3 @@ psql -h newtlike.com -p 5432 -d rucdb -U rucdb -f omdb_data_backup.sql
 ### C-sharp
 dotnet-sdk 9
 Xunit
-CJTP
