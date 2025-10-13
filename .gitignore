@@ -38,5 +38,5 @@
 !readme*
 
 # Ignore obj and bin folders completely (override the !*/ rule)
-/obj/
-/bin/
+/obj
+/bin
