@@ -123,16 +123,16 @@ namespace Assignment4
             Assert.Equal(12, products.Count);
             Assert.Equal("Chai", products.First().Name);
             Assert.Equal("Beverages", products.First().CategoryName);
-            Assert.Equal("Lakkalik��ri", products.Last().Name);
+            Assert.Equal("Lakkalikööri", products.Last().Name);
         }
 
         [Fact]
-        public void GetProduct_NameSubString_ReturnsProductsThatMachesTheSubString()
+        public void GetProduct_NameSubString_ReturnsProductsThatMatchesTheSubString()
         {
             var service = new DataService();
             var products = service.GetProductByName("em");
             Assert.Equal(4, products.Count);
-            Assert.Equal("NuNuCa Nu�-Nougat-Creme", products.First().ProductName);
+            Assert.Equal("NuNuCa Nuß-Nougat-Creme", products.First().ProductName);
             Assert.Equal("Flotemysost", products.Last().ProductName);
         }
 
