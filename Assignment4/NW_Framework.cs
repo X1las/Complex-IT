@@ -36,8 +36,8 @@ public class Category
 public class Product
 {
     private string name;
-    public int Id { get; set; }
-    public string? Name
+    public required int Id { get; set; }
+    public required string? Name
     {
         get => name;
         set => name = value;
@@ -50,34 +50,54 @@ public class Product
 
     public string? Description { get; set; }
     public int SupplierId { get; set; }
-    public decimal Price { get; set; }
+    public required double Price { get; set; }
     public int CategoryId { get; set; }
 
     public int Count { get; set; }
 
-    public int UnitPrice { get; set; }
+    public double UnitPrice { get; set; }
     public int UnitsInStock { get; set; }
     public string? QuantityPerUnit { get; set; }
     public Category? Category { get; set; }
     public string? CategoryName { get; set; }
+
+    public Product(int id = 0, string name = "", double price = 0.0, int unitsInStock = 0, string quantityPerUnit = "")
+    {
+        Id = id;
+        Name = name;
+        Price = price;
+        UnitsInStock = unitsInStock;
+        QuantityPerUnit = quantityPerUnit;
+    }
 }
 
 public class Order
 {
-    public int Id { get; set; }
-    public string CustomerId { get; set; }
+    public required int Id { get; set; }
+    public required string CustomerId { get; set; }
     public int EmplyeeId { get; set; }
     public DateTime Date { get; set; }
     public DateTime Required { get; set; }
     public DateTime ShippedDate { get; set; }
     public int Freight { get; set; }
-    public string ShipName { get; set; }
-    public string ShipAddress { get; set; }
-    public string ShipCity { get; set; }
-    public string ShipPostalCode { get; set; }
-    public string ShipCountry { get; set; }
+    public required string ShipName { get; set; }
+    public required string ShipAddress { get; set; }
+    public required string ShipCity { get; set; }
+    public required string ShipPostalCode { get; set; }
+    public required string ShipCountry { get; set; }
 
-    public ICollection<OrderDetails> OrderDetails { get; set; }
+    public Order(int id = 0, string customerId = "", string shipName = "", string shipAddress = "", string shipCity = "", string shipPostalCode = "", string shipCountry = "")
+    {
+        Id = id;
+        CustomerId = customerId;
+        ShipName = shipName;
+        ShipAddress = shipAddress;
+        ShipCity = shipCity;
+        ShipPostalCode = shipPostalCode;
+        ShipCountry = shipCountry;
+    }
+
+    public required ICollection<OrderDetails> OrderDetails { get; set; }
 }
 
 public class OrderDetails
