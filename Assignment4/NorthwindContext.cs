@@ -1,4 +1,4 @@
-﻿using EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace Assignment4;

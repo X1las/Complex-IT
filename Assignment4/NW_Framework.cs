@@ -10,7 +10,6 @@ public class Category
 
 public class Product
 {
-    private string name;
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? ProductName { get; set; } 
@@ -40,6 +39,7 @@ public class OrderDetails
     // public int Count { get; set; }
     public Order? Order { get; set; }
     public Product? Product { get; set; }
+    public int ProductId { get; set; }
     public int UnitPrice { get; set; }
     public int Quantity { get; set; }
     public int Discount { get; set; }
