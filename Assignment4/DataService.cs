@@ -70,7 +70,7 @@ public class DataService
     }
     public ICollection<OrderDetails> GetOrderDetailsByOrderId(int orderId)
     {
-        return OrderDetails.Where(od => od.OrderId == orderId).ToList();
+        return OrderDetails.Where(od => od.OrderId == orderId.ToString()).ToList();
     }
     public ICollection<OrderDetails> GetOrderDetailsByProductId(int productId)
     {

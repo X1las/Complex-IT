@@ -35,32 +35,22 @@ public class Category
 
 public class Product
 {
-    private string name = "";
+    public string? Name { get; set; } = null;
     public required int Id { get; set; }
-    public required string Name
-    {
-        get => name;
-        set => name = value ?? "";
-    }
 
-    public string ProductName {
-        get => name;
-        set => name = value ?? "";
-    }   
-
-    public string? Description { get; set; }
+    public string? Description { get; set; } = null;
     public required int SupplierId { get; set; }
     public required int CategoryId { get; set; }
     public required string QuantityPerUnit { get; set; }
     public required int UnitPrice { get; set; }
     public required int UnitsInStock { get; set; }
 
-    public int Count { get; set; }
-    public double Price { get; set; }
+    public int? Count { get; set; } = null;
+    public double? Price { get; set; } = null;
     public required Category Category { get; set; }
-    public string? CategoryName { get; set; }
+    public string? CategoryName { get; set; } = null;
 
-    public Product(int id = 0, string name = "", int supplierId = 0, int categoryId = 0, string quantityPerUnit = "", int unitPrice = 0, int unitsInStock = 0, Category? category = null)
+    public Product(int id = 0, string? name = null, int supplierId = 0, int categoryId = 0, string? quantityPerUnit = "0", int unitPrice = 0, int unitsInStock = 0, Category? category = null)
     {
         Id = id;
         Name = name;
