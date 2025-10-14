@@ -4,10 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Assignment4;
 public class DataService
 {
-    public List<Category> Categories { get; set; } = new List<Category>();
-    public List<Product> Products { get; set; } = new List<Product>();
-    public List<Order> Orders { get; set; } = new List<Order>();
-    public List<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
+
     public List<Category> GetCategories()
     {
         using var db = new NorthwindContext();

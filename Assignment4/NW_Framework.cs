@@ -5,7 +5,6 @@ public class Category
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public List<Product> Products { get; set; } = new List<Product>();
 }
 
 public class Product
@@ -24,8 +23,6 @@ public class Product
 public class Order
 {
     public int Id { get; set; }
-    public string CustomerId { get; set; }
-    public int EmployeeId { get; set; }
     public DateTime Date { get; set; }
     public DateTime Required { get; set; }
     public string? ShipName { get; set; }
@@ -37,8 +34,8 @@ public class OrderDetails
 {
     public int OrderId { get; set; }
     public Order? Order { get; set; }
-    public Product? Product { get; set; }
     public int ProductId { get; set; }
+    public Product? Product { get; set; }
     public double UnitPrice { get; set; }
     public double Quantity { get; set; }
     public double Discount { get; set; }

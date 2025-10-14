@@ -22,8 +22,8 @@ public class NorthwindContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Category mapping
-         modelBuilder.Entity<Category>().ToTable("categories");
-         modelBuilder.Entity<Category>()
+        modelBuilder.Entity<Category>().ToTable("categories");
+        modelBuilder.Entity<Category>()
             .Property(x => x.Id)
             .HasColumnName("categoryid")
             .ValueGeneratedNever();
@@ -56,8 +56,6 @@ public class NorthwindContext : DbContext
         modelBuilder.Entity<Order>().Property(x => x.Required).HasColumnName("requireddate");
         modelBuilder.Entity<Order>().Property(x => x.ShipName).HasColumnName("shipname");
         modelBuilder.Entity<Order>().Property(x => x.ShipCity).HasColumnName("shipcity");
-        modelBuilder.Entity<Order>().Property(x => x.CustomerId).HasColumnName("customerid");
-        modelBuilder.Entity<Order>().Property(x => x.EmployeeId).HasColumnName("employeeid");
 
         // OrderDetails mapping
         modelBuilder.Entity<OrderDetails>().ToTable("orderdetails");
