@@ -16,7 +16,6 @@ public class NorthwindContext : DbContext
         optionsBuilder.UseNpgsql("host=newtlike.com;db=northwind;uid=rucdb;pwd=testdb;Client Encoding=UTF8",
         npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()
         );
-        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,7 +25,7 @@ public class NorthwindContext : DbContext
         modelBuilder.Entity<Category>()
             .Property(x => x.Id)
             .HasColumnName("categoryid")
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd();
         modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("categoryname");
         modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description");
 
@@ -46,8 +45,9 @@ public class NorthwindContext : DbContext
         // Product-Category relationship
         modelBuilder.Entity<Product>()
             .HasOne(x => x.Category)
-            .WithMany()
-            .HasForeignKey(x => x.Id);
+            .WithMany(x => x.Products)
+            .HasForeignKey(x => x.CategoryId)
+            .HasPrincipalKey(x => x.Id);
 
         // Order mapping
         modelBuilder.Entity<Order>().ToTable("orders");
