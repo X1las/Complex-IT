@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 
 
 namespace Assignment4;
-
-public class DataService
+public class DataService        
 {
     public ICollection<Category> Categories { get; set; } = new List<Category>();
     public ICollection<Product> Products { get; set; } = new List<Product>();
+
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
+    public ICollection<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
 
     public ICollection<Category> GetCategories()
     {
