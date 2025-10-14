@@ -20,25 +20,26 @@ public class DataService
         return db.Categories.FirstOrDefault(c => c.Id == id);
     }
 
-    public Category CreateCategory(string name, string description)
+public Category CreateCategory(string name, string description)
+{
+    using var db = new NorthwindContext();
+
+    // Get the next ID by finding the max and adding 1
+    var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
+    var nextId = maxId + 1;
+
+    var category = new Category
     {
         using var db = new NorthwindContext();
 
-        // Get the next ID by finding the max and adding 1
-        var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
-        var nextId = maxId + 1;
+    db.Categories.Add(category);
 
-        var category = new Category
-        {
-            Id = nextId,
-            Name = name,
-            Description = description
-        };
-
-        db.Categories.Add(category);
-        // db.SaveChanges();
-        return category;
-    }
+        // Verify it was saved by reloading from database
+    db.Entry(category).Reload();
+    db.SaveChanges();
+    return category;
+    
+}
 
     public bool DeleteCategory(int id)
     {
@@ -53,7 +54,7 @@ public class DataService
     public bool UpdateCategory(int id, string name, string description)
     {
         using var db = new NorthwindContext();
-        var category = db.Categories.Find(id);
+        var category = db.Categories.FirstOrDefault(c => c.Id == id);
         if (category == null) return false;
         category.Name = name;
         category.Description = description;
@@ -91,6 +92,7 @@ public class DataService
         using var db = new NorthwindContext();
         return db.Products
             .Where(p => p.Name!.Contains(name))
+            .OrderBy(p => p.Id)
             .Select(p => new Product
             {
                 Id = p.Id,
