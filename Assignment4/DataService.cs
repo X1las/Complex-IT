@@ -2,10 +2,10 @@
 namespace Assignment4;
 public class DataService
 {
-    public List<Category> Categories { get; set; } = new List<Category>();
-    public List<Product> Products { get; set; } = new List<Product>();
+    public ICollection<Category> Categories { get; set; } = new List<Category>();
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 
-    public List<Category> GetCategories()
+    public ICollection<Category> GetCategories()
     {
         return Categories;
     }
@@ -29,11 +29,11 @@ public class DataService
     {
 
     }
-    public List<Product> GetProductByCategory(int categoryId)
+    public ICollection<Product> GetProductByCategory(int categoryId)
     {
 
     }
-    public Product GetProductByName(string name)
+    public ICollection<Product> GetProductByName(string name)
     {
 
     }
@@ -41,15 +41,15 @@ public class DataService
     {
 
     }
-    public List<Order> GetOrders()
+    public ICollection<Order> GetOrders()
     {
 
     }
-    public OrderDetails GetOrderDetailsByOrderId(int orderId)
+    public ICollection<OrderDetails> GetOrderDetailsByOrderId(int orderId)
     {
 
     }
-    public OrderDetails GetOrderDetailsByProductId(int productId)
+    public ICollection<OrderDetails> GetOrderDetailsByProductId(int productId)
     {
 
     }
