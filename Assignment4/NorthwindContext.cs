@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EntityFrameworkCore;
 using Npgsql;
 
 namespace Assignment4;
@@ -14,7 +14,7 @@ public class NorthwindContext : DbContext
     {
         optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
         optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.UseNpgsql("host=localhost;db=northwind;uid=;pwd=;Client Encoding=UTF8",
+        optionsBuilder.UseNpgsql("host=newtlike.com;db=northwind;uid=rucdb;pwd=testdb;Client Encoding=UTF8",
         npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()
         );
         
