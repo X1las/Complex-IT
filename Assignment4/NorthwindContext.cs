@@ -45,7 +45,7 @@ public class NorthwindContext : DbContext
         modelBuilder.Entity<Product>()
             .HasOne(x => x.Category)
             .WithMany()
-            .HasForeignKey(x => x.CategoryId);
+            .HasForeignKey(x => x.Id);
 
         // Order mapping
         modelBuilder.Entity<Order>().ToTable("orders");
@@ -54,6 +54,8 @@ public class NorthwindContext : DbContext
         modelBuilder.Entity<Order>().Property(x => x.Required).HasColumnName("requireddate");
         modelBuilder.Entity<Order>().Property(x => x.ShipName).HasColumnName("shipname");
         modelBuilder.Entity<Order>().Property(x => x.ShipCity).HasColumnName("shipcity");
+        modelBuilder.Entity<Order>().Property(x => x.CustomerId).HasColumnName("customerid");
+        modelBuilder.Entity<Order>().Property(x => x.EmployeeId).HasColumnName("employeeid");
 
         // OrderDetails mapping
         modelBuilder.Entity<OrderDetails>().ToTable("orderdetails");
