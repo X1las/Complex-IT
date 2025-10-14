@@ -11,9 +11,9 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("Assignment4Tests")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84b83598cd324a57e40b52aed70bd86694e3fccc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ef90e19ec61bb55daf62d75a434adce54a0ac357")]
 [assembly: System.Reflection.AssemblyProductAttribute("Assignment4Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Assignment4Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
