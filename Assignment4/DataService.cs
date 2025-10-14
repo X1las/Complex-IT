@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 namespace Assignment4;
-public class DataService        
+public class DataService
 {
     public List<Category> Categories { get; set; } = new List<Category>();
     public List<Product> Products { get; set; } = new List<Product>();
@@ -30,7 +30,10 @@ public Category CreateCategory(string name, string description)
 
     var category = new Category
     {
-        using var db = new NorthwindContext();
+        Id = nextId,
+        Name = name,
+        Description = description
+    };
 
     db.Categories.Add(category);
 
@@ -38,7 +41,7 @@ public Category CreateCategory(string name, string description)
     db.Entry(category).Reload();
     db.SaveChanges();
     return category;
-    
+
 }
 
     public bool DeleteCategory(int id)

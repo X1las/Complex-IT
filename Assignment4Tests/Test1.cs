@@ -1,4 +1,8 @@
-﻿namespace Assignment4
+﻿using System;
+using System.Linq;
+using Xunit;
+
+namespace Assignment4
 {
     public class DataServiceTests
     {
@@ -123,7 +127,7 @@
         }
 
         [Fact]
-        public void GetProduct_NameSubString_ReturnsProductsThatMatchesTheSubString()
+        public void GetProduct_NameSubString_ReturnsProductsThatMachesTheSubString()
         {
             var service = new DataService();
             var products = service.GetProductByName("em");
