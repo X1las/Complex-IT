@@ -9,6 +9,7 @@ public class Category
 
 public class Product
 {
+    private string name;
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? ProductName { get; set; } 
@@ -23,6 +24,8 @@ public class Product
 public class Order
 {
     public int Id { get; set; }
+    public string CustomerId { get; set; }
+    public int EmplyeeId { get; set; }
     public DateTime Date { get; set; }
     public DateTime Required { get; set; }
     public string? ShipName { get; set; }

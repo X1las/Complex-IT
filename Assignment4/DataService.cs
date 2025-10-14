@@ -5,8 +5,10 @@ namespace Assignment4;
 
 public class DataService
 {
-    // Category methods
-    public List<Category> GetCategories()
+    public ICollection<Category> Categories { get; set; } = new List<Category>();
+    public ICollection<Product> Products { get; set; } = new List<Product>();
+
+    public ICollection<Category> GetCategories()
     {
         using var db = new NorthwindContext();
         return db.Categories.ToList();
