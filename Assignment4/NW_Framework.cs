@@ -35,39 +35,41 @@ public class Category
 
 public class Product
 {
-    private string name;
+    private string name = "";
     public required int Id { get; set; }
-    public required string? Name
+    public required string Name
     {
         get => name;
-        set => name = value;
+        set => name = value ?? "";
     }
 
     public string ProductName {
         get => name;
-        set => name = value;
+        set => name = value ?? "";
     }   
 
     public string? Description { get; set; }
-    public int SupplierId { get; set; }
-    public required double Price { get; set; }
-    public int CategoryId { get; set; }
+    public required int SupplierId { get; set; }
+    public required int CategoryId { get; set; }
+    public required string QuantityPerUnit { get; set; }
+    public required int UnitPrice { get; set; }
+    public required int UnitsInStock { get; set; }
 
     public int Count { get; set; }
-
-    public double UnitPrice { get; set; }
-    public int UnitsInStock { get; set; }
-    public string? QuantityPerUnit { get; set; }
-    public Category? Category { get; set; }
+    public double Price { get; set; }
+    public required Category Category { get; set; }
     public string? CategoryName { get; set; }
 
-    public Product(int id = 0, string name = "", double price = 0.0, int unitsInStock = 0, string quantityPerUnit = "")
+    public Product(int id = 0, string name = "", int supplierId = 0, int categoryId = 0, string quantityPerUnit = "", int unitPrice = 0, int unitsInStock = 0, Category? category = null)
     {
         Id = id;
         Name = name;
-        Price = price;
-        UnitsInStock = unitsInStock;
+        SupplierId = supplierId;
+        CategoryId = categoryId;
         QuantityPerUnit = quantityPerUnit;
+        UnitPrice = unitPrice;
+        UnitsInStock = unitsInStock;
+        Category = category ?? new Category();
     }
 }
 
@@ -75,18 +77,18 @@ public class Order
 {
     public required int Id { get; set; }
     public required string CustomerId { get; set; }
-    public int EmplyeeId { get; set; }
-    public DateTime Date { get; set; }
-    public DateTime Required { get; set; }
-    public DateTime ShippedDate { get; set; }
+    public int EmployeeId { get; set; }
+    public DateOnly OrderDate { get; set; }
+    public DateOnly RequireDate { get; set; }
+    public DateOnly ShippedDate { get; set; }
     public int Freight { get; set; }
     public required string ShipName { get; set; }
     public required string ShipAddress { get; set; }
-    public required string ShipCity { get; set; }
-    public required string ShipPostalCode { get; set; }
-    public required string ShipCountry { get; set; }
+    public string? ShipCity { get; set; }
+    public string? ShipPostalCode { get; set; }
+    public string? ShipCountry { get; set; }
 
-    public Order(int id = 0, string customerId = "", string shipName = "", string shipAddress = "", string shipCity = "", string shipPostalCode = "", string shipCountry = "")
+    public Order(int id = 0, string customerId = "", string shipName = "", string shipAddress = "", string? shipCity = null, string? shipPostalCode = null, string? shipCountry = null)
     {
         Id = id;
         CustomerId = customerId;
@@ -97,18 +99,73 @@ public class Order
         ShipCountry = shipCountry;
     }
 
-    public required ICollection<OrderDetails> OrderDetails { get; set; }
+    public ICollection<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
 }
 
 public class OrderDetails
 {
-    public int OrderId { get; set; }
-    public int Count { get; set; }
+    public required string OrderId { get; set; }
+    public required int ProductId { get; set; }
     public Order? Order { get; set; }
-    public int ProductId { get; set; }
     public Product? Product { get; set; }
-    public double UnitPrice { get; set; }
+    public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
-    public double Discount { get; set; }
+    public float Discount { get; set; }
 
 }
+
+/*
+
+Joachim:
+public class Product
+{
+    public required int productId { get; set; }
+    public required string productName { get; set; }
+    public required int SupplierId { get; set; }
+    public required int CategoryId { get; set; }
+    public required string quantityperunit { get; set; }
+    public required int UnitPrice { get; set; }
+    public required int UnitsInStock { get; set; }
+    public required Category Category { get; set; }
+}
+
+public class Product
+{
+    public required int productId { get; set; }
+    public required string productName { get; set; }
+    public required int SupplierId { get; set; }
+    public required int CategoryId { get; set; }
+    public required string quantityperunit { get; set; }
+    public required int UnitPrice { get; set; }
+    public required int UnitsInStock { get; set; }
+    public required Category Category { get; set; }
+}
+
+public class Order
+{
+    public required int orderid { get; set; }
+    public required string customerid { get; set; }
+    public int employeeid { get; set; }
+    public DateOnly orderdate { get; set; }
+    public DateOnly requiredate { get; set; }
+    public DateOnly shippeddate { get; set; }
+    public int freight { get; set; }
+    public required string shipname { get; set; }
+    public required string shipaddress { get; set; }
+    public string shipcity { get; set; }
+    public string shippostalcode { get; set; }
+    public string shipcountry { get; set; }
+
+    public ICollection<OrderDetails> OrderDetails { get; set; }
+
+}
+
+public class OrderDetails
+{
+    public required string orderId { get; set; }
+    public required int productId { get; set; }
+    public decimal unitPrice { get; set; }
+    public int quantity { get; set; }
+    public float discount { get; set; }
+}
+*/
