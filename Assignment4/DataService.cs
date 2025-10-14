@@ -4,15 +4,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Assignment4;
 public class DataService        
 {
-    public ICollection<Category> Categories { get; set; } = new List<Category>();
-    public ICollection<Product> Products { get; set; } = new List<Product>();
-
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
-    public ICollection<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
-
-    // Category methods
-    public ICollection<Category> GetCategories()
-    //public List<Category> GetCategories()
+    public List<Category> Categories { get; set; } = new List<Category>();
+    public List<Product> Products { get; set; } = new List<Product>();
+    public List<Order> Orders { get; set; } = new List<Order>();
+    public List<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
+    public List<Category> GetCategories()
     {
         using var db = new NorthwindContext();
         return db.Categories.ToList();
@@ -24,33 +20,33 @@ public class DataService
         return db.Categories.FirstOrDefault(c => c.Id == id);
     }
 
-   public Category CreateCategory(string name, string description)
-{
-    using var db = new NorthwindContext();
-
-    // Get the next ID by finding the max and adding 1
-    var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
-    var nextId = maxId + 1;
-
-    var category = new Category
+    public Category CreateCategory(string name, string description)
     {
-        Id = nextId,
-        Name = name,
-        Description = description
-    };
+        using var db = new NorthwindContext();
 
-    db.Categories.Add(category);
-    // db.SaveChanges();
-    return category;
-}
+        // Get the next ID by finding the max and adding 1
+        var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
+        var nextId = maxId + 1;
+
+        var category = new Category
+        {
+            Id = nextId,
+            Name = name,
+            Description = description
+        };
+
+        db.Categories.Add(category);
+        // db.SaveChanges();
+        return category;
+    }
 
     public bool DeleteCategory(int id)
     {
         using var db = new NorthwindContext();
-        var category = db.Categories.Find(id);
+        var category = db.Categories.FirstOrDefault(c => c.Id == id);
         if (category == null) return false;
         db.Categories.Remove(category);
-        // db.SaveChanges();
+        db.SaveChanges();
         return true;
     }
 

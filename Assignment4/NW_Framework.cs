@@ -5,7 +5,7 @@ public class Category
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public ICollection<Product> Products { get; set; }
+    public List<Product> Products { get; set; } = new List<Product>();
 }
 
 public class Product
@@ -39,9 +39,6 @@ public class OrderDetails
     public Order? Order { get; set; }
     public Product? Product { get; set; }
     public int ProductId { get; set; }
-    /*public int UnitPrice { get; set; }
-    public int Quantity { get; set; }
-    public int Discount { get; set; }*/
     public double UnitPrice { get; set; }
     public double Quantity { get; set; }
     public double Discount { get; set; }
