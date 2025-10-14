@@ -46,8 +46,7 @@ public class NorthwindContext : DbContext
         modelBuilder.Entity<Product>()
             .HasOne(x => x.Category)
             .WithMany(x => x.Products)
-            .HasForeignKey(x => x.CategoryId)
-            .HasPrincipalKey(x => x.Id);
+            .HasForeignKey(x => x.CategoryId);
 
         // Order mapping
         modelBuilder.Entity<Order>().ToTable("orders");
