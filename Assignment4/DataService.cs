@@ -5,10 +5,8 @@ namespace Assignment4;
 
 public class DataService
 {
-    public ICollection<Category> Categories { get; set; } = new List<Category>();
-    public ICollection<Product> Products { get; set; } = new List<Product>();
-
-    public ICollection<Category> GetCategories()
+    // Category methods
+    public List<Category> GetCategories()
     {
         using var db = new NorthwindContext();
         return db.Categories.ToList();
@@ -36,7 +34,7 @@ public class DataService
     };
 
     db.Categories.Add(category);
-    db.SaveChanges();
+    // db.SaveChanges();
     return category;
 }
 
@@ -46,7 +44,7 @@ public class DataService
         var category = db.Categories.Find(id);
         if (category == null) return false;
         db.Categories.Remove(category);
-        db.SaveChanges();
+        // db.SaveChanges();
         return true;
     }
 
