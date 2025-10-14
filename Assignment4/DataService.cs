@@ -10,9 +10,9 @@ public class DataService
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
 
-    public ICollection<Category> GetCategories()
     // Category methods
-    public List<Category> GetCategories()
+    public ICollection<Category> GetCategories()
+    //public List<Category> GetCategories()
     {
         using var db = new NorthwindContext();
         return db.Categories.ToList();
