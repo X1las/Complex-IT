@@ -502,8 +502,17 @@
         }
       },
       "xunit.runner.visualstudio/2.8.2": {},
+      "Assignment3/1.0.0": {
+        "runtime": {
+          "Assignment3.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Assignment4/1.0.0": {
         "dependencies": {
+          "Assignment3": "1.0.0",
           "Microsoft.EntityFrameworkCore": "9.0.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
@@ -731,6 +740,11 @@
       "sha512": "sha512-vm1tbfXhFmjFMUmS4M0J0ASXz3/U5XvXBa6DOQUL3fEz4Vt6YPhv+ESCarx6M6D+9kJkJYZKCNvJMas1+nVfmQ==",
       "path": "xunit.runner.visualstudio/2.8.2",
       "hashPath": "xunit.runner.visualstudio.2.8.2.nupkg.sha512"
+    },
+    "Assignment3/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Assignment4/1.0.0": {
       "type": "project",
