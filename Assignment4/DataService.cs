@@ -16,29 +16,38 @@ public class DataService
         return db.Categories.FirstOrDefault(c => c.Id == id);
     }
 
-public Category CreateCategory(string name, string description)
-{
-    using var db = new NorthwindContext();
-
-    // Get the next ID by finding the max and adding 1
-    var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
-    var nextId = maxId + 1;
-
-    var category = new Category
+    public void CreateCategory(Category category)
     {
-        Id = nextId,
-        Name = name,
-        Description = description
-    };
+        var db = new NorthwindContext();
+        var maxId = db.Categories.Max(x => x.Id);
+        category.Id = maxId + 1;
+        db.Categories.Add(category);
+        db.SaveChanges();
+    }
 
-    db.Categories.Add(category);
+    public Category CreateCategory(string name, string description)
+    {
+        using var db = new NorthwindContext();
+
+        // Get the next ID by finding the max and adding 1
+        var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
+        var nextId = maxId + 1;
+
+        var category = new Category
+        {
+            Id = nextId,
+            Name = name,
+            Description = description
+        };
+
+        db.Categories.Add(category);
 
         // Verify it was saved by reloading from database
-    db.Entry(category).Reload();
-    db.SaveChanges();
-    return category;
+        db.Entry(category).Reload();
+        db.SaveChanges();
+        return category;
 
-}
+    }
 
     public bool DeleteCategory(int id)
     {
@@ -81,7 +90,8 @@ public Category CreateCategory(string name, string description)
                 UnitPrice = p.UnitPrice,
                 UnitsInStock = p.UnitsInStock,
                 QuantityPerUnit = p.QuantityPerUnit,
-                CategoryId = p.CategoryId
+                CategoryId = p.CategoryId,
+                Category = p.Category
             })
             .ToList();
     }
@@ -100,7 +110,8 @@ public Category CreateCategory(string name, string description)
                 UnitPrice = p.UnitPrice,
                 UnitsInStock = p.UnitsInStock,
                 QuantityPerUnit = p.QuantityPerUnit,
-                CategoryId = p.CategoryId
+                CategoryId = p.CategoryId,
+                Category = p.Category
             })
             .ToList();
     }

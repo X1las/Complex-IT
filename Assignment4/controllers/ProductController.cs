@@ -3,7 +3,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace WebServiceLayer.Controllers;
+namespace WebServiceLayer;
 
 [Route("api/products")]
 [ApiController]
@@ -75,7 +75,7 @@ public class ProductsController : ControllerBase
     {
         var model = _mapper.Map<ProductModel>(product);
         model.Url = GetUrl(nameof(GetProduct), new { id = product.Id });
-        model.CategoryUrl = GetUrl(nameof(CategoriesController.GetCategory), new { product.Category.Id});
+        model.CategoryUrl ??= GetUrl(nameof(CategoriesController.GetCategory), new { product.Category.Id });
         return model;
     }
 
