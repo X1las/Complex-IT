@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-
-namespace Assignment4;
+namespace DataServiceLayer;
 public class DataService
 {
 
@@ -139,6 +138,21 @@ public Category CreateCategory(string name, string description)
         return db.OrderDetails
             .Include(od => od.Order)
             .Where(od => od.ProductId == productId)
+            .ToList();
+    }
+    public int GetProductCount()
+    {
+        var db = new NorthwindContext();
+        return db.Products.Count();
+    }
+    public IList<Product> GetProducts(int page, int pageSize)
+    {
+        var db = new NorthwindContext();
+        return db.Products
+            .Include(x => x.Category)
+            .OrderBy(x => x.Id)
+            .Skip(page* pageSize)
+            .Take(pageSize)
             .ToList();
     }
 }

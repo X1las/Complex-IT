@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "Assignment4/1.0.0": {
         "dependencies": {
+          "Assignment3": "1.0.0",
           "Microsoft.EntityFrameworkCore": "9.0.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
@@ -175,6 +176,14 @@
             "fileVersion": "9.0.4.0"
           }
         }
+      },
+      "Assignment3/1.0.0": {
+        "runtime": {
+          "Assignment3.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -288,6 +297,11 @@
       "sha512": "sha512-mw5vcY2IEc7L+IeGrxpp/J5OSnCcjkjAgJYCm/eD52wpZze8zsSifdqV7zXslSMmfJG2iIUGZyo3KuDtEFKwMQ==",
       "path": "npgsql.entityframeworkcore.postgresql/9.0.4",
       "hashPath": "npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512"
+    },
+    "Assignment3/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

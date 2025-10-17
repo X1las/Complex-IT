@@ -1,7 +1,7 @@
 ﻿
 using Npgsql;
 
-namespace Assignment4;
+namespace DataServiceLayer;
 
 class Program
 {

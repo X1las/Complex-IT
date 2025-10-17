@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Assignment4;
+namespace DataServiceLayer;
 
 public class NorthwindContext : DbContext
 {
