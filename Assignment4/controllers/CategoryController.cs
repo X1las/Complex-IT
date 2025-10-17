@@ -2,7 +2,6 @@ using DataServiceLayer;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
 namespace WebServiceLayer;
 
