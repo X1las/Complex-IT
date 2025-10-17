@@ -1,86 +1,78 @@
 using DataServiceLayer;
-using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace WebServiceLayer.Controllers;
+namespace WebServiceLayer;
 
 [Route("api/products")]
 [ApiController]
-public class ProductsController : ControllerBase
+public class ProductController : ControllerBase
 {
     private readonly DataService _dataService;
     private readonly LinkGenerator _generator;
-    private readonly IMapper _mapper;
 
-    public ProductsController(
-        DataService dataService,
-        LinkGenerator generator, 
-        IMapper mapper) 
+    public ProductController(DataService dataService, LinkGenerator generator)
     {
         _dataService = dataService;
         _generator = generator;
-        _mapper = mapper;
     }
-
-    [HttpGet(Name = nameof(GetProducts))]
-    public IActionResult GetProducts(int page = 0, int pageSize = 5)
-    {
-        var products = _dataService
-            .GetProducts(page, pageSize)
-            .Select(x => CreateProductModel(x));
-
-        var numOfItems = _dataService.GetProductCount();
-        var numPages = (int)Math.Ceiling((double)numOfItems / pageSize);
-
-        var prev = page > 0
-            ? GetUrl(nameof(GetProducts), new { page = page - 1, pageSize })
-            : null;
-
-        var next = page < numPages-1
-            ? GetUrl(nameof(GetProducts), new { page = page + 1, pageSize })
-            : null;
-
-        var cur = GetUrl(nameof(GetProducts), new {page, pageSize });
-
-        var result = new
-        {
-            Prev = prev,
-            Next = next,
-            Current = cur,
-            NumberOfPages=numPages,
-            NumberOfIems = numOfItems,
-            Items = products
-        };
-
-
-
-        return Ok(result);
-    }
-
-    
 
     [HttpGet("{id}", Name = nameof(GetProduct))]
     public IActionResult GetProduct(int id)
     {
         var product = _dataService.GetProduct(id);
+
         if (product == null)
         {
             return NotFound();
         }
-        return Ok(CreateProductModel(product));
+
+        var result = new
+        {
+            name = product.Name,
+            category = new
+            {
+                name = product.Category?.Name
+            }
+        };
+
+        return Ok(result);
     }
 
-    private ProductModel CreateProductModel(Product product)
+    [HttpGet("category/{id}")]
+    public IActionResult GetProductsByCategory(int id)
     {
-        var model = _mapper.Map<ProductModel>(product);
-        model.Url = GetUrl(nameof(GetProduct), new { id = product.Id });
-        model.CategoryUrl = GetUrl(nameof(CategoriesController.GetCategory), new { product.Category.Id});
-        return model;
+        var products = _dataService.GetProductByCategory(id);
+
+        if (products == null || products.Count == 0)
+        {
+            return NotFound(new List<object>());
+        }
+
+        var result = products.Select(p => new
+        {
+            name = p.Name,
+            categoryName = p.CategoryName
+        });
+
+        return Ok(result);
     }
 
-    private string? GetUrl(string endpointName, object values)
+    [HttpGet("name/{name}")]
+    public IActionResult GetProductsByName(string name)
     {
-        return _generator.GetUriByName(HttpContext, endpointName, values);
+        var products = _dataService.GetProductByName(name);
+
+        if (products == null || products.Count == 0)
+        {
+            return NotFound(new List<object>());
+        }
+
+        var result = products.Select(p => new
+        {
+            productName = p.ProductName
+        });
+
+        return Ok(result);
     }
 }

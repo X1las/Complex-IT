@@ -48,8 +48,6 @@ public class CategoriesController : ControllerBase
         return Ok(model);
     }
 
-    
-
     [HttpPost]
     public IActionResult CreateCategory(CreateCategoryModel creationModel)
     {
@@ -57,7 +55,21 @@ public class CategoriesController : ControllerBase
 
         _dataService.CreateCategory(category);
 
-        return Created();
+        var model = CreateCategoryModel(category);
+        return Created(model.Url ?? string.Empty, model);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult UpdateCategory(int id, [FromBody] CategoryModel updateModel)
+    {
+        if (_dataService.UpdateCategory(id, updateModel.Name ?? string.Empty, updateModel.Description ?? string.Empty))
+        {
+
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 
     [HttpDelete("{id}")]
@@ -65,12 +77,12 @@ public class CategoriesController : ControllerBase
     {
         if (_dataService.DeleteCategory(id))
         {
-            return NoContent();
+            return Ok();
         }
 
         return NotFound();
     }
-
+    
     private CategoryModel CreateCategoryModel(Category category)
     {
         var model = _mapper.Map<CategoryModel>(category);

@@ -16,6 +16,15 @@ public class DataService
         return db.Categories.FirstOrDefault(c => c.Id == id);
     }
 
+public void CreateCategory(Category category)
+{
+    var db = new NorthwindContext();
+        var maxId = db.Categories.Max(x => x.Id);
+        category.Id = maxId + 1;
+        db.Categories.Add(category);
+    db.SaveChanges();
+}
+
 public Category CreateCategory(string name, string description)
 {
     using var db = new NorthwindContext();
@@ -32,12 +41,11 @@ public Category CreateCategory(string name, string description)
     };
 
     db.Categories.Add(category);
-
-        // Verify it was saved by reloading from database
-    db.Entry(category).Reload();
     db.SaveChanges();
+    
+    // Verify it was saved by reloading from database
+    db.Entry(category).Reload();
     return category;
-
 }
 
     public bool DeleteCategory(int id)
@@ -142,12 +150,12 @@ public Category CreateCategory(string name, string description)
     }
     public int GetProductCount()
     {
-        var db = new NorthwindContext();
+        using var db = new NorthwindContext();
         return db.Products.Count();
     }
     public IList<Product> GetProducts(int page, int pageSize)
     {
-        var db = new NorthwindContext();
+        using var db = new NorthwindContext();
         return db.Products
             .Include(x => x.Category)
             .OrderBy(x => x.Id)
