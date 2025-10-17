@@ -1,62 +1,30 @@
-﻿
-using Npgsql;
+﻿using DataServiceLayer;
+using Microsoft.AspNetCore.Builder;
+using Mapster;
 
-namespace DataServiceLayer;
+namespace WebServiceLayer;
 
-class Program
+public class Program
 {
-    static void Main(string[] args)
+    public static DataService DataService { get; } = new DataService();
+    public static void Main(string[] args)
     {
-        var connectionString = "host=newtlike.com;db=northwind;uid=rucdb;pwd=testdb";
-        var connection = new NpgsqlConnection(connectionString);
+        var builder = WebApplication.CreateBuilder(args);
 
-        connection.Open();
+        // Add services to the container.
 
-        var cmd = new NpgsqlCommand();
-        cmd.Connection = connection;
+        builder.Services.AddSingleton<DataService>();
 
-        // Multiple queries separated by semicolons
-        cmd.CommandText = @"
-            select * from categories;
-            select * from products;
-            select * from orders;
-            select * from orderdetails;
-        ";
+        builder.Services.AddMapster();
 
-        var reader = cmd.ExecuteReader();
+        builder.Services.AddControllers();
 
-        // Read categories
-        Console.WriteLine("=== CATEGORIES ===");
-        while (reader.Read())
-        {
-            Console.WriteLine($"{reader.GetInt32(0)} {reader.GetString(1)}");
-        }
+        var app = builder.Build();
 
-        // Move to next result set (products)
-        reader.NextResult();
-        Console.WriteLine("\n=== PRODUCTS ===");
-        while (reader.Read())
-        {
-            Console.WriteLine($"{reader.GetInt32(0)} {reader.GetString(1)}");
-        }
+        // Configure the HTTP request pipeline.
 
-        // Move to next result set (orders)
-        reader.NextResult();
-        Console.WriteLine("\n=== ORDERS ===");
-        while (reader.Read())
-        {
-            Console.WriteLine($"{reader.GetInt32(0)}");
-        }
+        app.MapControllers();
 
-        // Move to next result set (order details)
-        reader.NextResult();
-        Console.WriteLine("\n=== ORDER DETAILS ===");
-        while (reader.Read())
-        {
-            Console.WriteLine($"{reader.GetInt32(0)}");
-        }
-
-        reader.Close();
-        connection.Close();
+        app.Run();
     }
 }
