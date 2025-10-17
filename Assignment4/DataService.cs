@@ -18,7 +18,7 @@ public class DataService
 
 public void CreateCategory(Category category)
 {
-    var db = new NorthwindContext();
+    using var db = new NorthwindContext();
         var maxId = db.Categories.Max(x => x.Id);
         category.Id = maxId + 1;
         db.Categories.Add(category);
