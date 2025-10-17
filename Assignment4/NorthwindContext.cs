@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Assignment4;
 
@@ -17,14 +16,16 @@ public class NorthwindContext : DbContext
         optionsBuilder.UseNpgsql("host=newtlike.com;db=northwind;uid=rucdb;pwd=testdb;Client Encoding=UTF8",
         npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()
         );
-        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Category mapping
         modelBuilder.Entity<Category>().ToTable("categories");
-        modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("categoryid");
+        modelBuilder.Entity<Category>()
+            .Property(x => x.Id)
+            .HasColumnName("categoryid")
+            .ValueGeneratedOnAdd();
         modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("categoryname");
         modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description");
 
@@ -44,7 +45,7 @@ public class NorthwindContext : DbContext
         // Product-Category relationship
         modelBuilder.Entity<Product>()
             .HasOne(x => x.Category)
-            .WithMany()
+            .WithMany(x => x.Products)
             .HasForeignKey(x => x.CategoryId);
 
         // Order mapping
