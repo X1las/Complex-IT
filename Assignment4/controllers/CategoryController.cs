@@ -64,12 +64,9 @@ public class CategoriesController : ControllerBase
     {
         if (_dataService.UpdateCategory(id, updateModel.Name ?? string.Empty, updateModel.Description ?? string.Empty))
         {
-
-            {
-                return Ok();
-            }
-            return NotFound();
+            return Ok();
         }
+        return NotFound();
     }
 
     [HttpDelete("{id}")]

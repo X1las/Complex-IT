@@ -12,7 +12,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Configure Kestrel to listen on port 5001
         builder.WebHost.ConfigureKestrel(options =>
         {
             options.ListenLocalhost(5001);
