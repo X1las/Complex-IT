@@ -2,7 +2,8 @@ using DataServiceLayer;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using WebServiceLayer.Models;
+using Microsoft.AspNetCore.Routing;
+using WebServiceLayer;
 
 namespace WebServiceLayer.Controllers;
 
@@ -10,12 +11,12 @@ namespace WebServiceLayer.Controllers;
 [ApiController]
 public class CategoriesController : ControllerBase
 {
-    private readonly IDataService _dataService;
+    private readonly DataService _dataService;
     private readonly LinkGenerator _generator;
     private readonly IMapper _mapper;
 
     public CategoriesController(
-        IDataService dataService,
+        DataService dataService,
         LinkGenerator generator,
         IMapper mapper)
     {
@@ -48,15 +49,13 @@ public class CategoriesController : ControllerBase
         return Ok(model);
     }
 
-    
+
 
     [HttpPost]
     public IActionResult CreateCategory(CreateCategoryModel creationModel)
     {
         var category = creationModel.Adapt<Category>();
-
         _dataService.CreateCategory(category);
-
         return Created();
     }
 

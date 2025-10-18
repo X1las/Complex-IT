@@ -1,21 +1,21 @@
-using DataService;
+using DataServiceLayer;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Emit;
-using WebServiceLayer.Models;
+using Microsoft.AspNetCore.Routing;
+using WebServiceLayer.Controllers;
 
-namespace WebServiceLayer.Controllers;
+
 
 [Route("api/products")]
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly IDataService _dataService;
+    private readonly DataService _dataService;
     private readonly LinkGenerator _generator;
     private readonly IMapper _mapper;
 
     public ProductsController(
-        IDataService dataService,
+        DataService dataService,
         LinkGenerator generator, 
         IMapper mapper) 
     {
@@ -54,8 +54,6 @@ public class ProductsController : ControllerBase
             Items = products
         };
 
-
-
         return Ok(result);
     }
 
@@ -72,9 +70,9 @@ public class ProductsController : ControllerBase
         return Ok(CreateProductModel(product));
     }
 
-    private ProductModel CreateProductModel(Product product)
+    private WebServiceLayer.ProductModel CreateProductModel(Product product)
     {
-        var model = _mapper.Map<ProductModel>(product);
+        var model = _mapper.Map<WebServiceLayer.ProductModel>(product);
         model.Url = GetUrl(nameof(GetProduct), new { id = product.Id });
         model.CategoryUrl = GetUrl(nameof(CategoriesController.GetCategory), new { product.Category.Id});
         return model;

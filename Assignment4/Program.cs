@@ -5,6 +5,7 @@ namespace DataServiceLayer;
 
 class Program
 {
+     public static DataService DataService{ get; } = new DataService();
     static void Main(string[] args)
     {
         var connectionString = "host=newtlike.com;db=northwind;uid=rucdb;pwd=testdb";
@@ -14,6 +15,8 @@ class Program
 
         var cmd = new NpgsqlCommand();
         cmd.Connection = connection;
+
+
 
         // Multiple queries separated by semicolons
         cmd.CommandText = @"
