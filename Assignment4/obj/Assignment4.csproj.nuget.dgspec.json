@@ -1,31 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "E:\\GithubV2\\Assignment4p2v2\\Complex-IT\\Complex-IT\\Assignment4\\Assignment4.csproj": {}
+    "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj": {}
   },
   "projects": {
-    "E:\\GithubV2\\Assignment4p2v2\\Complex-IT\\Complex-IT\\Assignment4\\Assignment4.csproj": {
+    "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\GithubV2\\Assignment4p2v2\\Complex-IT\\Complex-IT\\Assignment4\\Assignment4.csproj",
+        "projectUniqueName": "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj",
         "projectName": "Assignment4",
-        "projectPath": "E:\\GithubV2\\Assignment4p2v2\\Complex-IT\\Complex-IT\\Assignment4\\Assignment4.csproj",
-        "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
-        "outputPath": "E:\\GithubV2\\Assignment4p2v2\\Complex-IT\\Complex-IT\\Assignment4\\obj\\",
+        "projectPath": "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj",
+        "packagesPath": "/home/xilas/.nuget/packages/",
+        "outputPath": "/home/xilas/Complex-IT/Assignment4/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/xilas/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +39,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -57,10 +52,6 @@
             "Mapster.DependencyInjection": {
               "target": "Package",
               "version": "[1.0.1, )"
-            },
-            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
-              "target": "Package",
-              "version": "[9.0.10, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -90,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
