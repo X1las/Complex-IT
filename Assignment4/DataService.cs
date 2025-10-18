@@ -16,7 +16,24 @@ public class DataService
         return db.Categories.FirstOrDefault(c => c.Id == id);
     }
 
-    public void CreateCategory(Category category)
+public void CreateCategory(Category category)
+{
+    using var db = new NorthwindContext();
+        var maxId = db.Categories.Max(x => x.Id);
+        category.Id = maxId + 1;
+        db.Categories.Add(category);
+    db.SaveChanges();
+}
+
+public Category CreateCategory(string name, string description)
+{
+    using var db = new NorthwindContext();
+
+    // Get the next ID by finding the max and adding 1
+    var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
+    var nextId = maxId + 1;
+
+    var category = new Category
     {
         var db = new NorthwindContext();
         var maxId = db.Categories.Max(x => x.Id);
@@ -25,29 +42,13 @@ public class DataService
         db.SaveChanges();
     }
 
-    public Category CreateCategory(string name, string description)
-    {
-        using var db = new NorthwindContext();
-
-        // Get the next ID by finding the max and adding 1
-        var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
-        var nextId = maxId + 1;
-
-        var category = new Category
-        {
-            Id = nextId,
-            Name = name,
-            Description = description
-        };
-
-        db.Categories.Add(category);
-
-        // Verify it was saved by reloading from database
-        db.Entry(category).Reload();
-        db.SaveChanges();
-        return category;
-
-    }
+    db.Categories.Add(category);
+    db.SaveChanges();
+    
+    // Verify it was saved by reloading from database
+    db.Entry(category).Reload();
+    return category;
+}
 
     public bool DeleteCategory(int id)
     {
@@ -153,12 +154,12 @@ public class DataService
     }
     public int GetProductCount()
     {
-        var db = new NorthwindContext();
+        using var db = new NorthwindContext();
         return db.Products.Count();
     }
     public IList<Product> GetProducts(int page, int pageSize)
     {
-        var db = new NorthwindContext();
+        using var db = new NorthwindContext();
         return db.Products
             .Include(x => x.Category)
             .OrderBy(x => x.Id)
