@@ -37,7 +37,6 @@ public class AttributeAlts
     public string TitleId { get; set; }
     public string AltsOrdering { get; set; }
     public string Attribute { get; set; }
-
 }
 
 public class Attributes
@@ -47,7 +46,7 @@ public class Attributes
 
 public class Bookmarks
 {
-    public string Username { get; set; }
+    public string UserName { get; set; }
     public string TitleId { get; set; }
 }
 

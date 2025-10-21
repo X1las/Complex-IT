@@ -53,6 +53,26 @@ public class DataService
             .ToList();
     }
 
+    public List<Titles> GetTitlesByYear(ImdbContext context, string year)
+    {
+        return context.Title
+            .Where(t => t.Year == year)
+            .ToList();
+    }
+
+    public List<Titles> GetTitleByType(ImdbContext context, string titleType)
+    {
+        return context.Title
+            .Where(tg => tg.TitleType == titleType)
+            .ToList();
+    }
+
+    public List<UserRatings> GetUserRatingsByUsername(ImdbContext context, string username)
+    {
+        return context.UsersRating
+            .Where(ur => ur.Username == username)
+            .ToList();
+    }
     public ImdbRatings? GetTitleRatingById(ImdbContext context, string titleId)
     {
         return context.ImdbRating.FirstOrDefault(tr => tr.TitleId == titleId);

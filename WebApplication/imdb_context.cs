@@ -79,7 +79,7 @@ public class ImdbContext : DbContext
 
         // Bookmarks mapping
         modelBuilder.Entity<Bookmarks>().ToTable("bookmarks");
-        modelBuilder.Entity<Bookmarks>().Property(x => x.Username).HasColumnName("username");
+        modelBuilder.Entity<Bookmarks>().Property(x => x.UserName).HasColumnName("username");
         modelBuilder.Entity<Bookmarks>().Property(x => x.TitleId).HasColumnName("title_id");
 
         // BoxofficeTitles mapping
