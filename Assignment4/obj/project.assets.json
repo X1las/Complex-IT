@@ -36,6 +36,7 @@
           "lib/net7.0/Mapster.DependencyInjection.dll": {}
         }
       },
+<<<<<<< HEAD
       "Microsoft.AspNetCore.JsonPatch/9.0.10": {
         "type": "package",
         "dependencies": {
@@ -83,6 +84,8 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
       "Microsoft.EntityFrameworkCore/9.0.1": {
         "type": "package",
         "dependencies": {
@@ -312,6 +315,7 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+<<<<<<< HEAD
       "Newtonsoft.Json/13.0.3": {
         "type": "package",
         "compile": {
@@ -341,6 +345,8 @@
           }
         }
       },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
       "Npgsql/9.0.3": {
         "type": "package",
         "dependencies": {
@@ -420,6 +426,7 @@
         "mapster.dependencyinjection.nuspec"
       ]
     },
+<<<<<<< HEAD
     "Microsoft.AspNetCore.JsonPatch/9.0.10": {
       "sha512": "4KK/qmGXL/QGnJlKViqd37XR+39c4k6wn1BvEZlppFY6TZN78dgFk3Eh/hWKy3G3Ai27L5e+g/pddutzUitpVA==",
       "type": "package",
@@ -524,6 +531,8 @@
         "version.txt"
       ]
     },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
     "Microsoft.EntityFrameworkCore/9.0.1": {
       "sha512": "E25w4XugXNykTr5Y/sLDGaQ4lf67n9aXVPvsdGsIZjtuLmbvb9AoYP8D50CDejY8Ro4D9GK2kNHz5lWHqSK+wg==",
       "type": "package",
@@ -902,6 +911,7 @@
         "useSharedDesignerContext.txt"
       ]
     },
+<<<<<<< HEAD
     "Newtonsoft.Json/13.0.3": {
       "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
       "type": "package",
@@ -953,6 +963,8 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
     "Npgsql/9.0.3": {
       "sha512": "tPvY61CxOAWxNsKLEBg+oR646X4Bc8UmyQ/tJszL/7mEmIXQnnBhVJZrZEEUv0Bstu0mEsHZD5At3EO8zQRAYw==",
       "type": "package",
@@ -990,7 +1002,10 @@
     "net9.0": [
       "Mapster >= 7.4.0",
       "Mapster.DependencyInjection >= 1.0.1",
+<<<<<<< HEAD
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 9.0.10",
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
       "Microsoft.EntityFrameworkCore >= 9.0.1",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4"
     ]
@@ -1046,10 +1061,13 @@
             "target": "Package",
             "version": "[1.0.1, )"
           },
+<<<<<<< HEAD
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
             "target": "Package",
             "version": "[9.0.10, )"
           },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[9.0.1, )"

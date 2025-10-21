@@ -18,7 +18,28 @@ public class DataService
         return db.Categories.FirstOrDefault(c => c.Id == id);
     }
 
+<<<<<<< HEAD
     public void CreateCategory(Category category)
+=======
+public void CreateCategory(Category category)
+{
+    using var db = new NorthwindContext();
+        var maxId = db.Categories.Max(x => x.Id);
+        category.Id = maxId + 1;
+        db.Categories.Add(category);
+    db.SaveChanges();
+}
+
+public Category CreateCategory(string name, string description)
+{
+    using var db = new NorthwindContext();
+
+    // Get the next ID by finding the max and adding 1
+    var maxId = db.Categories.Any() ? db.Categories.Max(c => c.Id) : 0;
+    var nextId = maxId + 1;
+
+    var category = new Category
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
     {
         var db = new NorthwindContext();
         var maxId = db.Categories.Max(x => x.Id);
@@ -27,6 +48,7 @@ public class DataService
         db.SaveChanges();
     }
 
+<<<<<<< HEAD
     public Category CreateCategory(string name, string description)
     {
         using var db = new NorthwindContext();
@@ -48,6 +70,15 @@ public class DataService
         return category;
 
     }
+=======
+    db.Categories.Add(category);
+    db.SaveChanges();
+    
+    // Verify it was saved by reloading from database
+    db.Entry(category).Reload();
+    return category;
+}
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
 
     public bool DeleteCategory(int id)
     {
@@ -153,12 +184,12 @@ public class DataService
     }
     public int GetProductCount()
     {
-        var db = new NorthwindContext();
+        using var db = new NorthwindContext();
         return db.Products.Count();
     }
     public IList<Product> GetProducts(int page, int pageSize)
     {
-        var db = new NorthwindContext();
+        using var db = new NorthwindContext();
         return db.Products
             .Include(x => x.Category)
             .OrderBy(x => x.Id)

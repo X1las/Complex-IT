@@ -52,10 +52,13 @@
               "target": "Package",
               "version": "[1.0.1, )"
             },
+<<<<<<< HEAD
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[9.0.10, )"
             },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.1, )"

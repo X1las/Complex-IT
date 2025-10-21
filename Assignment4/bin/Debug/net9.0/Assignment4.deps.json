@@ -51,7 +51,10 @@
       },
       "Microsoft.AspNetCore.JsonPatch/9.0.10": {
         "dependencies": {
+<<<<<<< HEAD
           "Microsoft.CSharp": "4.7.0",
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
@@ -74,7 +77,10 @@
           }
         }
       },
+<<<<<<< HEAD
       "Microsoft.CSharp/4.7.0": {},
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
       "Microsoft.EntityFrameworkCore/9.0.1": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Abstractions": "9.0.1",
@@ -298,6 +304,7 @@
       "path": "microsoft.aspnetcore.mvc.newtonsoftjson/9.0.10",
       "hashPath": "microsoft.aspnetcore.mvc.newtonsoftjson.9.0.10.nupkg.sha512"
     },
+<<<<<<< HEAD
     "Microsoft.CSharp/4.7.0": {
       "type": "package",
       "serviceable": true,
@@ -305,6 +312,8 @@
       "path": "microsoft.csharp/4.7.0",
       "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
     },
+=======
+>>>>>>> 1aa6250150feadf49d4305c12ae1141b60045214
     "Microsoft.EntityFrameworkCore/9.0.1": {
       "type": "package",
       "serviceable": true,
