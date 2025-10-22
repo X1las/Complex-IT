@@ -46,7 +46,7 @@ public class Attributes
 
 public class Bookmarks
 {
-    public string UserName { get; set; }
+    public string Username { get; set; }
     public string TitleId { get; set; }
 }
 
