@@ -1,10 +1,21 @@
-﻿namespace WebApplicationTests;
+﻿using System;
+using System.Linq;
+using Xunit;
 
-public class UnitTest1
+namespace DataServiceLayer.Tests
 {
-    [Fact]
-    public void Test1()
+    public class DataServiceTests
     {
+        /* Categories */
 
+        [Fact]
+        public void UserObject_HasDefaultValues()
+        {
+            var user = new Users();
+            user.Username = "testuser";
+            user.Pswd = "password123";
+            Assert.Equal("testuser", user.Username);
+            Assert.Equal("password123", user.Pswd);
+        }
     }
 }
