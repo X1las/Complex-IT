@@ -1,127 +1,39 @@
 {
   "format": 1,
   "restore": {
-    "/home/xilas/Complex-IT/WebApplicationTests/WebApplicationTests.csproj": {}
+    "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj": {}
   },
   "projects": {
-    "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj": {
+    "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj",
-        "projectName": "WebApplication",
-        "projectPath": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj",
-        "packagesPath": "/home/xilas/.nuget/packages/",
-        "outputPath": "/home/xilas/Complex-IT/WebApplication/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/home/xilas/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net9.0"
-        ],
-        "sources": {
-          "/usr/lib/dotnet/library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net9.0": {
-            "targetAlias": "net9.0",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
-      },
-      "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
-          "dependencies": {
-            "Mapster": {
-              "target": "Package",
-              "version": "[7.4.0, )"
-            },
-            "Mapster.DependencyInjection": {
-              "target": "Package",
-              "version": "[1.0.1, )"
-            },
-            "Microsoft.AspNetCore.JsonPatch": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Npgsql.EntityFrameworkCore.PostgreSQL": {
-              "target": "Package",
-              "version": "[9.0.4, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/home/xilas/Complex-IT/WebApplicationTests/WebApplicationTests.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/home/xilas/Complex-IT/WebApplicationTests/WebApplicationTests.csproj",
+        "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj",
         "projectName": "WebApplicationTests",
-        "projectPath": "/home/xilas/Complex-IT/WebApplicationTests/WebApplicationTests.csproj",
-        "packagesPath": "/home/xilas/.nuget/packages/",
-        "outputPath": "/home/xilas/Complex-IT/WebApplicationTests/obj/",
+        "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj",
+        "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
+        "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/xilas/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj": {
-                "projectPath": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj"
+              "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj": {
+                "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj"
               }
             }
           }
@@ -136,7 +48,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -177,7 +89,97 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+        "projectName": "WebApplication",
+        "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+        "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
+        "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Mapster": {
+              "target": "Package",
+              "version": "[7.4.0, )"
+            },
+            "Microsoft.AspNetCore.JsonPatch": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

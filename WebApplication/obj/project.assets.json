@@ -23,19 +23,6 @@
           "lib/net7.0/Mapster.Core.dll": {}
         }
       },
-      "Mapster.DependencyInjection/1.0.1": {
-        "type": "package",
-        "dependencies": {
-          "Mapster": "7.4.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0"
-        },
-        "compile": {
-          "lib/net7.0/Mapster.DependencyInjection.dll": {}
-        },
-        "runtime": {
-          "lib/net7.0/Mapster.DependencyInjection.dll": {}
-        }
-      },
       "Microsoft.AspNetCore.JsonPatch/9.0.10": {
         "type": "package",
         "dependencies": {
@@ -436,20 +423,6 @@
         "lib/net7.0/Mapster.Core.dll",
         "mapster.core.1.2.1.nupkg.sha512",
         "mapster.core.nuspec"
-      ]
-    },
-    "Mapster.DependencyInjection/1.0.1": {
-      "sha512": "LfjnRIwx6WAo3ssq8PFeaHFaUz00BfSG9BhWgXsiDa3H5lDhG0lpMGDF6w2ZnooS4eHYmAv4f77VxmzpvgorNg==",
-      "type": "package",
-      "path": "mapster.dependencyinjection/1.0.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "icon.png",
-        "lib/net6.0/Mapster.DependencyInjection.dll",
-        "lib/net7.0/Mapster.DependencyInjection.dll",
-        "mapster.dependencyinjection.1.0.1.nupkg.sha512",
-        "mapster.dependencyinjection.nuspec"
       ]
     },
     "Microsoft.AspNetCore.JsonPatch/9.0.10": {
@@ -1052,7 +1025,6 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Mapster >= 7.4.0",
-      "Mapster.DependencyInjection >= 1.0.1",
       "Microsoft.AspNetCore.JsonPatch >= 9.0.10",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 9.0.10",
       "Microsoft.AspNetCore.OpenApi >= 9.0.10",
@@ -1061,25 +1033,31 @@
     ]
   },
   "packageFolders": {
-    "/home/xilas/.nuget/packages/": {}
+    "C:\\Users\\JDorph\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj",
+      "projectUniqueName": "e:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
       "projectName": "WebApplication",
-      "projectPath": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj",
-      "packagesPath": "/home/xilas/.nuget/packages/",
-      "outputPath": "/home/xilas/Complex-IT/WebApplication/obj/",
+      "projectPath": "e:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+      "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
+      "outputPath": "e:\\Github\\Subproject2\\Complex-IT\\WebApplication\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/xilas/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1098,7 +1076,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -1107,10 +1085,6 @@
           "Mapster": {
             "target": "Package",
             "version": "[7.4.0, )"
-          },
-          "Mapster.DependencyInjection": {
-            "target": "Package",
-            "version": "[1.0.1, )"
           },
           "Microsoft.AspNetCore.JsonPatch": {
             "target": "Package",
@@ -1152,7 +1126,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
