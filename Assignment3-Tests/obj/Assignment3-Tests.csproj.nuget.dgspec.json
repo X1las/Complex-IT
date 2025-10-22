@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj": {}
+    "E:\\Github\\Subproject2\\Complex-IT\\Assignment3-Tests\\Assignment3-Tests.csproj": {}
   },
   "projects": {
-    "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj": {
+    "E:\\Github\\Subproject2\\Complex-IT\\Assignment3-Tests\\Assignment3-Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj",
-        "projectName": "WebApplicationTests",
-        "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj",
+        "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3-Tests\\Assignment3-Tests.csproj",
+        "projectName": "Assignment3-Tests",
+        "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3-Tests\\Assignment3-Tests.csproj",
         "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
-        "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplicationTests\\obj\\",
+        "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3-Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -32,8 +32,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj": {
-                "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj"
+              "E:\\Github\\Subproject2\\Complex-IT\\Assignment3\\Assignment3.csproj": {
+                "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3\\Assignment3.csproj"
               }
             }
           }
@@ -64,13 +64,11 @@
             },
             "xunit": {
               "target": "Package",
-              "version": "[2.9.3, )"
+              "version": "[2.9.2, )"
             },
             "xunit.runner.visualstudio": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.5, )"
+              "version": "[2.8.2, )"
             }
           },
           "imports": [
@@ -93,14 +91,14 @@
         }
       }
     },
-    "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj": {
+    "E:\\Github\\Subproject2\\Complex-IT\\Assignment3\\Assignment3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
-        "projectName": "WebApplication",
-        "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+        "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3\\Assignment3.csproj",
+        "projectName": "Assignment3",
+        "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3\\Assignment3.csproj",
         "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
-        "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\obj\\",
+        "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment3\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -138,36 +136,6 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "dependencies": {
-            "Mapster": {
-              "target": "Package",
-              "version": "[7.4.0, )"
-            },
-            "Mapster.DependencyInjection": {
-              "target": "Package",
-              "version": "[1.0.1, )"
-            },
-            "Microsoft.AspNetCore.JsonPatch": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.0.10, )"
-            },
-            "Npgsql.EntityFrameworkCore.PostgreSQL": {
-              "target": "Package",
-              "version": "[9.0.4, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -180,9 +148,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
