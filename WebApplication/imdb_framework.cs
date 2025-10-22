@@ -4,9 +4,6 @@ public class Users
 {
     public string Username { get; set; }
     public string Pswd { get; set; }
-    public List<UserRatings>? UserRatingsDetails { get; set; }
-    public List<UserHistory>? UserHistoryDetails { get; set; }
-    public List<Bookmarks>? BookmarksDetails { get; set; }
 }
 
 public class UserRatings
