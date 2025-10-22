@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace DataServiceLayer;
+
 public class DataService
 {
     public Users? GetUserByUsername(ImdbContext context, string username)
@@ -103,5 +104,26 @@ public class DataService
             .Where(t => titleIds.Contains(t.Id))
             .ToList();
     }
+
+    public List<Crew> GetCrewByTitleId(ImdbContext context, string titleId)
+    {
+        var crewIds = context.Attend
+            .Where(tc => tc.TitleId == titleId)
+            .Select(tc => tc.CrewId)
+            .ToList();
+
+        return context.Crew
+            .Where(c => crewIds.Contains(c.Id))
+            .ToList();
+    }
+
+    public List<Episodes> GetEpisodesBySeriesId(ImdbContext context, string seriesId)
+    {
+        return context.Episodes
+            .Where(e => e.SeriesId == seriesId)
+            .ToList();
+    }
+
+    
 
 }
