@@ -1061,31 +1061,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\JDorph\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\mto\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+      "projectUniqueName": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj",
       "projectName": "WebApplication",
-      "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
-      "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
-      "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\obj\\",
+      "projectPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj",
+      "packagesPath": "C:\\Users\\mto\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\mto\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1104,7 +1097,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -1158,7 +1151,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
