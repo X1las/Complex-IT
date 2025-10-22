@@ -1713,33 +1713,39 @@
     ]
   },
   "packageFolders": {
-    "/home/xilas/.nuget/packages/": {}
+    "C:\\Users\\JDorph\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/xilas/Complex-IT/Assignment4Tests/Assignment4Tests.csproj",
+      "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\Assignment4Tests\\Assignment4Tests.csproj",
       "projectName": "Assignment4Tests",
-      "projectPath": "/home/xilas/Complex-IT/Assignment4Tests/Assignment4Tests.csproj",
-      "packagesPath": "/home/xilas/.nuget/packages/",
-      "outputPath": "/home/xilas/Complex-IT/Assignment4Tests/obj/",
+      "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment4Tests\\Assignment4Tests.csproj",
+      "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
+      "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment4Tests\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/xilas/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj": {
-              "projectPath": "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj"
+            "E:\\Github\\Subproject2\\Complex-IT\\Assignment4\\Assignment4.csproj": {
+              "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\Assignment4\\Assignment4.csproj"
             }
           }
         }
@@ -1754,7 +1760,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -1795,7 +1801,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
