@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj": {}
+    "C:\\Users\\malth\\Documents\\Complex-IT\\WebApplication\\WebApplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj": {
+    "C:\\Users\\malth\\Documents\\Complex-IT\\WebApplication\\WebApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj",
+        "projectUniqueName": "C:\\Users\\malth\\Documents\\Complex-IT\\WebApplication\\WebApplication.csproj",
         "projectName": "WebApplication",
-        "projectPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj",
-        "packagesPath": "C:\\Users\\mto\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\obj\\",
+        "projectPath": "C:\\Users\\malth\\Documents\\Complex-IT\\WebApplication\\WebApplication.csproj",
+        "packagesPath": "C:\\Users\\malth\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\malth\\Documents\\Complex-IT\\WebApplication\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mto\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\malth\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"

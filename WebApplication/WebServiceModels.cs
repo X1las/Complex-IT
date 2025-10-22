@@ -11,7 +11,16 @@ public class TitleModel
     public string? TitleType { get; set; }
     public string Year { get; set; } = string.Empty;
     public double Rating { get; set; }
+    public string Poster { get; set; } = string.Empty;
     public string Url { get; set; } = string.Empty;
+}
+
+public class TitleModelShort // TitleModel DTO
+{
+    public string Id { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string Plot { get; set; } = string.Empty;
+    public string Poster { get; set; } = string.Empty;
 }
 
 public class UserModel // UserModel DTO
@@ -53,12 +62,12 @@ public class PagedResult<T> // Page Wrapper
 {
     public List<T> Items { get; set; } = new();    
     public int Total { get; set; } 
-    public int Page { get; set; }
-    public int PageSize { get; set; }
-    public int NumberOfPages => (int)Math.Ceiling((double)Total / PageSize);
-    public string? Previous { get; set; }
-    public string? Next { get; set; }
-    public string? Current { get; set; }
+    public int Page { get; set; } 
+    public int PageSize { get; set; } 
+    public int NumberOfPages => (int)Math.Ceiling((double)Total / PageSize); 
+    public string? Previous { get; set; } 
+    public string? Next { get; set; } 
+    public string? Current { get; set; } 
 }
 
 public class EpisodesModel
@@ -69,4 +78,9 @@ public class EpisodesModel
     public int? EpisodeNumber { get; set; }
     public string EpisodeTitle { get; set; } = string.Empty;
     public string Url { get; set; } = string.Empty;
+}
+public class BookmarkModel // BookmarkModel DTO
+{
+    public string Username { get; set; } = string.Empty;
+    public string TitleId { get; set; } = string.Empty;
 }
