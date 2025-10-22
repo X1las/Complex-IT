@@ -12,21 +12,23 @@ public class TitleController : ControllerBase
     private readonly DataService _dataService;
     private readonly LinkGenerator _generator;
     private readonly IMapper _mapper;
+    private readonly ImdbContext _context;
 
     public TitleController(
         DataService dataService,
         LinkGenerator generator,
-        IMapper mapper)
+        IMapper mapper,
+        ImdbContext context)
     {
         _dataService = dataService;
         _generator = generator;
         _mapper = mapper;
+        _context = context;
     }
 
-    [HttpGet("{id}", Name = nameof(GetTitle))]
     public IActionResult GetTitle(string id)
     {
-        var title = _dataService.GetTitleById(id);
+        var title = _dataService.GetTitleById(_context, id);
 
         if (title == null)
         {

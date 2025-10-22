@@ -33,7 +33,7 @@ public class DataService
         try
         {
             return context.Title
-                .Where(t => t.Title.Contains(titleName))
+                .Where(t => t.Title != null && t.Title.Contains(titleName))
                 .ToList();
         }
         catch (Exception)
@@ -84,7 +84,7 @@ public class DataService
         try
         {
             return context.Crew
-                .Where(c => c.Fullname.Contains(crewName))
+                .Where(c => c.Fullname != null && c.Fullname.Contains(crewName))
                 .ToList();
         }
         catch (Exception)
@@ -113,7 +113,7 @@ public class DataService
             .ToList();
 
         return context.Crew
-            .Where(c => crewIds.Contains(c.Id))
+            .Where(c => crewIds.Contains(c.CrewId))
             .ToList();
     }
 
@@ -124,6 +124,6 @@ public class DataService
             .ToList();
     }
 
-    
+
 
 }

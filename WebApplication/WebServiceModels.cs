@@ -21,3 +21,9 @@ public class CrewModel
     public string PersonId { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
 }
+
+public class SearchModel
+{
+    public string Query { get; set; } = string.Empty;
+}
+
