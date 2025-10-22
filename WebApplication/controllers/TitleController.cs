@@ -9,13 +9,13 @@ namespace WebServiceLayer;
 [ApiController]
 public class TitleController : ControllerBase
 {
-    private readonly DataService _dataService;
+    private readonly TitleDataService _dataService;
     private readonly LinkGenerator _generator;
     private readonly IMapper _mapper;
     private readonly ImdbContext _context;
 
     public TitleController(
-        DataService dataService,
+        TitleDataService dataService,
         LinkGenerator generator,
         IMapper mapper,
         ImdbContext context)
