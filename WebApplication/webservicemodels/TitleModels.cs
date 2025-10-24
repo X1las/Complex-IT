@@ -1,14 +1,10 @@
-using System;
-using DataServiceLayer;
+namespace WebServiceLayer.Models;
 
-namespace WebServiceLayer;
-
-// Data transfer objects (DTOs) for Web Service Layer
 public class TitleModel
 {
     public string Id { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
-    public string? TitleType { get; set; }
+    public string TitleType { get; set; } = string.Empty;
     public string Year { get; set; } = string.Empty;
     public double Rating { get; set; }
     public string Url { get; set; } = string.Empty;
@@ -43,8 +39,15 @@ public class TitleSearchModel
     public string Url { get; set; } = string.Empty;
 }
 
-public class TitleCrewModel // TitleCrewModel DTO
+public class TitleCrewModel
 {
-    public string TitleId { get; set; } = string.Empty;    
-    public IEnumerable <TitleCrewModel> ? CrewId { get; set; }
+    public string TitleId { get; set; } = string.Empty;
+    public IEnumerable<TitleCrewModel>? CrewId { get; set; }
+}
+
+public class TitleGenres
+{
+    public string TitleId { get; set; }
+    public string Genre { get; set; }
+    
 }

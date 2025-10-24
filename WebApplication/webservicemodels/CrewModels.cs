@@ -1,7 +1,4 @@
-using System;
-using DataServiceLayer;
-
-namespace WebServiceLayer;
+namespace WebServiceLayer.Models;
 public class CrewModel // CrewModelDetails DTO
 {
     public string CrewId { get; set; } = string.Empty;
@@ -14,7 +11,17 @@ public class CrewModel // CrewModelDetails DTO
 
 public class CrewTitlesModel // CrewTitlesModel DTO
 {
-    public IEnumerable<CrewTitlesModel>? CrewTitles { get; set; }
+    public string TitleId { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string? TitleType { get; set; }
+    public string Year { get; set; } = string.Empty;
+    public double Rating { get; set; }
+    public string Url { get; set; } = string.Empty;
+}
+
+public class CrewTitlesResponse
+{
+    public List<CrewTitlesResponse>? CrewTitles { get; set; }
 }
 
 public class CrewSearchModel // CrewSearchModel DTO

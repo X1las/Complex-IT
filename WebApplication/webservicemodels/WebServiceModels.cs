@@ -1,16 +1,27 @@
 using System;
 using DataServiceLayer;
 
-namespace WebServiceLayer;
+namespace WebServiceLayer.Models;
 
-public class PagedResult<T> // Page Wrapper
+public class PagedResultDto<T>
 {
-    public List<T> Items { get; set; } = new();    
-    public int Total { get; set; } 
-    public int Page { get; set; }
+    public int CurrentPage { get; set; }
     public int PageSize { get; set; }
-    public int NumberOfPages => (int)Math.Ceiling((double)Total / PageSize);
-    public string? Previous { get; set; }
-    public string? Next { get; set; }
-    public string? Current { get; set; }
+    public int TotalItems { get; set; }
+    public int TotalPages { get; set; }
+    public string? PreviousPage { get; set; }
+    public string? NextPage { get; set; }
+    public List<T> Items { get; set; } = new();
+}
+
+public class ErrorResponseDto
+{
+    public string Error { get; set; } = string.Empty;
+    public string? Details { get; set; }
+}
+
+public class SuccessResponseDto
+{
+    public string Message { get; set; } = string.Empty;
+    public object? Data { get; set; }
 }

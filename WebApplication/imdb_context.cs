@@ -65,6 +65,7 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Attends>().Property(x => x.TitleId).HasColumnName("title_id");
         modelBuilder.Entity<Attends>().Property(x => x.CrewId).HasColumnName("crew_id");
         modelBuilder.Entity<Attends>().Property(x => x.CrewRole).HasColumnName("crew_role");
+        modelBuilder.Entity<Attends>().Property(x => x.Job).HasColumnName("job");
         modelBuilder.Entity<Attends>().Property(x => x.CrewCharacter).HasColumnName("crew_character");
 
         // AttributeAlts mapping
@@ -81,6 +82,8 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Bookmarks>().ToTable("bookmarks");
         modelBuilder.Entity<Bookmarks>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<Bookmarks>().Property(x => x.TitleId).HasColumnName("title_id");
+        // Composity key for Bookmarks
+        modelBuilder.Entity<Bookmarks>().HasKey(b => new { b.Username, b.TitleId });
 
         // BoxofficeTitles mapping
         modelBuilder.Entity<BoxofficeTitles>().ToTable("boxoffice_title");
@@ -206,7 +209,5 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Titles>().Property(x => x.IsAdult).HasColumnName("isadult");
         modelBuilder.Entity<Titles>().Property(x => x.Rating).HasColumnName("rating");
         modelBuilder.Entity<Titles>().Property(x => x.Votes).HasColumnName("votes");
-        
-
     }
 }

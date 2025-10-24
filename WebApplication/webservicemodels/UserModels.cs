@@ -1,30 +1,31 @@
-using System;
-using DataServiceLayer;
+namespace WebServiceLayer.Models;
 
-namespace WebServiceLayer;
-
-public class UserModel // UserModel DTO
+// User Authentication & Profile
+public class UserRegistrationDto
 {
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
-    public List<Bookmarks> Bookmarks { get; set; } = new();
-    public List<UserRatings> Ratings { get; set; } = new();
-    public List<UserHistory> History { get; set; } = new();
+    public string? Email { get; set; }
 }
 
-public class UserHistory // UserHistory DTO
+public class UserLoginDto
 {
-    public string? TitleId { get; set; }
-    public DateTime Date { get; set; }  
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }
 
-public class UserRatings // UserRatings DTO
+public class UserLoginResponseDto
 {
-    public string? TitleId { get; set; }
-    public double Rating { get; set; }
+    public int UserId { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string? Token { get; set; }
 }
 
-public class UserBookmarks // Bookmarks DTO
+public class UserProfileDto
 {
-    public string? TitleId { get; set; }
+    public string? Url { get; set; }
+    public int Id { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
