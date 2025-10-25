@@ -8,11 +8,11 @@ namespace WebServiceLayer.Models;
 [Route("api/users/{username}/bookmarks")]
 public class BookmarksController : ControllerBase
 {
-    private readonly BookmarkServices _bookmarkService;
+    private readonly BookmarkDataService _bookmarkService;
 
     public BookmarksController()
     {
-        _bookmarkService = new BookmarkServices();
+        _bookmarkService = new BookmarkDataService();
     }
 
     // GET: api/users/{username}/bookmarks

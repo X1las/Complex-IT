@@ -19,9 +19,3 @@ public class ErrorResponseDto
     public string Error { get; set; } = string.Empty;
     public string? Details { get; set; }
 }
-
-public class SuccessResponseDto
-{
-    public string Message { get; set; } = string.Empty;
-    public object? Data { get; set; }
-}

@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataServiceLayer;
 
-public class TitleServices
+public class TitleDataService
 {
-    private readonly HistoryServices _historyServices;
+    private readonly UserHistoryDataService _historyServices;
 
-    public TitleServices()
+    public TitleDataService()
     {
-        _historyServices = new HistoryServices();
+        _historyServices = new UserHistoryDataService();
     }
 
     public (List<Titles> titles, int totalCount) GetTitles(int? userId = null)

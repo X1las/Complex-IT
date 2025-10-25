@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebServiceLayer.Models;
 namespace DataServiceLayer;
 
-public class CrewServices
+public class CrewDataService
 {
     public Crew? GetCrew(string id)
     {
@@ -50,11 +50,18 @@ public class CrewServices
 
         return db.Attend
             .Where(a => a.CrewId == crewId)
-            .Include(a => a.TitleId)
-            .Select(a => new CrewTitlesModel
-            {
-                
-            })
+            .Join(db.Title,
+                a => a.TitleId,
+                t => t.Id,
+                (a, t) => new CrewTitlesModel
+                {
+                    TitleId = t.Id,
+                    Title = t.Title ?? string.Empty,
+                    TitleType = t.TitleType,
+                    Year = t.Year ?? string.Empty,
+                    Rating = t.Rating,
+                    Url = $"/api/titles/{t.Id}"
+                })
             .ToList();
     }
 

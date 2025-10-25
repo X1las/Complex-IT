@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 namespace DataServiceLayer;
 
-public class BookmarkServices
+public class BookmarkDataService
 {
     public bool AddBookmark(string username, string titleId)
     {
@@ -48,7 +48,6 @@ public class BookmarkServices
         using var db = new ImdbContext();
         
         var query = db.Bookmark
-            .Include(b => b.TitleId)
             .Where(b => b.Username == username)
             .AsQueryable();
         
@@ -66,7 +65,6 @@ public class BookmarkServices
     {
         using var db = new ImdbContext();
         return db.Bookmark
-            .Include(b => b.TitleId)
             .FirstOrDefault(b => b.Username == username && b.TitleId == titleId);
     }
 

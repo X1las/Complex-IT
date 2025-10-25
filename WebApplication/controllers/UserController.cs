@@ -8,11 +8,11 @@ namespace WebServiceLayer;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly BookmarkServices _bookmarkService;
+    private readonly BookmarkDataService _bookmarkService;
 
     public UserController()
     {
-        _bookmarkService = new BookmarkServices();
+        _bookmarkService = new BookmarkDataService();
     }
 
     // GET: api/users/{username}/bookmarks

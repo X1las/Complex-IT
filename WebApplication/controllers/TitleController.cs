@@ -8,11 +8,11 @@ namespace WebServiceLayer;
 [ApiController]
 public class TitleController : ControllerBase
 {
-    private readonly TitleServices _titleService;
+    private readonly TitleDataService _titleService;
 
     public TitleController()
     {
-        _titleService = new TitleServices();
+        _titleService = new TitleDataService();
     }
 
     // GET: api/titles

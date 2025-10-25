@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataServiceLayer;
 
-public class HistoryServices
+public class UserHistoryDataService
 {
     public void RecordUserHistory(int userId, string titleId)
     {
@@ -25,7 +25,6 @@ public class HistoryServices
         using var db = new ImdbContext();
         
         var query = db.UsersHistory
-            .Include(h => h.TitleId)
             .Where(h => h.Username == userId.ToString())
             .AsQueryable();
         
@@ -75,7 +74,6 @@ public class HistoryServices
         using var db = new ImdbContext();
         
         return db.UsersHistory
-            .Include(h => h.TitleId)
             .Where(h => h.Username == userId.ToString())
             .OrderByDescending(h => h.Date)
             .Take(limit)
