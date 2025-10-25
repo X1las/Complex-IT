@@ -1,3 +1,4 @@
+<<<<<<< HEAD:WebApplication/WebServiceModels.cs
 using DataServiceLayer;
 
 namespace WebServiceLayer;
@@ -57,6 +58,9 @@ public class UserHistoryModel // UserHistoryModel DTO
     public string? TitleId { get; set; }
 }
 
+=======
+namespace WebServiceLayer.Models;
+>>>>>>> 55d726728e160f0aea6e9e86a63557d92a638ff6:WebApplication/webservicemodels/CrewModels.cs
 public class CrewModel // CrewModelDetails DTO
 {
     public string CrewId { get; set; } = string.Empty;
@@ -69,9 +73,34 @@ public class CrewModel // CrewModelDetails DTO
 
 public class CrewTitlesModel // CrewTitlesModel DTO
 {
+<<<<<<< HEAD:WebApplication/WebServiceModels.cs
     public string CrewId { get; set; } = string.Empty;
     public string TitleId { get; set; } = string.Empty;
     public string? CrewRole { get; set; }
     public string? Job { get; set; }
     public string? CrewCharacter { get; set; }
 }
+=======
+    public string TitleId { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string? TitleType { get; set; }
+    public string Year { get; set; } = string.Empty;
+    public double Rating { get; set; }
+    public string Url { get; set; } = string.Empty;
+}
+
+public class CrewTitlesResponse
+{
+    public List<CrewTitlesResponse>? CrewTitles { get; set; }
+}
+
+public class CrewSearchModel // CrewSearchModel DTO
+{
+    public string CrewId { get; set; } = string.Empty;
+    public string Fullname { get; set; } = string.Empty;
+    public string? BirthYear { get; set; }
+    public string? DeathYear { get; set; }
+    public double AverageRating { get; set; }
+    public string Url { get; set; } = string.Empty;
+}
+>>>>>>> 55d726728e160f0aea6e9e86a63557d92a638ff6:WebApplication/webservicemodels/CrewModels.cs

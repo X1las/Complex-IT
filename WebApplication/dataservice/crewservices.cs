@@ -1,30 +1,66 @@
+using Microsoft.EntityFrameworkCore;
+using WebServiceLayer.Models;
 namespace DataServiceLayer;
 
-public class CrewDataService
+public class CrewServices
 {
-    public Crew? GetCrewById(ImdbContext context, string crewId)
+    public Crew? GetCrew(string id)
     {
-        return context.Crew.FirstOrDefault(c => c.CrewId == crewId);
+        using var db = new ImdbContext();
+        return db.Crew
+            .FirstOrDefault(c => c.CrewId == id);
     }
 
-    public List<Crew>? GetCrewByName(ImdbContext context, string crewName)
+    public (List<Crew> crew, int totalCount) SearchCrew(
+        string query
+)
     {
+        using var db = new ImdbContext();
 
-        return context.Crew
-            .Where(c => c.Fullname != null && c.Fullname.Contains(crewName))
+        var crewQuery = db.Crew
+            .Where(c => c.Fullname!.ToLower().Contains(query.ToLower()))
+            .AsQueryable();
+
+        var totalCount = crewQuery.Count();
+
+        var results = crewQuery
+            .OrderBy(c => c.Fullname)
             .ToList();
 
+        return (results, totalCount);
     }
 
-    public List<Titles>? GetTitlesByCrewId(ImdbContext context, string crewId)
+    public (List<Crew> crew, int totalCount) GetCrew()
     {
-        var titleIds = context.Attend
-            .Where(tc => tc.CrewId == crewId)
-            .Select(tc => tc.TitleId)
+        using var db = new ImdbContext();
+
+        var query = db.Crew.AsQueryable();
+        var totalCount = query.Count();
+
+        var crew = query
+            .OrderBy(c => c.Fullname)
             .ToList();
 
-        return context.Title
-            .Where(t => titleIds.Contains(t.Id))
+        return (crew, totalCount);
+    }
+
+    public List<CrewTitlesModel> GetCrewTitles(string crewId)
+    {
+        using var db = new ImdbContext();
+
+        return db.Attend
+            .Where(a => a.CrewId == crewId)
+            .Include(a => a.TitleId)
+            .Select(a => new CrewTitlesModel
+            {
+                
+            })
             .ToList();
+    }
+
+    public bool CrewExists(string crewId)
+    {
+        using var db = new ImdbContext();
+        return db.Crew.Any(c => c.CrewId == crewId);
     }
 }

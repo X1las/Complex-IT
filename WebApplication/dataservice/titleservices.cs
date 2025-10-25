@@ -1,69 +1,133 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace DataServiceLayer;
 
-public class TitleDataService
+public class TitleServices
 {
+    private readonly HistoryServices _historyServices;
 
-    public Titles? GetTitleById(ImdbContext context, string titleId)
+    public TitleServices()
     {
-        return context.Title.FirstOrDefault(t => t.Id == titleId);
+        _historyServices = new HistoryServices();
     }
 
-    public List<Titles>? GetTitlesByName(ImdbContext context, string titleName)
+    public (List<Titles> titles, int totalCount) GetTitles(int? userId = null)
     {
-        return context.Title
-            .Where(t => t.Title != null && t.Title.Contains(titleName))
+        using var db = new ImdbContext();
+        
+        var query = db.Title.AsQueryable();
+        var totalCount = query.Count();
+        
+        var titles = query
+            .OrderBy(t => t.Title)
             .ToList();
+        
+        if (userId.HasValue)
+        {
+            foreach (var title in titles)
+            {
+                _historyServices.RecordUserHistory(userId.Value, title.Id);
+            }
+        }
+        
+        return (titles, totalCount);
     }
-
-    public List<Titles>? GetTitlesByGenre(ImdbContext context, string genre)
-    {
-        var titleIds = context.TitleGenre
-            .Where(tg => tg.Genre == genre)
-            .Select(tg => tg.TitleId)
-            .ToList();
-
-        return context.Title
-            .Where(t => titleIds.Contains(t.Id))
-            .ToList();
-    }
-
-    public List<Titles>? GetTitlesByYear(ImdbContext context, string year)
-    {
-        return context.Title
-            .Where(t => t.Year == year)
-            .ToList();
-    }
-
-    public List<Titles>? GetTitleByType(ImdbContext context, string titleType)
-    {
-        return context.Title
-            .Where(tg => tg.TitleType == titleType)
-            .ToList();
-    }
-
     
-    public ImdbRatings? GetTitleRatingById(ImdbContext context, string titleId)
+    public Titles? GetTitle(string id, int? userId = null)
     {
-        return context.ImdbRating.FirstOrDefault(tr => tr.TitleId == titleId);
+        using var db = new ImdbContext();
+        
+        var title = db.Title
+            .FirstOrDefault(t => t.Id == id);
+            
+        if (userId.HasValue && title != null)
+        {
+            _historyServices.RecordUserHistory(userId.Value, id);
+        }
+        
+        return title;
+    }
+    
+    public (List<Titles> results, int totalCount) SearchTitles(
+        string query, 
+        int? userId = null)
+    {
+        using var db = new ImdbContext();
+        
+        var titleQuery = db.Title
+            .Where(t => t.Title!.ToLower().Contains(query.ToLower()) || 
+                       (t.Plot != null && t.Plot.ToLower().Contains(query.ToLower())))
+            .AsQueryable();
+        
+        var totalCount = titleQuery.Count();
+        
+        var results = titleQuery
+            .OrderBy(t => t.Title)
+            .ToList();
+        
+        if (userId.HasValue)
+        {
+            foreach (var title in results)
+            {
+                _historyServices.RecordUserHistory(userId.Value, title.Id);
+            }
+        }
+        
+        return (results, totalCount);
+    }
+    
+    public List<TitleGenres> GetTitleGenres(string titleId)
+    {
+        using var db = new ImdbContext();
+        return db.TitleGenre
+            .Where(tg => tg.TitleId == titleId)
+            .ToList();
+    }
+    
+    public List<Attends> GetTitleCast(string titleId, int limit = 10)
+    {
+        using var db = new ImdbContext();
+        return db.Attend
+            .Where(a => a.TitleId == titleId)
+            .Take(limit)
+            .ToList();
     }
 
-    public List<Crew>? GetCrewByTitleId(ImdbContext context, string titleId)
+    public (List<Titles> titles, int totalCount) GetTitlesByGenre(
+        string genre)
     {
-        var crewIds = context.Attend
-            .Where(tc => tc.TitleId == titleId)
-            .Select(tc => tc.CrewId)
+        using var db = new ImdbContext();
+        
+        var query = db.TitleGenre
+            .Where(tg => tg.Genre == genre)
+            .Join(db.Title,
+                tg => tg.TitleId,
+                t => t.Id,
+                (tg, t) => t)
+            .AsQueryable();
+        
+        var totalCount = query.Count();
+        
+        var titles = query
+            .OrderBy(t => t.Title)
             .ToList();
-
-        return context.Crew
-            .Where(c => crewIds.Contains(c.CrewId))
-            .ToList();
+        
+        return (titles, totalCount);
     }
 
-    public List<Episodes>? GetEpisodesBySeriesId(ImdbContext context, string seriesId)
+    public bool TitleExists(string titleId)
     {
-        return context.Episodes
-            .Where(e => e.SeriesId == seriesId)
-            .ToList();
+        using var db = new ImdbContext();
+        return db.Title.Any(t => t.Id == titleId);
     }
 
+    public List<Episodes>? GetTitleEpisodes(string seriesId)
+    {
+        using var db = new ImdbContext();
+        return db.Episodes
+            .Where(te => te.SeriesId == seriesId)
+            .OrderBy(te => te.SeasonNumber)
+            .ThenBy(te => te.EpisodeNumber)
+            .ToList();
+    }
 }
