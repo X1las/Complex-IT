@@ -12,15 +12,16 @@ public class Program
 
         builder.WebHost.ConfigureKestrel(options =>
         {
-            options.ListenLocalhost(5001);
+            options.ListenLocalhost(5001); // HTTP only - no HTTPS certificate needed
         });
 
         // Register all your data services for dependency injection
+        builder.Services.AddScoped<UserHistoryDataService>(); // Add this first for dependencies
         builder.Services.AddScoped<UserDataService>();
-        builder.Services.AddScoped<TitleDataService>();      // If you have this
-        builder.Services.AddScoped<CrewDataService>();       // If you have this
-        builder.Services.AddScoped<BookmarkDataService>();   // If you have this
-        builder.Services.AddScoped<UserRatingDataService>();     // If you have this
+        builder.Services.AddScoped<TitleDataService>();
+        builder.Services.AddScoped<CrewDataService>();
+        builder.Services.AddScoped<BookmarkDataService>();
+        builder.Services.AddScoped<UserRatingDataService>();
         // Add Mapster for object mapping
         builder.Services.AddMapster();
         

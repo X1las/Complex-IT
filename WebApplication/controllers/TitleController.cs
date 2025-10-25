@@ -31,7 +31,7 @@ public class TitleController : ControllerBase
             Title = t.Title ?? string.Empty,
             TitleType = t.TitleType ?? string.Empty,
             Year = t.StartYear ?? string.Empty,
-            Rating = t.Rating,
+            Rating = t.Rating ?? 0,
             Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
 
@@ -60,7 +60,7 @@ public class TitleController : ControllerBase
             Title = title.Title ?? string.Empty,
             TitleType = title.TitleType ?? string.Empty,
             Year = title.StartYear ?? string.Empty,
-            Rating = title.Rating,
+            Rating = title.Rating ?? 0,
             Url = Url.Action(nameof(GetTitle), new { id = title.Id }) ?? string.Empty
         };
 
@@ -87,7 +87,7 @@ public class TitleController : ControllerBase
             Title = t.Title ?? string.Empty,
             TitleType = t.TitleType,
             Year = t.StartYear ?? string.Empty,
-            Rating = t.Rating,
+            Rating = t.Rating ?? 0,
             Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
 
@@ -154,7 +154,7 @@ public class TitleController : ControllerBase
             Title = t.Title ?? string.Empty,
             TitleType = t.TitleType,
             Year = t.StartYear ?? string.Empty,
-            Rating = t.Rating,
+            Rating = t.Rating ?? 0,
         }).ToList();
 
         return Ok(new

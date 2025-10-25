@@ -59,7 +59,7 @@ public class CrewDataService
                     Title = t.Title ?? string.Empty,
                     TitleType = t.TitleType,
                     Year = t.Year ?? string.Empty,
-                    Rating = t.Rating,
+                    Rating = t.Rating ?? 0,
                     Url = $"/api/titles/{t.Id}"
                 })
             .ToList();
