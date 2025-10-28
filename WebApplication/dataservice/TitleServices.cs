@@ -22,14 +22,6 @@ public class TitleDataService
             .OrderBy(t => t.Title)
             .ToList();
         
-        if (userId.HasValue)
-        {
-            foreach (var title in titles)
-            {
-                _historyServices.RecordUserHistory(userId.Value, title.Id);
-            }
-        }
-        
         return (titles, totalCount);
     }
     

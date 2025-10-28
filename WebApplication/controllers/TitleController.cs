@@ -18,13 +18,23 @@ public class TitleController : ControllerBase
     // GET: api/titles
     [HttpGet]
     public IActionResult GetTitles(
-        [FromQuery] int? userId = null)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var (titles, totalCount) = _titleService.GetTitles(userId);
+        var (titlesList, totalCount) = _titleService.GetTitles();
+        
+        // Calculate pagination
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        
+        var titles = titlesList
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
         if (titles == null || titles.Count == 0)
-            return NotFound(new { message = "No titles found" });
+            return NotFound(new ErrorResponseDto { Error = "No titles found" });
 
+        // Creating Title DTO
         var titleDtos = titles.Select(t => new TitleModel
         {
             Id = t.Id,
@@ -34,12 +44,18 @@ public class TitleController : ControllerBase
             Rating = t.Rating ?? 0,
             Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
-
-        return Ok(new
+        
+        // Converting Title DTO to Paginated Response
+        var response = new PagedResultDto<TitleModel>
         {
-            data = titleDtos,
-            totalCount,
-        });
+            Items = titleDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return Ok(response);
     }
 
     // GET: api/titles/{id}
