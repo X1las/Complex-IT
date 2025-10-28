@@ -19,9 +19,21 @@ public class TitleController : ControllerBase
     [HttpGet]
     public IActionResult GetTitles(
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? search = null)
     {
-        var (titlesList, totalCount) = _titleService.GetTitles();
+        List<Titles> titlesList;
+        int totalCount;
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            (titlesList, totalCount) = _titleService.SearchTitles(search);
+        }
+        else
+        {
+            (titlesList, totalCount) = _titleService.GetTitles();
+        }
+        
         
         // Calculate pagination
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -81,53 +93,6 @@ public class TitleController : ControllerBase
         };
 
         return Ok(titleDto);
-    }
-
-    // GET: api/titles/search
-    [HttpGet("search")]
-    public IActionResult SearchTitles(
-        [FromQuery] string query,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
-    {
-        if (string.IsNullOrWhiteSpace(query))
-            return BadRequest(new ErrorResponseDto { Error = "Search query is required" });
-
-        var (results, totalCount) = _titleService.SearchTitles(query);
-        
-        // Calculate pagination
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-        
-        var paginatedResults = results
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-
-        if (paginatedResults == null || paginatedResults.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No titles found matching the search query" });
-
-        // Creating Search DTO
-        var searchDtos = paginatedResults.Select(t => new TitleSearchModel
-        {
-            Id = t.Id,
-            Title = t.Title ?? string.Empty,
-            TitleType = t.TitleType,
-            Year = t.StartYear ?? string.Empty,
-            Rating = t.Rating ?? 0,
-            Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
-        }).ToList();
-
-        // Converting Search DTO to Paginated Response
-        var response = new PagedResultDto<TitleSearchModel>
-        {
-            Items = searchDtos,
-            CurrentPage = page,
-            PageSize = pageSize,
-            TotalItems = totalCount,
-            TotalPages = totalPages,
-        };
-
-        return Ok(response);
     }
 
     // GET: api/titles/{id}/genres

@@ -11,7 +11,7 @@ public class TitleDataService
         _historyServices = new UserHistoryDataService();
     }
 
-    public (List<Titles> titles, int totalCount) GetTitles(int? userId = null)
+    public (List<Titles> titles, int totalCount) GetTitles()
     {
         using var db = new ImdbContext();
         
@@ -24,23 +24,22 @@ public class TitleDataService
         
         return (titles, totalCount);
     }
-    
+
     public Titles? GetTitle(string id, int? userId = null)
     {
         using var db = new ImdbContext();
-        
+
         var title = db.Title
             .FirstOrDefault(t => t.Id == id);
-            
+
         if (userId.HasValue && title != null)
         {
             _historyServices.RecordUserHistory(userId.Value, id);
         }
-        
+
         return title;
     }
-    
-    public (List<Titles> results, int totalCount) SearchTitles(
+    public (List<Titles> titles, int totalCount) SearchTitles(
         string query)
     {
         using var db = new ImdbContext();
