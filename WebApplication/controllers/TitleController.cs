@@ -87,17 +87,27 @@ public class TitleController : ControllerBase
     [HttpGet("search")]
     public IActionResult SearchTitles(
         [FromQuery] string query,
-        [FromQuery] int? userId = null)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(query))
-            return BadRequest(new { message = "Search query is required" });
+            return BadRequest(new ErrorResponseDto { Error = "Search query is required" });
 
-        var (results, totalCount) = _titleService.SearchTitles(query, userId);
+        var (results, totalCount) = _titleService.SearchTitles(query);
+        
+        // Calculate pagination
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        
+        var paginatedResults = results
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-        if (results == null || results.Count == 0)
-            return NotFound(new { message = "No titles found matching the search query" });
+        if (paginatedResults == null || paginatedResults.Count == 0)
+            return NotFound(new ErrorResponseDto { Error = "No titles found matching the search query" });
 
-        var searchDtos = results.Select(t => new TitleSearchModel
+        // Creating Search DTO
+        var searchDtos = paginatedResults.Select(t => new TitleSearchModel
         {
             Id = t.Id,
             Title = t.Title ?? string.Empty,
@@ -107,11 +117,17 @@ public class TitleController : ControllerBase
             Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
 
-        return Ok(new
+        // Converting Search DTO to Paginated Response
+        var response = new PagedResultDto<TitleSearchModel>
         {
-            data = searchDtos,
-            query
-        });
+            Items = searchDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return Ok(response);
     }
 
     // GET: api/titles/{id}/genres

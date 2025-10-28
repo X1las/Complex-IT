@@ -41,8 +41,7 @@ public class TitleDataService
     }
     
     public (List<Titles> results, int totalCount) SearchTitles(
-        string query, 
-        int? userId = null)
+        string query)
     {
         using var db = new ImdbContext();
         
@@ -56,14 +55,6 @@ public class TitleDataService
         var results = titleQuery
             .OrderBy(t => t.Title)
             .ToList();
-        
-        if (userId.HasValue)
-        {
-            foreach (var title in results)
-            {
-                _historyServices.RecordUserHistory(userId.Value, title.Id);
-            }
-        }
         
         return (results, totalCount);
     }
