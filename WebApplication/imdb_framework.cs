@@ -111,10 +111,10 @@ public class Regions
     public string? Language { get; set; }
 }
 
-public class RunTimes
+public class Runtimes
 {
     public  string TitleId { get; set; }
-    public string? RunTime { get; set; }
+    public string? Runtime { get; set; }
 }
 
 public class Series

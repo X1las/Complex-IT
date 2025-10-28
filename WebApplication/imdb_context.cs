@@ -20,7 +20,7 @@ public class ImdbContext : DbContext
     public DbSet<MaturityRatings> MaturityRating { get; set; }
     public DbSet<Productions> Production { get; set; }
     public DbSet<Regions> Region { get; set; }
-    public DbSet<RunTimes> ProductionTitle { get; set; }
+    public DbSet<Runtimes> Runtime { get; set; }
     public DbSet<Series> Series { get; set; }
     public DbSet<TitleAwards> TitleAward { get; set; }
     public DbSet<TitleGenres> TitleGenre { get; set; }
@@ -155,11 +155,11 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Regions>().Property(x => x.Region).HasColumnName("region");
         modelBuilder.Entity<Regions>().Property(x => x.Language).HasColumnName("language");
 
-        // RunTimes mapping
-        modelBuilder.Entity<RunTimes>().ToTable("runtimes");
-        modelBuilder.Entity<RunTimes>().HasKey(rt => rt.TitleId);
-        modelBuilder.Entity<RunTimes>().Property(x => x.TitleId).HasColumnName("title_id");
-        modelBuilder.Entity<RunTimes>().Property(x => x.RunTime).HasColumnName("runtime");
+        // Runtimes mapping
+        modelBuilder.Entity<Runtimes>().ToTable("runtimes");
+        modelBuilder.Entity<Runtimes>().HasKey(rt => rt.TitleId);
+        modelBuilder.Entity<Runtimes>().Property(x => x.TitleId).HasColumnName("title_id");
+        modelBuilder.Entity<Runtimes>().Property(x => x.Runtime).HasColumnName("runtime");
 
         // Series mapping
         modelBuilder.Entity<Series>().ToTable("series");
