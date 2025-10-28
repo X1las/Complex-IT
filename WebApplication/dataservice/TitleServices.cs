@@ -2,16 +2,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataServiceLayer;
 
-public class TitleServices
+public class TitleDataService
 {
-    private readonly HistoryServices _historyServices;
+    private readonly UserHistoryDataService _historyServices;
 
-    public TitleServices()
+    public TitleDataService()
     {
-        _historyServices = new HistoryServices();
+        _historyServices = new UserHistoryDataService();
     }
 
-    public (List<Titles> titles, int totalCount) GetTitles(int? userId = null)
+    public (List<Titles> titles, int totalCount) GetTitles()
     {
         using var db = new ImdbContext();
         
@@ -22,35 +22,25 @@ public class TitleServices
             .OrderBy(t => t.Title)
             .ToList();
         
-        if (userId.HasValue)
-        {
-            foreach (var title in titles)
-            {
-                _historyServices.RecordUserHistory(userId.Value, title.Id);
-            }
-        }
-        
         return (titles, totalCount);
     }
-    
+
     public Titles? GetTitle(string id, int? userId = null)
     {
         using var db = new ImdbContext();
-        
+
         var title = db.Title
             .FirstOrDefault(t => t.Id == id);
-            
+
         if (userId.HasValue && title != null)
         {
             _historyServices.RecordUserHistory(userId.Value, id);
         }
-        
+
         return title;
     }
-    
-    public (List<Titles> results, int totalCount) SearchTitles(
-        string query, 
-        int? userId = null)
+    public (List<Titles> titles, int totalCount) SearchTitles(
+        string query)
     {
         using var db = new ImdbContext();
         
@@ -65,14 +55,6 @@ public class TitleServices
             .OrderBy(t => t.Title)
             .ToList();
         
-        if (userId.HasValue)
-        {
-            foreach (var title in results)
-            {
-                _historyServices.RecordUserHistory(userId.Value, title.Id);
-            }
-        }
-        
         return (results, totalCount);
     }
     
@@ -84,12 +66,11 @@ public class TitleServices
             .ToList();
     }
     
-    public List<Attends> GetTitleCast(string titleId, int limit = 10)
+    public List<Attends> GetTitleCast(string titleId)
     {
         using var db = new ImdbContext();
         return db.Attend
             .Where(a => a.TitleId == titleId)
-            .Take(limit)
             .ToList();
     }
 
@@ -114,13 +95,6 @@ public class TitleServices
         
         return (titles, totalCount);
     }
-
-    public bool TitleExists(string titleId)
-    {
-        using var db = new ImdbContext();
-        return db.Title.Any(t => t.Id == titleId);
-    }
-
     public List<Episodes>? GetTitleEpisodes(string seriesId)
     {
         using var db = new ImdbContext();
@@ -128,6 +102,16 @@ public class TitleServices
             .Where(te => te.SeriesId == seriesId)
             .OrderBy(te => te.SeasonNumber)
             .ThenBy(te => te.EpisodeNumber)
+            .ToList();
+    }
+
+    public List<string> GetAllGenres()
+    {
+        using var db = new ImdbContext();
+        return db.TitleGenre
+            .Select(tg => tg.Genre!)
+            .Distinct()
+            .OrderBy(g => g)
             .ToList();
     }
 }

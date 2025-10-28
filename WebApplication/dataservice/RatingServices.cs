@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 namespace DataServiceLayer;
 
-public class RatingServices
+public class UserRatingDataService
 {
     public bool AddOrUpdateRating(int userId, string titleId, int rating)
     {
@@ -55,7 +55,6 @@ public class RatingServices
         using var db = new ImdbContext();
         
         var query = db.UsersRating
-            .Include(r => r.TitleId)
             .Where(r => r.Username == userId.ToString())
             .AsQueryable();
         
@@ -72,7 +71,6 @@ public class RatingServices
     {
         using var db = new ImdbContext();
         return db.UsersRating
-            .Include(r => r.TitleId)
             .FirstOrDefault(r => r.Username == userId.ToString() && r.TitleId == titleId);
     }
 
