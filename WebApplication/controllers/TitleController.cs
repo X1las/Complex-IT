@@ -1,5 +1,6 @@
 using DataServiceLayer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebServiceLayer.Models;
 
 namespace WebServiceLayer;
@@ -81,14 +82,22 @@ public class TitleController : ControllerBase
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
-        var titleDto = new TitleModelShort
+        var titleDto = new TitleModel
         {
             Id = title.Id,
             Title = title.Title ?? string.Empty,
             TitleType = title.TitleType ?? string.Empty,
             Year = title.StartYear ?? string.Empty,
             Rating = title.Rating ?? 0,
-            Url = Url.Action(nameof(GetTitle), new { id = title.Id }) ?? string.Empty
+            Plot = title.Plot ?? string.Empty,
+            PosterUrl = _titleService.GetTitlePoster(title.Id)?.Poster ?? string.Empty,
+            WebsiteUrl = _titleService.GetTitleWebsite(title.Id)?.Website ?? string.Empty,
+            StartYear = title.StartYear ?? string.Empty,
+            EndYear = title.EndYear ?? string.Empty,
+            ReleaseDate = title.Release_Date ?? string.Empty,
+            RuntimeMinutes = _titleService.GetTitleRuntime(title.Id)?.Runtime ?? string.Empty,
+            IsAdult = title.IsAdult.HasValue ? (title.IsAdult.Value ? "Yes" : "No") : "Unknown",
+            Votes = title.Votes ?? 0
         };
 
         return Ok(titleDto);
@@ -114,9 +123,9 @@ public class TitleController : ControllerBase
         return Ok(genres);
     }
 
-    // GET: api/titles/{id}/cast
-    [HttpGet("{id}/cast")]
-    public IActionResult GetTitleCast(string id,
+    // GET: api/titles/{id}/crew
+    [HttpGet("{id}/crew")]
+    public IActionResult GetTitleCrew(string id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
@@ -128,7 +137,7 @@ public class TitleController : ControllerBase
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
-        var cast = _titleService.GetTitleCast(id);
+        var cast = _titleService.GetTitleCrew(id);
 
         if (cast == null || cast.Count == 0)
             return NotFound(new ErrorResponseDto { Error = "No cast found for this title" });
@@ -164,6 +173,7 @@ public class TitleController : ControllerBase
         var genres = _titleService.GetAllGenres();
         return Ok(genres);
     }
+
     [HttpGet("genres/{genre}")]
     public IActionResult GetTitlesBySpecificGenre(string genre,
         [FromQuery] int page = 1,
@@ -246,6 +256,79 @@ public class TitleController : ControllerBase
         var response = new PagedResultDto<TitleEpisodesModel>
         {
             Items = paginatedEpisodes,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}/alternates")]
+    public IActionResult GetAlternateTitles(string id,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        var alternateTitles = _titleService.GetTitleAlternates(id);
+
+        if (alternateTitles == null || alternateTitles.Count == 0)
+            return NotFound(new ErrorResponseDto { Error = "No alternate titles found" });
+
+        var totalCount = alternateTitles.Count;
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        var paginatedTitles = alternateTitles
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+        
+        var titleDtos = paginatedTitles.Select(t => new TitleAltsModel
+        {
+            AltsTitle = t.AltsTitle ?? string.Empty,
+            Types = t.Types,
+            IsOriginalTitle = t.IsOriginalTitle
+        }).ToList();
+
+        var response = new PagedResultDto<TitleAltsModel>
+        {
+            Items = titleDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}/regions")]
+    public IActionResult GetTitleRegions(string id,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        var titleRegions = _titleService.GetTitleRegions(id);
+
+        if (titleRegions == null || titleRegions.Count == 0)
+            return NotFound(new ErrorResponseDto { Error = "No regions found for this title" });
+
+        var totalCount = titleRegions.Count;
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        var paginatedRegions = titleRegions
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var regionDtos = paginatedRegions.Select(r => new TitleRegionModel
+        {
+            Region = r.Region ?? string.Empty,
+            Language = _titleService.GetTitleRegionDetails(r.Region)?.Language ?? string.Empty
+        }).ToList();
+
+        var response = new PagedResultDto<TitleRegionModel>
+        {
+            Items = regionDtos,
             CurrentPage = page,
             PageSize = pageSize,
             TotalItems = totalCount,

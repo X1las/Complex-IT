@@ -66,7 +66,7 @@ public class TitleDataService
             .ToList();
     }
     
-    public List<Attends> GetTitleCast(string titleId)
+    public List<Attends> GetTitleCrew(string titleId)
     {
         using var db = new ImdbContext();
         return db.Attend
@@ -112,6 +112,50 @@ public class TitleDataService
             .Select(tg => tg.Genre!)
             .Distinct()
             .OrderBy(g => g)
+            .ToList();
+    }
+
+    public TitlePosters? GetTitlePoster(string titleId)
+    {
+        using var db = new ImdbContext();
+        return db.TitlePoster
+            .FirstOrDefault(tp => tp.TitleId == titleId);
+    }
+
+    public TitleWebsites? GetTitleWebsite(string titleId)
+    {
+        using var db = new ImdbContext();
+        return db.TitleWebsite
+            .FirstOrDefault(tw => tw.TitleId == titleId);
+    }
+
+    public Runtimes? GetTitleRuntime(string titleId)
+    {
+        using var db = new ImdbContext();
+        return db.Runtime
+            .FirstOrDefault(tr => tr.TitleId == titleId);
+    }
+
+    public List<TitleRegions>? GetTitleRegions(string titleId)
+    {
+        using var db = new ImdbContext();
+        return db.TitleRegion
+            .Where(tr => tr.TitleId == titleId)
+            .ToList();
+    }
+
+    public Regions? GetTitleRegionDetails(string region)
+    {
+        using var db = new ImdbContext();
+        return db.Region
+            .FirstOrDefault(r => r.Region == region);
+    }
+
+    public List<AlternateTitles>? GetTitleAlternates(string titleId)
+    {
+        using var db = new ImdbContext();
+        return db.AlternateTitle
+            .Where(ta => ta.TitleId == titleId)
             .ToList();
     }
 }
