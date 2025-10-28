@@ -10,9 +10,9 @@ public class TitleController : ControllerBase
 {
     private readonly TitleDataService _titleService;
 
-    public TitleController()
+    public TitleController(TitleDataService titleService)
     {
-        _titleService = new TitleDataService();
+        _titleService = titleService;
     }
 
     // GET: api/titles
@@ -34,7 +34,6 @@ public class TitleController : ControllerBase
             (titlesList, totalCount) = _titleService.GetTitles();
         }
         
-        
         // Calculate pagination
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
         
@@ -47,7 +46,7 @@ public class TitleController : ControllerBase
             return NotFound(new ErrorResponseDto { Error = "No titles found" });
 
         // Creating Title DTO
-        var titleDtos = titles.Select(t => new TitleModel
+        var titleDtos = titles.Select(t => new TitleModelShort
         {
             Id = t.Id,
             Title = t.Title ?? string.Empty,
@@ -58,7 +57,7 @@ public class TitleController : ControllerBase
         }).ToList();
         
         // Converting Title DTO to Paginated Response
-        var response = new PagedResultDto<TitleModel>
+        var response = new PagedResultDto<TitleModelShort>
         {
             Items = titleDtos,
             CurrentPage = page,
@@ -72,17 +71,17 @@ public class TitleController : ControllerBase
 
     // GET: api/titles/{id}
     [HttpGet("{id}")]
-    public IActionResult GetTitle(string id, [FromQuery] int? userId = null)
+    public IActionResult GetTitle(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
-            return BadRequest(new { message = "Title ID is required" });
+            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" }); // Fix 4: Use ErrorResponseDto consistently
 
-        var title = _titleService.GetTitle(id, userId);
+        var title = _titleService.GetTitle(id);
 
         if (title == null)
-            return NotFound(new { message = "Title not found" });
+            return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
-        var titleDto = new TitleModel
+        var titleDto = new TitleModelShort
         {
             Id = title.Id,
             Title = title.Title ?? string.Empty,
@@ -100,82 +99,132 @@ public class TitleController : ControllerBase
     public IActionResult GetTitleGenres(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
-            return BadRequest(new { message = "Title ID is required" });
+            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        if (!_titleService.TitleExists(id))
-            return NotFound(new { message = "Title not found" });
+        var title = _titleService.GetTitle(id);
+
+        if (title == null)
+            return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
         var genres = _titleService.GetTitleGenres(id);
 
         if (genres == null || genres.Count == 0)
-            return NotFound(new { message = "No genres found for this title" });
+            return NotFound(new ErrorResponseDto { Error = "No genres found for this title" });
 
-        return Ok(new { data = genres });
+        return Ok(genres);
     }
 
     // GET: api/titles/{id}/cast
     [HttpGet("{id}/cast")]
-    public IActionResult GetTitleCast(string id, [FromQuery] int limit = 10)
+    public IActionResult GetTitleCast(string id,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(id))
-            return BadRequest(new { message = "Title ID is required" });
+            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        if (!_titleService.TitleExists(id))
-            return NotFound(new { message = "Title not found" });
+        var title = _titleService.GetTitle(id);
 
-        var cast = _titleService.GetTitleCast(id, limit);
+        if (title == null)
+            return NotFound(new ErrorResponseDto { Error = "Title not found" });
+
+        var cast = _titleService.GetTitleCast(id);
 
         if (cast == null || cast.Count == 0)
-            return NotFound(new { message = "No cast found for this title" });
+            return NotFound(new ErrorResponseDto { Error = "No cast found for this title" });
 
-        return Ok(new { data = cast });
+        var totalCount = cast.Count;
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        var paginatedCast = cast
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(c => new TitleCrewModel
+            {
+                CrewId = c.CrewId,
+                TitleId = c.TitleId
+            })
+            .ToList();
+
+        var response = new PagedResultDto<TitleCrewModel>
+        {
+            Items = paginatedCast,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return Ok(response);
     }
 
-    // GET: api/titles/genre/{genre}
-    [HttpGet("genre/{genre}")]
-    public IActionResult GetTitlesByGenre(
-        string genre
-        )
+    // GET: api/titles/genres
+    [HttpGet("genres")]
+    public IActionResult GetGenres()
     {
+        var genres = _titleService.GetAllGenres();
+        return Ok(genres);
+    }
+    [HttpGet("genres/{genre}")]
+    public IActionResult GetTitlesBySpecificGenre(string genre,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        // Add validation
         if (string.IsNullOrWhiteSpace(genre))
-            return BadRequest(new { message = "Genre is required" });
+            return BadRequest(new ErrorResponseDto { Error = "Genre is required" });
 
         var (titles, totalCount) = _titleService.GetTitlesByGenre(genre);
 
         if (titles == null || titles.Count == 0)
-            return NotFound(new { message = $"No titles found for genre '{genre}'" });
+            return NotFound(new ErrorResponseDto { Error = $"No titles found for genre '{genre}'" });
 
-        var titleDtos = titles.Select(t => new TitleModelShort
+        
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        var paginatedTitles = titles
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var titleDtos = paginatedTitles.Select(t => new TitleModelShort
         {
             Id = t.Id,
             Title = t.Title ?? string.Empty,
-            TitleType = t.TitleType,
+            TitleType = t.TitleType ?? string.Empty,
             Year = t.StartYear ?? string.Empty,
             Rating = t.Rating ?? 0,
+            Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
 
-        return Ok(new
+        var response = new PagedResultDto<TitleModelShort>
         {
-            data = titleDtos,
-            totalCount,
-            genre
-        });
+            Items = titleDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return Ok(response);
     }
 
     // GET: api/titles/{id}/episodes
     [HttpGet("{id}/episodes")]
-    public IActionResult GetTitleEpisodes(string id)
+    public IActionResult GetTitleEpisodes(string id,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(id))
-            return BadRequest(new { message = "Series ID is required" });
+            return BadRequest(new ErrorResponseDto { Error = "Series ID is required" });
 
-        if (!_titleService.TitleExists(id))
-            return NotFound(new { message = "Series not found" });
+        var title = _titleService.GetTitle(id);
+
+        if (title == null)
+            return NotFound(new ErrorResponseDto { Error = "Series not found" });
 
         var episodes = _titleService.GetTitleEpisodes(id);
 
         if (episodes == null || episodes.Count == 0)
-            return NotFound(new { message = "No episodes found for this series" });
+            return NotFound(new ErrorResponseDto { Error = "No episodes found for this title" });
 
         var episodeDtos = episodes.Select(e => new TitleEpisodesModel
         {
@@ -183,10 +232,26 @@ public class TitleController : ControllerBase
             SeriesId = e.SeriesId ?? string.Empty,
             SeasonNumber = e.SeasonNumber,
             EpisodeNumber = e.EpisodeNumber,
-            EpisodeTitle = e.EpisodeId, // You may need to join with Titles table to get actual title
+            EpisodeTitle = _titleService.GetTitle(e.EpisodeId)?.Title ?? string.Empty,
             Url = Url.Action(nameof(GetTitle), new { id = e.EpisodeId }) ?? string.Empty
         }).ToList();
 
-        return Ok(new { data = episodeDtos });
+        var totalCount = episodeDtos.Count;
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        var paginatedEpisodes = episodeDtos
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var response = new PagedResultDto<TitleEpisodesModel>
+        {
+            Items = paginatedEpisodes,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return Ok(response);
     }
 }

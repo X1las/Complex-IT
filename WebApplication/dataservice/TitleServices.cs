@@ -66,12 +66,11 @@ public class TitleDataService
             .ToList();
     }
     
-    public List<Attends> GetTitleCast(string titleId, int limit = 10)
+    public List<Attends> GetTitleCast(string titleId)
     {
         using var db = new ImdbContext();
         return db.Attend
             .Where(a => a.TitleId == titleId)
-            .Take(limit)
             .ToList();
     }
 
@@ -96,13 +95,6 @@ public class TitleDataService
         
         return (titles, totalCount);
     }
-
-    public bool TitleExists(string titleId)
-    {
-        using var db = new ImdbContext();
-        return db.Title.Any(t => t.Id == titleId);
-    }
-
     public List<Episodes>? GetTitleEpisodes(string seriesId)
     {
         using var db = new ImdbContext();
@@ -110,6 +102,16 @@ public class TitleDataService
             .Where(te => te.SeriesId == seriesId)
             .OrderBy(te => te.SeasonNumber)
             .ThenBy(te => te.EpisodeNumber)
+            .ToList();
+    }
+
+    public List<string> GetAllGenres()
+    {
+        using var db = new ImdbContext();
+        return db.TitleGenre
+            .Select(tg => tg.Genre!)
+            .Distinct()
+            .OrderBy(g => g)
             .ToList();
     }
 }
