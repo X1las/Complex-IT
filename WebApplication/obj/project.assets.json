@@ -1067,11 +1067,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+      "projectUniqueName": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplication\\WebApplication.csproj",
       "projectName": "WebApplication",
-      "projectPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\WebApplication.csproj",
+      "projectPath": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplication\\WebApplication.csproj",
       "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
-      "outputPath": "E:\\Github\\Subproject2\\Complex-IT\\WebApplication\\obj\\",
+      "outputPath": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplication\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
