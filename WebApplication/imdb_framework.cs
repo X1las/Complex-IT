@@ -4,9 +4,6 @@ public class Users
 {
     public string Username { get; set; }
     public string Pswd { get; set; }
-    public List<UserRatings>? UserRatingsDetails { get; set; }
-    public List<UserHistory>? UserHistoryDetails { get; set; }
-    public List<Bookmarks>? BookmarksDetails { get; set; }
 }
 
 public class UserRatings
@@ -114,10 +111,10 @@ public class Regions
     public string? Language { get; set; }
 }
 
-public class RunTimes
+public class Runtimes
 {
     public  string TitleId { get; set; }
-    public string? RunTime { get; set; }
+    public string? Runtime { get; set; }
 }
 
 public class Series
@@ -182,7 +179,7 @@ public class AlternateTitles
 
 public class Titles
 {
-    public  string Id { get; set; }
+    public string Id { get; set; }
     public string? Title { get; set; }
     public string? TitleType { get; set; }
     public string? Plot { get; set; }
@@ -191,8 +188,8 @@ public class Titles
     public string? EndYear { get; set; }
     public string? Release_Date { get; set; }
     public string? OriginalTitle { get; set; }
-    public bool IsAdult { get; set; }
-    public double Rating { get; set; }
-    public int Votes { get; set; }
+    public bool? IsAdult { get; set; }
+    public double? Rating { get; set; }
+    public int? Votes { get; set; }
 }
 
