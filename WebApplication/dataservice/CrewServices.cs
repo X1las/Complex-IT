@@ -11,19 +11,22 @@ public class CrewDataService
             .FirstOrDefault(c => c.CrewId == id);
     }
 
-    public (List<Crew> crew, int totalCount) SearchCrew(
-        string query
-)
+    public (List<Crew>? crew, int totalCount) SearchCrew(
+        string query,
+        List<Crew> crew)
     {
         using var db = new ImdbContext();
 
-        var crewQuery = db.Crew
-            .Where(c => c.Fullname!.ToLower().Contains(query.ToLower()))
-            .AsQueryable();
+        var filteredQuery = crew.AsQueryable();
 
-        var totalCount = crewQuery.Count();
+        if (!string.IsNullOrEmpty(query))
+        {
+            filteredQuery = filteredQuery.Where(c =>
+                c.Fullname != null && c.Fullname.Contains(query));
+        }
 
-        var results = crewQuery
+        var totalCount = filteredQuery.Count();
+        var results = filteredQuery
             .OrderBy(c => c.Fullname)
             .ToList();
 
@@ -44,25 +47,27 @@ public class CrewDataService
         return (crew, totalCount);
     }
 
-    public List<CrewTitlesModel> GetCrewTitles(string crewId)
+    public (List<CrewTitlesModel>? titles, int totalCount) GetCrewTitles(string crewId)
     {
         using var db = new ImdbContext();
 
-        return db.Attend
-            .Where(a => a.CrewId == crewId)
-            .Join(db.Title,
-                a => a.TitleId,
-                t => t.Id,
-                (a, t) => new CrewTitlesModel
-                {
-                    TitleId = t.Id,
-                    Title = t.Title ?? string.Empty,
-                    TitleType = t.TitleType,
-                    Year = t.Year ?? string.Empty,
-                    Rating = t.Rating ?? 0,
-                    Url = $"/api/titles/{t.Id}"
-                })
-            .ToList();
+        var query = from attend in db.Attend
+                    join title in db.Title on attend.TitleId equals title.Id
+                    where attend.CrewId == crewId
+                    select new CrewTitlesModel
+                    {
+                        TitleId = title.Id,
+                        Title = title.OriginalTitle ?? string.Empty,
+                        TitleType = title.TitleType,
+                        Year = title.StartYear ?? string.Empty,
+                        Rating = title.Rating ?? 0,
+                        Url = $"/titles/{title.Id}"
+                    };
+
+        var titles = query.ToList();
+        var totalCount = titles.Count;
+
+        return (titles, totalCount);
     }
 
     public bool CrewExists(string crewId)

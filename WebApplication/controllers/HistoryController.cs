@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebServiceLayer;
 
-[Route("api/users/")]
+[Route("api/users/{username}/history")]
 [ApiController]
-public class UserController : ControllerBase
+public class HistoryController : ControllerBase
 {
     private readonly ImdbContext _context;
 
-    public UserController(ImdbContext context)
+    public HistoryController(ImdbContext context)
     {
         _context = context;
     }
