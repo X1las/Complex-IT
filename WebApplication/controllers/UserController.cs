@@ -12,7 +12,7 @@ public class UserController : ControllerBase
     private readonly ImdbContext _context;
     private readonly IPasswordHasher<User> _passwordHasher;
 
-    public UserController(ImdbContext context,IPasswordHasher<User> passwordHasher)
+    public UserController(ImdbContext context, IPasswordHasher<User> passwordHasher)
     {
         _context = context;
         _passwordHasher = passwordHasher;
@@ -24,7 +24,7 @@ public class UserController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
         {
-            return BadRequest(); 
+            return BadRequest();
         }
         var username = model.Username.Trim();
         var existingUser = await _context.Users.AnyAsync(u => u.Username == model.Username);
@@ -69,17 +69,17 @@ public class UserController : ControllerBase
 
 
     // POST: api/users/login
- [HttpPost("login")]
+    [HttpPost("login")]
     public IActionResult Login(UserLoginModel model)
     {
         var user = _dataService.GetUser(model.Username);
 
-        if(user == null)
+        if (user == null)
         {
             return BadRequest();
         }
 
-        if(!_hashing.Verify(model.Password, user.Password, user.Salt))
+        if (!_hashing.Verify(model.Password, user.Password, user.Salt))
         {
             return BadRequest();
         }
@@ -105,6 +105,34 @@ public class UserController : ControllerBase
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return Ok(new { user.Username, token = jwt });
+    }
+
+
+  // DELETE: api/users/me
+    [HttpDelete("me")]
+    [Authorize]
+    public async Task<IActionResult> DeleteOwnAccount()
+    {
+        
+        var username = User?.Identity?.Name
+                       ?? User?.FindFirst(Name)?.Value
+                       ?? User?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+
+        if (string.IsNullOrWhiteSpace(username))
+            return Unauthorized("Unable to determine authenticated user.");
+
+        var normalized = username.Trim().ToLowerInvariant();
+
+        
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Username.ToLower() == normalized);
+
+        //require 'confirm' in body
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+
+
+        return NoContent("Account deleted successfully.");
     }
 
 }
