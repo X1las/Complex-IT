@@ -15,20 +15,21 @@ public class Program
             options.ListenLocalhost(5001); // HTTP only - no HTTPS certificate needed
         });
 
-        // Register all your data services for dependency injection
-        builder.Services.AddScoped<UserHistoryDataService>(); // Add this first for dependencies
+        // Register all data services for dependency injection
+        builder.Services.AddScoped<UserHistoryDataService>();
         builder.Services.AddScoped<UserDataService>();
         builder.Services.AddScoped<TitleDataService>();
         builder.Services.AddScoped<CrewDataService>();
         builder.Services.AddScoped<BookmarkDataService>();
         builder.Services.AddScoped<UserRatingDataService>();
-        // Add Mapster for object mapping
+        
+        // Register Mapster for object mapping
         builder.Services.AddMapster();
         
         // Add controllers
         builder.Services.AddControllers();
 
-        // Add CORS if needed for frontend
+        // Add CORS for frontend
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", policy =>

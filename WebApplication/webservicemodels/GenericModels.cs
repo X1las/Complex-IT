@@ -15,5 +15,4 @@ public class PagedResultDto<T>
 public class ErrorResponseDto
 {
     public string Error { get; set; } = string.Empty;
-    public string? Details { get; set; }
 }
