@@ -4,7 +4,7 @@ namespace DataServiceLayer;
 
 public class ImdbContext : DbContext
 {
-    public DbSet<Users> User { get; set; }
+    public DbSet<Users> Users { get; set; }
     public DbSet<UserRatings> UsersRating { get; set; }
     public DbSet<UserHistory> UsersHistory { get; set; }
     public DbSet<Attends> Attend { get; set; }
