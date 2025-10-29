@@ -142,21 +142,20 @@ public class TitleController : ControllerBase
         if (cast == null || cast.Count == 0)
             return NotFound(new ErrorResponseDto { Error = "No cast found for this title" });
 
+
+        var castDtos = cast.Select(c => new TitleCrewModel
+        {
+            CrewId = c.CrewId,
+            TitleId = c.TitleId,
+            Url = $"/api/crew/{c.CrewId}"
+        }).ToList();
+
         var totalCount = cast.Count;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-        var paginatedCast = cast
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(c => new TitleCrewModel
-            {
-                CrewId = c.CrewId,
-                TitleId = c.TitleId
-            })
-            .ToList();
 
         var response = new PagedResultDto<TitleCrewModel>
         {
-            Items = paginatedCast,
+            Items = castDtos,
             CurrentPage = page,
             PageSize = pageSize,
             TotalItems = totalCount,

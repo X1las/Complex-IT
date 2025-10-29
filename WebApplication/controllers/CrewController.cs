@@ -48,7 +48,7 @@ public class CrewController : ControllerBase
             BirthYear = c.BirthYear,
             DeathYear = c.DeathYear,
             AverageRating = c.AverageRating,
-            Url = $"/crew/{c.CrewId}"
+            Url = $"/api/crew/{c.CrewId}"
         }).ToList();
 
         var TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -81,7 +81,7 @@ public class CrewController : ControllerBase
             BirthYear = crew.BirthYear,
             DeathYear = crew.DeathYear,
             AverageRating = crew.AverageRating,
-            Url = $"/crew/{crew.CrewId}"
+            Url = $"/api/crew/{crew.CrewId}"
         };
 
         return Ok(crewModel);
@@ -112,7 +112,7 @@ public class CrewController : ControllerBase
             TitleType = t.TitleType,
             Year = t.Year,
             Rating = t.Rating,
-            Url = $"/titles/{t.TitleId}"
+            Url = $"/api/titles/{t.TitleId}"
         }).ToList();
 
         var TotalPages = (int)Math.Ceiling((double)totalCount / 10); // Default page size 10
