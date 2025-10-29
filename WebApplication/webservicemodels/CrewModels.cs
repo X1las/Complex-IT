@@ -5,7 +5,7 @@ public class CrewModel // CrewModelDetails DTO
     public string Fullname { get; set; } = string.Empty;
     public string? BirthYear { get; set; }
     public string? DeathYear { get; set; }
-    public double AverageRating { get; set; }
+    public double? AverageRating { get; set; }
     public string Url { get; set; } = string.Empty;
 }
 

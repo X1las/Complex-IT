@@ -59,7 +59,7 @@ public class Crew
     public string? Fullname { get; set; }
     public string? BirthYear { get; set; }
     public string? DeathYear { get; set; }
-    public double AverageRating { get; set; }
+    public double? AverageRating { get; set; }
 }
 
 public class DvdReleases
