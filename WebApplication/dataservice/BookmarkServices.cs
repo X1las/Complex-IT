@@ -41,21 +41,17 @@ public class BookmarkDataService
     }
     
     public (List<Bookmarks> bookmarks, int totalCount) GetUserBookmarks(
-        string username, 
-        int page, 
-        int pageSize)
+        string username)
     {
         using var db = new ImdbContext();
         
         var query = db.Bookmark
-            .Where(b => b.Username == username)
-            .AsQueryable();
+            .Where(b => b.Username == username);
         
         var totalCount = query.Count();
         
         var bookmarks = query
-            .Skip(page * pageSize)
-            .Take(pageSize)
+            .OrderBy(b => b.TitleId)
             .ToList();
         
         return (bookmarks, totalCount);
