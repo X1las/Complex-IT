@@ -1,14 +1,6 @@
 using DataServiceLayer;
-<<<<<<< HEAD
-using Mapster;
-using MapsterMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using System.Linq;
-=======
 using DataServiceLayer.Models;
 using Microsoft.AspNetCore.Mvc;
->>>>>>> b9860434210bbe375320e45bafeb347ce8bdc02b
 
 namespace WebServiceLayer;
 
@@ -16,7 +8,7 @@ namespace WebServiceLayer;
 [ApiController]
 public class UserController : ControllerBase
 {
-<<<<<<< HEAD
+
     private readonly DataService _dataService;
     private readonly LinkGenerator _generator;
     private readonly IMapper _mapper;
@@ -75,14 +67,13 @@ public class UserController : ControllerBase
         var model = _mapper.Map<BookmarkModel>(bookmark);
         model.Url = _generator.GetUriByName(HttpContext, nameof(GetBookmarks), new { username = bookmark.Username }) ?? string.Empty;
         return model;
-=======
     private readonly BookmarkDataService _bookmarkService;
 
     public UserController()
     {
         _bookmarkService = new BookmarkDataService();
     }
-
+    }
     // GET: api/users/{username}/bookmarks
     [HttpGet("{username}/bookmarks")]
     public IActionResult GetBookmarks(
@@ -196,6 +187,6 @@ public class UserController : ControllerBase
         var count = _bookmarkService.GetBookmarkCount(username);
 
         return Ok(new { count });
->>>>>>> b9860434210bbe375320e45bafeb347ce8bdc02b
     }
+
 }

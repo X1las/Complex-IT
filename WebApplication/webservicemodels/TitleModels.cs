@@ -55,7 +55,7 @@ public class TitleAltsModel
 {
     public string AltsTitle { get; set; }
     public string? Types { get; set; }
-    public string? IsOriginalTitle { get; set; }
+    public bool? IsOriginalTitle { get; set; }
 }
 
 public class TitleRegionModel
