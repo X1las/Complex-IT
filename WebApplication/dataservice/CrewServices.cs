@@ -69,10 +69,4 @@ public class CrewDataService
 
         return (titles, totalCount);
     }
-
-    public bool CrewExists(string crewId)
-    {
-        using var db = new ImdbContext();
-        return db.Crew.Any(c => c.CrewId == crewId);
-    }
 }
