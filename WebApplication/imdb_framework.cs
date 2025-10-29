@@ -174,7 +174,7 @@ public class AlternateTitles
     public  int Ordering { get; set; }
     public  string AltsTitle { get; set; }
     public string? Types { get; set; }
-    public string? IsOriginalTitle { get; set; }
+    public bool? IsOriginalTitle { get; set; }
 }
 
 public class Titles

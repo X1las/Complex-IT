@@ -219,7 +219,7 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<AlternateTitles>().Property(x => x.Ordering).HasColumnName("alts_ordering");
         modelBuilder.Entity<AlternateTitles>().Property(x => x.AltsTitle).HasColumnName("alts_title");
         modelBuilder.Entity<AlternateTitles>().Property(x => x.Types).HasColumnName("types");
-        modelBuilder.Entity<AlternateTitles>().Property(x => x.IsOriginalTitle).HasColumnName("IsOriginalTitle");
+        modelBuilder.Entity<AlternateTitles>().Property(x => x.IsOriginalTitle).HasColumnName("isoriginaltitle");
 
         // Titles mapping
         modelBuilder.Entity<Titles>().ToTable("titles");
