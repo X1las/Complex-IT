@@ -6,187 +6,105 @@ namespace WebServiceLayer;
 
 [Route("api/users")]
 [ApiController]
+
 public class UserController : ControllerBase
 {
-
-    private readonly DataService _dataService;
-    private readonly LinkGenerator _generator;
-    private readonly IMapper _mapper;
     private readonly ImdbContext _context;
+    private readonly IPasswordHasher<User> _passwordHasher;
 
-    public UserController(
-        DataService DSUser,
-        LinkGenerator generator,
-        IMapper mapper,
-        ImdbContext context)
+    public UserController(ImdbContext context,IPasswordHasher<User> passwordHasher)
     {
-        _dataService = DSUser;
-        _generator = generator;
-        _mapper = mapper;
         _context = context;
+        _passwordHasher = passwordHasher;
     }
 
-    [HttpGet("{username}/bookmarks")]
-    public IActionResult GetBookmarks(string username)
+    // POST: api/users/create
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateUser([FromBody] UserModel model)
+    {
+        if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+        {
+            return BadRequest(); 
+        }
+        var username = model.Username.Trim();
+        var existingUser = await _context.Users.AnyAsync(u => u.Username == model.Username);
+        if (existingUser)
+            return Conflict("Username already exists.");
+
+
+        var user = new Users
+        {
+            Username = model.Username,
+        };
+
+        user.pswd = _passwordHasher.HashPassword(user, model.Password);
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetUserByUsername), new { username = user.Username }, new { user.Username });
+
+    }
+    // GET: api/users/{username}
+    [HttpGet("{username}")]
+    public async Task<IActionResult> GetUserByUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
-            return BadRequest();
+        {
+            return BadRequest("Username is required.");
+        }
 
-        var bookmarks = _dataService.GetUserBookmarksByUsername(_context.Bookmark, username);
-        if (bookmarks.Count == 0)
+        var normalized = username.Trim().ToLower();
+
+        var userDto = await _context.Users.AsNoTracking().Where(u => u.Username.ToLower() == normalized)
+            .Select(u => new { u.Username }).FirstOrDefaultAsync();
+
+        if (user == null)
+        {
             return NotFound();
+        }
 
-        var models = bookmarks.Select(CreateBookmarkModel).ToList();
-        return Ok(models);
+        return Ok(userModel);
     }
 
-    [HttpPost("{username}/bookmarks")]
-    public IActionResult AddBookmark(string username, [FromBody] CreateBookmarkRequest req)
+
+    // POST: api/users/login
+ [HttpPost("login")]
+    public IActionResult Login(UserLoginModel model)
     {
-        if (string.IsNullOrWhiteSpace(username) || req == null || string.IsNullOrWhiteSpace(req.TitleId))
+        var user = _dataService.GetUser(model.Username);
+
+        if(user == null)
+        {
             return BadRequest();
+        }
 
-        // check for samme (username, titleId)
-        var exists = _context.Bookmark.Any(b => b.Username == username && b.TitleId == req.TitleId);
-        if (exists)
-            return Conflict("Bookmark already exists");
-
-        var bookmark = new Bookmarks { Username = username, TitleId = req.TitleId };
-        var success = _dataService.CreateUserBookmark(_context.Bookmark, bookmark);
-
-        if (!success)
-            return StatusCode(500);
-
-        var model = CreateBookmarkModel(bookmark);
-        var uri = _generator.GetUriByName(HttpContext, nameof(GetBookmarks), new { username }) ?? string.Empty;
-        return Created(uri, model);
-    }
-
-    private BookmarkModel CreateBookmarkModel(Bookmarks bookmark)
-    {
-        var model = _mapper.Map<BookmarkModel>(bookmark);
-        model.Url = _generator.GetUriByName(HttpContext, nameof(GetBookmarks), new { username = bookmark.Username }) ?? string.Empty;
-        return model;
-    private readonly BookmarkDataService _bookmarkService;
-
-    public UserController()
-    {
-        _bookmarkService = new BookmarkDataService();
-    }
-    }
-    // GET: api/users/{username}/bookmarks
-    [HttpGet("{username}/bookmarks")]
-    public IActionResult GetBookmarks(
-        string username,
-        [FromQuery] int page = 0,
-        [FromQuery] int pageSize = 10)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-            return BadRequest(new { message = "Username is required" });
-
-        var (bookmarks, totalCount) = _bookmarkService.GetUserBookmarks(username, page, pageSize);
-
-        if (bookmarks == null || bookmarks.Count == 0)
-            return NotFound(new { message = "No bookmarks found" });
-
-        // Map to DTOs
-        var bookmarkDtos = bookmarks.Select(b => new BookmarkDto
+        if(!_hashing.Verify(model.Password, user.Password, user.Salt))
         {
-            TitleId = b.TitleId,
-            Url = Url.Action(nameof(GetBookmarks), new { username }) ?? string.Empty
-        }).ToList();
+            return BadRequest();
+        }
 
-        return Ok(new
+        var claims = new List<Claim>
         {
-            data = bookmarkDtos,
-            totalCount,
-            page,
-            pageSize
-        });
-    }
-
-    // POST: api/users/{username}/bookmarks
-    [HttpPost("{username}/bookmarks")]
-    public IActionResult AddBookmark(string username, [FromBody] CreateBookmarkDto req)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-            return BadRequest(new { message = "Username is required" });
-
-        if (req == null || string.IsNullOrWhiteSpace(req.TitleId))
-            return BadRequest(new { message = "TitleId is required" });
-
-        // Check if bookmark already exists
-        if (_bookmarkService.BookmarkExists(username, req.TitleId))
-            return Conflict(new { message = "Bookmark already exists" });
-
-        // Add the bookmark
-        var success = _bookmarkService.AddBookmark(username, req.TitleId);
-
-        if (!success)
-            return StatusCode(500, new { message = "Failed to create bookmark" });
-
-        // Get the created bookmark
-        var bookmark = _bookmarkService.GetBookmark(username, req.TitleId);
-
-        if (bookmark == null)
-            return StatusCode(500, new { message = "Failed to retrieve created bookmark" });
-
-        var bookmarkDto = new BookmarkDto
-        {
-            TitleId = bookmark.TitleId,
-            Url = Url.Action(nameof(GetBookmarks), new { username }) ?? string.Empty
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
-        var uri = Url.Action(nameof(GetBookmarks), new { username }) ?? string.Empty;
-        return Created(uri, bookmarkDto);
-    }
+        var secret = _configuration.GetSection("Auth:Secret").Value;
 
-    // DELETE: api/users/{username}/bookmarks/{titleId}
-    [HttpDelete("{username}/bookmarks/{titleId}")]
-    public IActionResult RemoveBookmark(string username, string titleId)
-    {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(titleId))
-            return BadRequest(new { message = "Username and TitleId are required" });
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
-        var success = _bookmarkService.RemoveBookmark(username, titleId);
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        if (!success)
-            return NotFound(new { message = "Bookmark not found" });
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.Now.AddDays(4),
+            signingCredentials: creds
+            );
 
-        return Ok(new { message = "Bookmark removed successfully" });
-    }
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-    // GET: api/users/{username}/bookmarks/{titleId}
-    [HttpGet("{username}/bookmarks/{titleId}")]
-    public IActionResult GetBookmark(string username, string titleId)
-    {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(titleId))
-            return BadRequest(new { message = "Username and TitleId are required" });
-
-        var bookmark = _bookmarkService.GetBookmark(username, titleId);
-
-        if (bookmark == null)
-            return NotFound(new { message = "Bookmark not found" });
-
-        var bookmarkDto = new BookmarkDto
-        {
-            TitleId = bookmark.TitleId,
-            Url = Url.Action(nameof(GetBookmarks), new { username }) ?? string.Empty
-        };
-
-        return Ok(bookmarkDto);
-    }
-
-    // GET: api/users/{username}/bookmarks/count
-    [HttpGet("{username}/bookmarks/count")]
-    public IActionResult GetBookmarkCount(string username)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-            return BadRequest(new { message = "Username is required" });
-
-        var count = _bookmarkService.GetBookmarkCount(username);
-
-        return Ok(new { count });
+        return Ok(new { user.Username, token = jwt });
     }
 
 }
