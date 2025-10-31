@@ -1,6 +1,9 @@
 using DataServiceLayer;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebServiceLayer;
 
@@ -22,29 +25,51 @@ public class Program
         builder.Services.AddScoped<CrewDataService>();
         builder.Services.AddScoped<BookmarkDataService>();
         builder.Services.AddScoped<UserRatingDataService>();
+
+        // Hasing service
+        builder.Services.AddSingleton<Utils.Hashing>();
         
         // Register Mapster for object mapping
         builder.Services.AddMapster();
-        
+
         // Add controllers
         builder.Services.AddControllers();
+
+        // JWT Authentication
+        var jwtSecret = builder.Configuration.GetSection("Auth:Secret").Value;
+
+         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
         // Add CORS for frontend
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowAll", policy =>
+            options.AddPolicy("AllowFrotend", policy =>
             {
-                policy.AllowAnyOrigin()
+                policy.WithOrigins("http://localhost:3000")
                       .AllowAnyMethod()
-                      .AllowAnyHeader();
+                      .AllowAnyHeader()
+                      .AllowCredentials();
             });
         });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline
-        app.UseCors("AllowAll");
-        app.MapControllers();
+        app.UseCors("AllowFrontend"); // CORS first
+        app.UseAuthentication();      // Authentication second
+        app.UseAuthorization();       // Authorization third
+        app.MapControllers();         // Controllers last
+
 
         app.Run();
     }

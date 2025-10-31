@@ -7,10 +7,10 @@ public class Hashing
 {
     protected const int saltBitsize = 64;
     protected const byte saltBytesize = saltBitsize / 8;
-    protected const int hashBitsize = 256;
+    protected const int hashBitsize = 512;
     protected const int hashBytesize = hashBitsize / 8;
 
-    private HashAlgorithm sha256 = SHA256.Create();
+    private HashAlgorithm sha512 = SHA512.Create();
     protected RandomNumberGenerator rand = RandomNumberGenerator.Create();
 
     // hash(string password)
@@ -23,7 +23,7 @@ public class Hashing
         byte[] salt = new byte[saltBytesize];
         rand.GetBytes(salt);
         string saltString = Convert.ToHexString(salt);
-        string hash = HashSHA256(password, saltString);
+        string hash = HashSHA512(password, saltString);
         return (hash, saltString);
     }
 
@@ -32,17 +32,17 @@ public class Hashing
 
     public bool Verify(string loginPassword, string hashedRegisteredPassword, string saltString)
     {
-        string hashedLoginPassword = HashSHA256(loginPassword, saltString);
+        string hashedLoginPassword = HashSHA512(loginPassword, saltString);
         if (hashedRegisteredPassword == hashedLoginPassword) return true;
         else return false;
     }
 
-    // hashSHA256 is the "workhorse" --- the actual hashing
+    // hashSHA512 is the "workhorse" --- the actual hashing
 
-    private string HashSHA256(string password, string saltString)
+    private string HashSHA512(string password, string saltString)
     {
         byte[] hashInput = Encoding.UTF8.GetBytes(saltString + password); // perhaps encode only the password part?
-        byte[] hashOutput = sha256.ComputeHash(hashInput);
+        byte[] hashOutput = sha512.ComputeHash(hashInput);
         return Convert.ToHexString(hashOutput);
     }
 }
