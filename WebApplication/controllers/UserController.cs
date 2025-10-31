@@ -1,26 +1,35 @@
 using DataServiceLayer;
-using DataServiceLayer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WebServiceLayer.Models;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebServiceLayer;
 
+[Authorize]
 [Route("api/users")]
 [ApiController]
 
 public class UserController : ControllerBase
 {
     private readonly ImdbContext _context;
-    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IPasswordHasher<Users> _passwordHasher;
+    private readonly UserDataService _dataService;
 
-    public UserController(ImdbContext context, IPasswordHasher<User> passwordHasher)
+    public UserController(ImdbContext context, IPasswordHasher<Users> passwordHasher, UserDataService dataService)
     {
         _context = context;
         _passwordHasher = passwordHasher;
+        _dataService = dataService;
     }
 
-    // POST: api/users/create
     [HttpPost("create")]
-    public async Task<IActionResult> CreateUser([FromBody] UserModel model)
+    public async Task<IActionResult> CreateUser([FromBody] UserRegistrationModel model)
     {
         if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
         {
@@ -37,7 +46,7 @@ public class UserController : ControllerBase
             Username = model.Username,
         };
 
-        user.pswd = _passwordHasher.HashPassword(user, model.Password);
+        user.Pswd = _passwordHasher.HashPassword(user, model.Password);
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
@@ -45,7 +54,7 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(GetUserByUsername), new { username = user.Username }, new { user.Username });
 
     }
-    // GET: api/users/{username}
+
     [HttpGet("{username}")]
     public async Task<IActionResult> GetUserByUsername(string username)
     {
@@ -59,12 +68,12 @@ public class UserController : ControllerBase
         var userDto = await _context.Users.AsNoTracking().Where(u => u.Username.ToLower() == normalized)
             .Select(u => new { u.Username }).FirstOrDefaultAsync();
 
-        if (user == null)
+        if (userDto == null)
         {
             return NotFound();
         }
 
-        return Ok(userModel);
+        return Ok(userDto);
     }
 
 
@@ -72,14 +81,14 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login(UserLoginModel model)
     {
-        var user = _dataService.GetUser(model.Username);
+        var user = _dataService.GetUserByUsername(model.Username);
 
         if (user == null)
         {
             return BadRequest();
         }
 
-        if (!_hashing.Verify(model.Password, user.Password, user.Salt))
+        if (!_hashing.Verify(model.Password, user.Pswd, user.Salt))
         {
             return BadRequest();
         }
@@ -108,9 +117,8 @@ public class UserController : ControllerBase
     }
 
 
-  // DELETE: api/users/me
-    [HttpDelete("me")]
-    [Authorize]
+  // DELETE: api/users/{username}
+    [HttpDelete("{username}")]
     public async Task<IActionResult> DeleteOwnAccount()
     {
         
@@ -127,12 +135,15 @@ public class UserController : ControllerBase
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Username.ToLower() == normalized);
 
+        if (user == null)
+            return NotFound("User not found.");
+
         //require 'confirm' in body
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
 
 
-        return NoContent("Account deleted successfully.");
+        return NoContent();
     }
 
 }

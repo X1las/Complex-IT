@@ -1,9 +1,11 @@
 using DataServiceLayer;
 using DataServiceLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebServiceLayer.Models;
 
+[Authorize]
 [ApiController]
 [Route("api/users/{username}/bookmarks")]
 public class BookmarksController : ControllerBase

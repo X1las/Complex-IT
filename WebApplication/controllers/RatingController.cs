@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using DataServiceLayer;
 using WebServiceLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebServiceLayer.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/users/{userId}/ratings")]
 public class RatingController : ControllerBase

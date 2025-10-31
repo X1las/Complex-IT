@@ -1,6 +1,5 @@
 using DataServiceLayer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebServiceLayer.Models;
 
 namespace WebServiceLayer;
@@ -10,12 +9,10 @@ namespace WebServiceLayer;
 public class TitleController : ControllerBase
 {
     private readonly TitleDataService _titleService;
-    // private readonly UserRatingDataService _ratingService;
 
-    public TitleController(TitleDataService titleService /*, UserRatingDataService ratingService*/)
+    public TitleController(TitleDataService titleService)
     {
         _titleService = titleService;
-        // _ratingService = ratingService;
     }
 
     // GET: api/titles
@@ -36,19 +33,16 @@ public class TitleController : ControllerBase
         {
             (titlesList, totalCount) = _titleService.GetTitles();
         }
-
+        
         // Calculate pagination
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
+        
         var titles = titlesList
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToList();
 
-        if (titles == null || titles.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No titles found" });
-
-        // Creating Title DTO
+        // Return empty page with metadata instead of 404
         var titleDtos = titles.Select(t => new TitleModelShort
         {
             Id = t.Id,
@@ -58,7 +52,7 @@ public class TitleController : ControllerBase
             Rating = t.Rating ?? 0,
             Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
-
+        
         // Converting Title DTO to Paginated Response
         var response = new PagedResultDto<TitleModelShort>
         {
@@ -77,10 +71,9 @@ public class TitleController : ControllerBase
     public IActionResult GetTitle(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
-            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" }); // Fix 4: Use ErrorResponseDto consistently
+            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
         var title = _titleService.GetTitle(id);
-
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
@@ -118,10 +111,6 @@ public class TitleController : ControllerBase
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
         var genres = _titleService.GetTitleGenres(id);
-
-        if (genres == null || genres.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No genres found for this title" });
-
         return Ok(genres);
     }
 
@@ -135,25 +124,25 @@ public class TitleController : ControllerBase
             return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
         var title = _titleService.GetTitle(id);
-
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
-        var cast = _titleService.GetTitleCrew(id);
+        var crew = _titleService.GetTitleCrew(id) ?? new List<Attends>();
+        var totalCount = crew.Count;
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-        if (cast == null || cast.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No cast found for this title" });
+        // APPLY pagination before mapping (bug fix)
+        var pagedCrew = crew
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-
-        var castDtos = cast.Select(c => new TitleCrewModel
+        var castDtos = pagedCrew.Select(c => new TitleCrewModel
         {
             CrewId = c.CrewId,
             TitleId = c.TitleId,
-            Url = $"/api/crew/{c.CrewId}"
+            Url = Url.Action("GetCrew", "Crew", new { id = c.CrewId }) ?? $"/api/crew/{c.CrewId}"
         }).ToList();
-
-        var totalCount = cast.Count;
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         var response = new PagedResultDto<TitleCrewModel>
         {
@@ -185,10 +174,7 @@ public class TitleController : ControllerBase
             return BadRequest(new ErrorResponseDto { Error = "Genre is required" });
 
         var (titles, totalCount) = _titleService.GetTitlesByGenre(genre);
-
-        if (titles == null || titles.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = $"No titles found for genre '{genre}'" });
-
+        titles ??= new List<Titles>();
 
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
         var paginatedTitles = titles
@@ -228,15 +214,12 @@ public class TitleController : ControllerBase
             return BadRequest(new ErrorResponseDto { Error = "Series ID is required" });
 
         var title = _titleService.GetTitle(id);
-
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Series not found" });
 
-        var episodes = _titleService.GetTitleEpisodes(id);
+        var episodes = _titleService.GetTitleEpisodes(id) ?? new List<Episodes>();
 
-        if (episodes == null || episodes.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No episodes found for this title" });
-
+        // NOTE: possible N+1 below; consider optimizing in the service layer
         var episodeDtos = episodes.Select(e => new TitleEpisodesModel
         {
             EpisodessId = e.EpisodeId,
@@ -263,8 +246,6 @@ public class TitleController : ControllerBase
             TotalPages = totalPages,
         };
 
-
-
         return Ok(response);
     }
 
@@ -273,13 +254,16 @@ public class TitleController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var alternateTitles = _titleService.GetTitleAlternates(id);
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        if (alternateTitles == null || alternateTitles.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No alternate titles found" });
+        var alternateTitles = _titleService.GetTitleAlternates(id) ?? new List<AlternateTitles>();
 
         var totalCount = alternateTitles.Count;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        if (totalPages == 0) totalPages = 1;
+        if (page > totalPages) page = totalPages;
+
         var paginatedTitles = alternateTitles
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -309,13 +293,16 @@ public class TitleController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var titleRegions = _titleService.GetTitleRegions(id);
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        if (titleRegions == null || titleRegions.Count == 0)
-            return NotFound(new ErrorResponseDto { Error = "No regions found for this title" });
+        var titleRegions = _titleService.GetTitleRegions(id) ?? new List<TitleRegions>();
 
         var totalCount = titleRegions.Count;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        if (totalPages == 0) totalPages = 1;
+        if (page > totalPages) page = totalPages;
+
         var paginatedRegions = titleRegions
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -338,27 +325,4 @@ public class TitleController : ControllerBase
 
         return Ok(response);
     }
-
-//     // GET: api/titles/{id}/ratings/average
-//     [HttpGet("{id}/ratings/average")]
-//     public IActionResult GetAverageRating(string id)
-//     {
-//     if (string.IsNullOrWhiteSpace(id))
-//         return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
-
-//     var title = _titleService.GetTitle(id);
-//     if (title == null)
-//         return NotFound(new ErrorResponseDto { Error = "Title not found" });
-
-//     var average = _ratingService.GetAverageUserRatingForTitle(id);
-//     var count = _ratingService.GetTitleRatingCount(id);
-    
-//     return Ok(new 
-//     { 
-//         titleId = id,
-//         averageRating = Math.Round(average, 2),
-//         totalRatings = count
-//     });
-// }
-
 }

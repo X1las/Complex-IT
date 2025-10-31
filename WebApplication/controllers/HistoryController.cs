@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using DataServiceLayer;
 using WebServiceLayer.Models;
 
 namespace WebServiceLayer.Controllers;
 
-// example: api/users/1/history
+[Authorize]
 [ApiController]
 [Route("api/users/{userId}/history")]
 public class HistoryController : ControllerBase
