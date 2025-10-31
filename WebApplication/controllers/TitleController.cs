@@ -10,10 +10,12 @@ namespace WebServiceLayer;
 public class TitleController : ControllerBase
 {
     private readonly TitleDataService _titleService;
+    // private readonly UserRatingDataService _ratingService;
 
-    public TitleController(TitleDataService titleService)
+    public TitleController(TitleDataService titleService /*, UserRatingDataService ratingService*/)
     {
         _titleService = titleService;
+        // _ratingService = ratingService;
     }
 
     // GET: api/titles
@@ -34,10 +36,10 @@ public class TitleController : ControllerBase
         {
             (titlesList, totalCount) = _titleService.GetTitles();
         }
-        
+
         // Calculate pagination
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-        
+
         var titles = titlesList
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -56,7 +58,7 @@ public class TitleController : ControllerBase
             Rating = t.Rating ?? 0,
             Url = Url.Action(nameof(GetTitle), new { id = t.Id }) ?? string.Empty
         }).ToList();
-        
+
         // Converting Title DTO to Paginated Response
         var response = new PagedResultDto<TitleModelShort>
         {
@@ -187,7 +189,7 @@ public class TitleController : ControllerBase
         if (titles == null || titles.Count == 0)
             return NotFound(new ErrorResponseDto { Error = $"No titles found for genre '{genre}'" });
 
-        
+
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
         var paginatedTitles = titles
             .Skip((page - 1) * pageSize)
@@ -282,7 +284,7 @@ public class TitleController : ControllerBase
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToList();
-        
+
         var titleDtos = paginatedTitles.Select(t => new TitleAltsModel
         {
             AltsTitle = t.AltsTitle ?? string.Empty,
@@ -336,4 +338,27 @@ public class TitleController : ControllerBase
 
         return Ok(response);
     }
+
+//     // GET: api/titles/{id}/ratings/average
+//     [HttpGet("{id}/ratings/average")]
+//     public IActionResult GetAverageRating(string id)
+//     {
+//     if (string.IsNullOrWhiteSpace(id))
+//         return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
+
+//     var title = _titleService.GetTitle(id);
+//     if (title == null)
+//         return NotFound(new ErrorResponseDto { Error = "Title not found" });
+
+//     var average = _ratingService.GetAverageUserRatingForTitle(id);
+//     var count = _ratingService.GetTitleRatingCount(id);
+    
+//     return Ok(new 
+//     { 
+//         titleId = id,
+//         averageRating = Math.Round(average, 2),
+//         totalRatings = count
+//     });
+// }
+
 }
