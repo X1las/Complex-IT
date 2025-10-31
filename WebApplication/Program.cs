@@ -2,6 +2,9 @@ using DataServiceLayer;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using WebServiceLayer.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebServiceLayer;
 
@@ -33,6 +36,26 @@ public class Program
         // Register Mapster for object mapping
         builder.Services.AddMapster();
         
+        // Configure JWT Authentication
+        var secret = builder.Configuration.GetSection("Auth:Secret").Value 
+            ?? throw new InvalidOperationException("Auth:Secret is not configured");
+        var key = Encoding.UTF8.GetBytes(secret);
+        
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+        
+        builder.Services.AddAuthorization();
+        
         // Add controllers
         builder.Services.AddControllers();
 
@@ -51,6 +74,8 @@ public class Program
 
         // Configure the HTTP request pipeline
         app.UseCors("AllowAll");
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.MapControllers();
 
         app.Run();
