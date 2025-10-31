@@ -47,9 +47,8 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Users>().ToTable("users");
         modelBuilder.Entity<Users>().HasKey(u => u.Username);
         modelBuilder.Entity<Users>().Property(x => x.Username).HasColumnName("username");
-        modelBuilder.Entity<Users>().Property(x => x.HashedPassword).HasColumnName("hashed_password");
+        modelBuilder.Entity<Users>().Property(x => x.HashedPassword).HasColumnName("password");
         modelBuilder.Entity<Users>().Property(x => x.Salt).HasColumnName("salt");
-
         // UsersRating mapping
         modelBuilder.Entity<UserRatings>().ToTable("user_ratings");
         modelBuilder.Entity<UserRatings>().HasKey(ur => new { ur.Username, ur.TitleId });
