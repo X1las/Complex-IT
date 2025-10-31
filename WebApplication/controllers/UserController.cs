@@ -8,24 +8,26 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebServiceLayer.Utils;
 
 namespace WebServiceLayer;
 
 [Authorize]
 [Route("api/users")]
 [ApiController]
-
 public class UserController : ControllerBase
 {
     private readonly ImdbContext _context;
-    private readonly IPasswordHasher<Users> _passwordHasher;
     private readonly UserDataService _dataService;
+    private readonly Hashing _hashing;
 
-    public UserController(ImdbContext context, IPasswordHasher<Users> passwordHasher, UserDataService dataService)
+    public UserController(ImdbContext context,
+        IPasswordHasher<Users> passwordHasher,
+        UserDataService dataService, Hashing hashing)
     {
         _context = context;
-        _passwordHasher = passwordHasher;
         _dataService = dataService;
+        _hashing = hashing;
     }
 
     [HttpPost("create")]
@@ -46,7 +48,7 @@ public class UserController : ControllerBase
             Username = model.Username,
         };
 
-        user.Pswd = _passwordHasher.HashPassword(user, model.Password);
+        user.Pswd = _hashing.Hash(model.Password, user.Salt);
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
@@ -96,7 +98,6 @@ public class UserController : ControllerBase
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var secret = _configuration.GetSection("Auth:Secret").Value;
