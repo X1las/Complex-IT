@@ -1,9 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using WebServiceLayer.Utils;
 
 namespace DataServiceLayer;
 
 public class UserDataService
 {
+    private readonly Hashing _hashing;
+
+    public UserDataService(Hashing hashing)
+    {
+        _hashing = hashing;
+    }
+
     // CREATE
     public Users? RegisterUser(string username, string password)
     {
@@ -26,7 +34,7 @@ public class UserDataService
         var users = new Users
         {
             Username = username,
-            Pswd = password  // TODO: Hash password in production (BCrypt)
+            (HashedPassword, Salt) = _hashing.Hash(password)
         };
         
         db.Users.Add(users);
@@ -48,7 +56,7 @@ public class UserDataService
         // Find user with matching credentials
         // TODO: In production, compare hashed passwords
         var user = db.Users.FirstOrDefault(u => 
-            u.Username == username && u.Pswd == password);
+            u.Username == username && u.HashedPassword == password);
         
         return user;  // null if not found or invalid credentials
     }
@@ -104,7 +112,7 @@ public class UserDataService
         // Update password if provided
         if (!string.IsNullOrWhiteSpace(newPassword))
         {
-            user.Pswd = newPassword;  // TODO: Hash in production
+            (user.HashedPassword, user.Salt) = _hashing.Hash(newPassword);
         }
         
         // Update username if provided (more complex - need to update related data)

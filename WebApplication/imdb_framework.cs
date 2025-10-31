@@ -3,7 +3,8 @@ namespace DataServiceLayer;
 public class Users
 {
     public string Username { get; set; }
-    public string Pswd { get; set; }
+    public string HashedPassword { get; set; }
+    public string Salt { get; set; }
 }
 
 public class UserRatings

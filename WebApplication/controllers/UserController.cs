@@ -1,7 +1,6 @@
 using DataServiceLayer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebServiceLayer.Models;
 using System.Security.Claims;
@@ -20,14 +19,16 @@ public class UserController : ControllerBase
     private readonly ImdbContext _context;
     private readonly UserDataService _dataService;
     private readonly Hashing _hashing;
-
+    private readonly IConfiguration _configuration;
     public UserController(ImdbContext context,
-        IPasswordHasher<Users> passwordHasher,
-        UserDataService dataService, Hashing hashing)
+        UserDataService dataService,
+        Hashing hashing,
+        IConfiguration configuration)
     {
         _context = context;
         _dataService = dataService;
         _hashing = hashing;
+        _configuration = configuration;
     }
 
     [HttpPost("create")]
@@ -42,19 +43,17 @@ public class UserController : ControllerBase
         if (existingUser)
             return Conflict("Username already exists.");
 
-
         var user = new Users
         {
             Username = model.Username,
         };
 
-        user.Pswd = _hashing.Hash(model.Password, user.Salt);
+        (user.HashedPassword, user.Salt) = _hashing.Hash(model.Password);
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetUserByUsername), new { username = user.Username }, new { user.Username });
-
     }
 
     [HttpGet("{username}")]
@@ -90,7 +89,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        if (!_hashing.Verify(model.Password, user.Pswd, user.Salt))
+        if (!_hashing.Verify(model.Password, user.HashedPassword, user.Salt))
         {
             return BadRequest();
         }
@@ -124,7 +123,7 @@ public class UserController : ControllerBase
     {
         
         var username = User?.Identity?.Name
-                       ?? User?.FindFirst(Name)?.Value
+                       ?? User?.FindFirst(ClaimTypes.Name)?.Value
                        ?? User?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
 
         if (string.IsNullOrWhiteSpace(username))
