@@ -31,10 +31,12 @@ public class UserDataService
         }
         
         // Create new user
+        var (hashedPassword, salt) = _hashing.Hash(password);
         var users = new Users
         {
             Username = username,
-            (HashedPassword, Salt) = _hashing.Hash(password)
+            HashedPassword = hashedPassword,
+            Salt = salt
         };
         
         db.Users.Add(users);
