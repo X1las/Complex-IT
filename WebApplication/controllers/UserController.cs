@@ -31,6 +31,7 @@ public class UserController : ControllerBase
         _configuration = configuration;
     }
 
+    [AllowAnonymous]
     [HttpPost("create")]
     public async Task<IActionResult> CreateUser([FromBody] UserRegistrationModel model)
     {
@@ -79,6 +80,7 @@ public class UserController : ControllerBase
 
 
     // POST: api/users/login
+    [AllowAnonymous]
     [HttpPost("login")]
     public IActionResult Login(UserLoginModel model)
     {
