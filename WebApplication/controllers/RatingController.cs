@@ -7,7 +7,7 @@ namespace WebServiceLayer.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/users/ratings")]
+[Route("api/users/{username}/ratings")]
 public class RatingController : ControllerBase
 {
     private readonly UserRatingDataService _ratingService;
@@ -23,14 +23,26 @@ public class RatingController : ControllerBase
     {
         return User?.Identity?.Name ?? throw new UnauthorizedAccessException("User not authenticated");
     }
+
+    // Validate that the route username matches the authenticated user
+    private bool ValidateUsername(string username)
+    {
+        var authenticatedUsername = GetAuthenticatedUsername();
+        return username.Equals(authenticatedUsername, StringComparison.OrdinalIgnoreCase);
+    }
     
     // POST /api/users/{username}/ratings
     // Create or update a rating
     [HttpPost]
-    public async Task<IActionResult> CreateRating(CreateRatingDto dto)
+    public async Task<IActionResult> CreateRating(string username, CreateRatingDto dto)
     {
         try
         {
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
+
             if (string.IsNullOrWhiteSpace(dto.TitleId))
             {
                 return BadRequest(new ErrorResponseDto { Error = "TitleId is required" });
@@ -40,8 +52,6 @@ public class RatingController : ControllerBase
             {
                 return BadRequest(new ErrorResponseDto { Error = "Rating must be between 1 and 10" });
             }
-
-            var username = GetAuthenticatedUsername();
 
             var success = await Task.Run(() => _ratingService.AddOrUpdateRating(username, dto.TitleId, dto.Rating));
             
@@ -58,13 +68,13 @@ public class RatingController : ControllerBase
             
             var response = new RatingDto
             {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/ratings/{dto.TitleId}",
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{dto.TitleId}",
                 TitleId = dto.TitleId,
                 Rating = int.TryParse(rating?.Rating, out int r) ? r : 0,
                 CreatedAt = DateTime.UtcNow
             };
             
-            return CreatedAtAction(nameof(GetRating), new { titleId = dto.TitleId }, response);
+            return CreatedAtAction(nameof(GetRating), new { username, titleId = dto.TitleId }, response);
         }
         catch (Exception ex)
         {
@@ -75,17 +85,20 @@ public class RatingController : ControllerBase
 
     // GET /api/users/{username}/ratings
     [HttpGet]
-    public async Task<IActionResult> GetAllRatings()
+    public async Task<IActionResult> GetAllRatings(string username)
     {
         try
         {
-            var username = GetAuthenticatedUsername();
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
             var (ratings, totalCount) = await Task.Run(() => _ratingService.GetUserRatings(username));
             
             var ratingDtos = ratings.Select(r => new RatingDto
             {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/ratings/{r.TitleId}",
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{r.TitleId}",
                 TitleId = r.TitleId,
                 Rating = int.TryParse(r.Rating, out int rating) ? rating : 0,
                 CreatedAt = DateTime.UtcNow
@@ -107,11 +120,14 @@ public class RatingController : ControllerBase
     // GET /api/users/{username}/ratings/{titleId}
     // Get specific rating for a title
     [HttpGet("{titleId}")]
-    public async Task<IActionResult> GetRating(string titleId)
+    public async Task<IActionResult> GetRating(string username, string titleId)
     {
         try
         {
-            var username = GetAuthenticatedUsername();
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
             var rating = await Task.Run(() => _ratingService.GetUserRating(username, titleId));
             
@@ -122,7 +138,7 @@ public class RatingController : ControllerBase
             
             var response = new RatingDto
             {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/ratings/{rating.TitleId}",
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{rating.TitleId}",
                 TitleId = rating.TitleId,
                 Rating = int.TryParse(rating.Rating, out int r) ? r : 0,
                 CreatedAt = DateTime.UtcNow
@@ -140,11 +156,14 @@ public class RatingController : ControllerBase
     // GET /api/users/{username}/ratings/count
     // Get total number of ratings for user
     [HttpGet("count")]
-    public async Task<IActionResult> GetRatingCount()
+    public async Task<IActionResult> GetRatingCount(string username)
     {
         try
         {
-            var username = GetAuthenticatedUsername();
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
             var count = await Task.Run(() => _ratingService.GetRatingCount(username));
             return Ok(new { count });
@@ -158,16 +177,19 @@ public class RatingController : ControllerBase
 
     // PUT /api/users/{username}/ratings/{titleId}
     [HttpPut("{titleId}")]
-    public async Task<IActionResult> UpdateRating(string titleId, [FromBody] UpdateRatingDto dto)
+    public async Task<IActionResult> UpdateRating(string username, string titleId, [FromBody] UpdateRatingDto dto)
     {
         try
         {
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
+
             if (dto.Rating < 1 || dto.Rating > 10)
             {
                 return BadRequest(new ErrorResponseDto { Error = "Rating must be between 1 and 10" });
             }
-
-            var username = GetAuthenticatedUsername();
             
             // Check if rating exists
             var existingRating = await Task.Run(() => _ratingService.GetUserRating(username, titleId));
@@ -190,7 +212,7 @@ public class RatingController : ControllerBase
             
             var response = new RatingDto
             {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/ratings/{rating?.TitleId}",
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{rating?.TitleId}",
                 TitleId = rating?.TitleId ?? "",
                 Rating = int.TryParse(rating?.Rating, out int r) ? r : 0,
                 CreatedAt = DateTime.UtcNow
@@ -207,11 +229,14 @@ public class RatingController : ControllerBase
 
     // DELETE /api/users/{username}/ratings/{titleId}
     [HttpDelete("{titleId}")]
-    public async Task<IActionResult> DeleteRating(string titleId)
+    public async Task<IActionResult> DeleteRating(string username, string titleId)
     {
         try
         {
-            var username = GetAuthenticatedUsername();
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
             var success = await Task.Run(() => _ratingService.DeleteRating(username, titleId));
             
@@ -233,11 +258,14 @@ public class RatingController : ControllerBase
 
     // DELETE /api/users/{username}/ratings
     [HttpDelete]
-    public async Task<IActionResult> ClearAllRatings()
+    public async Task<IActionResult> ClearAllRatings(string username)
     {
         try
         {
-            var username = GetAuthenticatedUsername();
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
             await Task.Run(() => _ratingService.ClearUserRatings(username));
             
