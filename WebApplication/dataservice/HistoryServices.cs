@@ -6,13 +6,13 @@ public class UserHistoryDataService
 {
     // Record a new viewing
     // example RecordUserHistory(1, "tt1234567");
-    public void RecordUserHistory(int userId, string titleId)
+    public void RecordUserHistory(string? username, string titleId)
     {
         using var db = new ImdbContext();
 
         var history = new UserHistory
         {
-            Username = userId.ToString(),
+            Username = username,
             TitleId = titleId,
             Date = DateTime.UtcNow
         };
@@ -23,12 +23,12 @@ public class UserHistoryDataService
 
     // Get all history for a user with total count
     // example: GetUserHistory(1); returns all viewings for user 1
-    public (List<UserHistory> history, int totalCount) GetUserHistory(int userId)
+    public (List<UserHistory> history, int totalCount) GetUserHistory(string? username)
     {
         using var db = new ImdbContext();
 
         var query = db.UsersHistory
-            .Where(h => h.Username == userId.ToString())
+            .Where(h => h.Username == username)
             .AsQueryable();
 
         var totalCount = query.Count();
@@ -42,12 +42,12 @@ public class UserHistoryDataService
 
     // Get recent history entries with limit
     // example: GetRecentHistory(1, 10); returns the 10 most recent viewings for user 1
-    public List<UserHistory> GetRecentHistory(int userId, int limit = 10)
+    public List<UserHistory> GetRecentHistory(string? username, int limit = 10)
     {
         using var db = new ImdbContext();
 
         return db.UsersHistory
-            .Where(h => h.Username == userId.ToString())
+            .Where(h => h.Username == username)
             .OrderByDescending(h => h.Date)
             .Take(limit)
             .ToList();
@@ -55,15 +55,15 @@ public class UserHistoryDataService
 
     // Get count of history entries
     // example: GetHistoryCount(1); returns the number of viewings for user 1
-    public int GetHistoryCount(int userId)
+    public int GetHistoryCount(string? username)
     {
         using var db = new ImdbContext();
-        return db.UsersHistory.Count(h => h.Username == userId.ToString());
+        return db.UsersHistory.Count(h => h.Username == username);
     }
 
     // Delete a specific viewing by timestamp
     // example: DeleteHistoryItem(1, "tt1234567", someDateTime);
-    public bool DeleteHistoryItem(int userId, string titleId, DateTime timestamp)
+    public bool DeleteHistoryItem(string? userId, string titleId, DateTime timestamp)
     {
         using var db = new ImdbContext();
 
@@ -83,13 +83,13 @@ public class UserHistoryDataService
 
     // Delete all viewings of a specific title for a user
     // example: DeleteTitleHistory(1, "tt1234567");
-    public bool DeleteTitleHistory(int userId, string titleId)
+    public bool DeleteTitleHistory(string? username, string titleId)
     {
         using var db = new ImdbContext();
 
         // Find all records for this user and title
         var items = db.UsersHistory
-            .Where(h => h.Username == userId.ToString() && h.TitleId == titleId)
+            .Where(h => h.Username == username && h.TitleId == titleId)
             .ToList();
 
         if (!items.Any()) return false;
@@ -102,11 +102,11 @@ public class UserHistoryDataService
 
     // Clear all history for a user
     // example: ClearUserHistory(1);
-    public bool ClearUserHistory(int userId)
+    public bool ClearUserHistory(string? username)
     {
         using var db = new ImdbContext();
-        
-        var history = db.UsersHistory.Where(h => h.Username == userId.ToString());
+
+        var history = db.UsersHistory.Where(h => h.Username == username);
         db.UsersHistory.RemoveRange(history);
         db.SaveChanges();
         

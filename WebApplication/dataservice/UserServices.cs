@@ -1,9 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using WebServiceLayer.Utils;
 
 namespace DataServiceLayer;
 
 public class UserDataService
 {
+    private readonly Hashing _hashing;
+
+    public UserDataService(Hashing hashing)
+    {
+        _hashing = hashing;
+    }
+
     // CREATE
     public Users? RegisterUser(string username, string password)
     {
@@ -23,10 +31,12 @@ public class UserDataService
         }
         
         // Create new user
+        var (hashedPassword, salt) = _hashing.Hash(password);
         var users = new Users
         {
             Username = username,
-            Pswd = password  // TODO: Hash password in production (BCrypt)
+            HashedPassword = hashedPassword,
+            Salt = salt
         };
         
         db.Users.Add(users);
@@ -48,7 +58,7 @@ public class UserDataService
         // Find user with matching credentials
         // TODO: In production, compare hashed passwords
         var user = db.Users.FirstOrDefault(u => 
-            u.Username == username && u.Pswd == password);
+            u.Username == username && u.HashedPassword == password);
         
         return user;  // null if not found or invalid credentials
     }
@@ -104,7 +114,7 @@ public class UserDataService
         // Update password if provided
         if (!string.IsNullOrWhiteSpace(newPassword))
         {
-            user.Pswd = newPassword;  // TODO: Hash in production
+            (user.HashedPassword, user.Salt) = _hashing.Hash(newPassword);
         }
         
         // Update username if provided (more complex - need to update related data)
@@ -180,18 +190,6 @@ public class UserDataService
         return true;
     }
     
-    // HELPER - Check if user exists
-    public bool UserExists(string username)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            return false;
-        }
-        
-        using var db = new ImdbContext();
-        return db.Users.Any(u => u.Username == username);
-    }
-
     // HELPER - Check if username is available
     public bool IsUsernameAvailable(string username)
     {
@@ -203,11 +201,50 @@ public class UserDataService
         using var db = new ImdbContext();
         return !db.Users.Any(u => u.Username == username);
     }
-    
+
     // COUNT - Get total users
     public int GetUserCount()
     {
         using var db = new ImdbContext();
         return db.Users.Count();
+    }
+
+    public void UpdateUserToken(string username, string token)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return;
+        }
+
+        using var db = new ImdbContext();
+
+        var user = db.Users.FirstOrDefault(u => u.Username == username);
+        if (user == null)
+        {
+            return;  // User not found
+        }
+
+        user.Token = token;
+        user.LastLogin = DateTime.UtcNow;
+
+        db.SaveChanges();
+    }
+    
+    public bool ValidateUserToken(string username, string token)
+    {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(token))
+        {
+            return false;
+        }
+
+        using var db = new ImdbContext();
+
+        var user = db.Users.FirstOrDefault(u => u.Username == username);
+        if (user == null || user.Token != token)
+        {
+            return false;  // User not found or token mismatch
+        }
+
+        return true;  // Token is valid
     }
 }

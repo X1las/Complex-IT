@@ -1,6 +1,7 @@
 using DataServiceLayer;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using WebServiceLayer.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -18,6 +19,9 @@ public class Program
             options.ListenLocalhost(5001); // HTTP only - no HTTPS certificate needed
         });
 
+        // Register DbContext
+        builder.Services.AddDbContext<ImdbContext>();
+
         // Register all data services for dependency injection
         builder.Services.AddScoped<UserHistoryDataService>();
         builder.Services.AddScoped<UserDataService>();
@@ -29,9 +33,11 @@ public class Program
         // Hasing service
         builder.Services.AddSingleton<Utils.Hashing>();
         
+        // Register utility services
+        builder.Services.AddScoped<Hashing>();
+        
         // Register Mapster for object mapping
         builder.Services.AddMapster();
-
         // Add controllers
         builder.Services.AddControllers();
 
