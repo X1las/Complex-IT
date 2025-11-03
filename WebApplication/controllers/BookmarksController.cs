@@ -11,49 +11,68 @@ namespace WebServiceLayer.Models;
 public class BookmarksController : ControllerBase
 {
     private readonly BookmarkDataService _bookmarkService;
+    private readonly ILogger<BookmarksController> _logger;
 
-    public BookmarksController()
+    public BookmarksController(ILogger<BookmarksController> logger)
     {
         _bookmarkService = new BookmarkDataService();
+        _logger = logger;
+    }
+
+    private string GetAuthenticatedUsername()
+    {
+        return User?.Identity?.Name ?? throw new UnauthorizedAccessException("User not authenticated");
+    }
+
+    // Validate that the route username matches the authenticated user
+    private bool ValidateUsername(string username)
+    {
+        var authenticatedUsername = GetAuthenticatedUsername();
+        return username.Equals(authenticatedUsername, StringComparison.OrdinalIgnoreCase);
     }
 
     // GET: api/users/{username}/bookmarks
     [HttpGet]
-    public async Task<IActionResult> GetUserBookmarks(
-        string username,
-        [FromQuery] int page = 0,
-        [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetUserBookmarks(string username)
     {
-        // Input validation
-        if (string.IsNullOrWhiteSpace(username))
-            return BadRequest(new ErrorResponseDto {Error = "Username is required" });
-
-        var (bookmarks, totalCount) = await Task.Run(() => _bookmarkService.GetUserBookmarks(username));
-
-        if (bookmarks == null || bookmarks.Count == 0)
-            return NotFound(new ErrorResponseDto {Error = "No bookmarks found for the user" });
-
-        // Create DTO
-        var bookmarkDtos = bookmarks.Select(b => new BookmarkDto
+        try
         {
-            Url = Url.Action(nameof(GetUserBookmarks), new { username }) ?? string.Empty,
-            TitleId = b.TitleId,
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
-        }).ToList();
+            // Input validation
+            if (string.IsNullOrWhiteSpace(username))
+                return BadRequest(new ErrorResponseDto { Error = "Username is required" });
 
-        // Create paged result
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-        var response = new PagedResultDto<BookmarkDto>
+            var (bookmarks, totalCount) = await Task.Run(() => _bookmarkService.GetUserBookmarks(username));
+
+            if (bookmarks == null || bookmarks.Count == 0)
+                return NotFound(new ErrorResponseDto { Error = "No bookmarks found for the user" });
+
+            // Create DTO
+            var bookmarkDtos = bookmarks.Select(b => new BookmarkDto
+            {
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/bookmarks/{b.TitleId}",
+                TitleId = b.TitleId,
+            }).ToList();
+
+            return Ok(new
+            {
+                bookmarks = bookmarkDtos,
+                totalCount
+            });
+        }
+        catch (UnauthorizedAccessException)
         {
-            Items = bookmarkDtos,
-            CurrentPage = page,
-            PageSize = pageSize,
-            TotalItems = totalCount,
-            TotalPages = totalPages,
-        };
-
-        // Return paged result
-        return Ok(response);
+            return Unauthorized(new ErrorResponseDto { Error = "User not authenticated" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving bookmarks for user");
+            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving bookmarks" });
+        }
     }
 
     // POST: api/users/{username}/bookmarks
@@ -61,42 +80,86 @@ public class BookmarksController : ControllerBase
     public async Task<IActionResult> AddBookmark(string username,
         [FromBody] CreateBookmarkDto request)
     {
-        // Input validation
-        if (string.IsNullOrWhiteSpace(username))
-            return BadRequest(new ErrorResponseDto {Error = "Username is required" });
+        try
+        {
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
-        if (request == null || string.IsNullOrWhiteSpace(request.TitleId))
-            return BadRequest(new ErrorResponseDto {Error = "TitleId is required" });
+            // Input validation
+            if (string.IsNullOrWhiteSpace(username))
+                return BadRequest(new ErrorResponseDto { Error = "Username is required" });
 
-        if (await Task.Run(() => _bookmarkService.BookmarkExists(username, request.TitleId)))
-            return Conflict(new ErrorResponseDto {Error = "Bookmark already exists" });
+            if (request == null || string.IsNullOrWhiteSpace(request.TitleId))
+                return BadRequest(new ErrorResponseDto { Error = "TitleId is required" });
 
-        var success = await Task.Run(() => _bookmarkService.AddBookmark(username, request.TitleId));
+            if (await Task.Run(() => _bookmarkService.BookmarkExists(username, request.TitleId)))
+                return Conflict(new ErrorResponseDto { Error = "Bookmark already exists" });
 
-        if (!success)
-            return StatusCode(500, new ErrorResponseDto {Error = "Failed to create bookmark" });
+            var success = await Task.Run(() => _bookmarkService.AddBookmark(username, request.TitleId));
 
-        // Get the created bookmark
-        var bookmark = await Task.Run(() => _bookmarkService.GetBookmark(username, request.TitleId));
+            if (!success)
+                return StatusCode(500, new ErrorResponseDto { Error = "Failed to create bookmark" });
 
-        if (bookmark == null)
-            return StatusCode(500, new ErrorResponseDto {Error = "Failed to retrieve created bookmark" });
+            // Get the created bookmark
+            var bookmark = await Task.Run(() => _bookmarkService.GetBookmark(username, request.TitleId));
 
-        return Created();
+            if (bookmark == null)
+                return StatusCode(500, new ErrorResponseDto { Error = "Failed to retrieve created bookmark" });
+
+            _logger.LogInformation("User {Username} added bookmark for title {TitleId}", username, request.TitleId);
+
+            var response = new BookmarkDto
+            {
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/bookmarks/{request.TitleId}",
+                TitleId = request.TitleId
+            };
+
+            return CreatedAtAction(nameof(GetUserBookmarks), new { username }, response);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new ErrorResponseDto { Error = "User not authenticated" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding bookmark for user");
+            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while adding bookmark" });
+        }
     }
 
     // DELETE: api/users/{username}/bookmarks/{titleId}
     [HttpDelete("{titleId}")]
     public async Task<IActionResult> RemoveBookmark(string username, string titleId)
     {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(titleId))
-            return BadRequest(new ErrorResponseDto {Error = "Username and TitleId are required" });
+        try
+        {
+            if (!ValidateUsername(username))
+            {
+                return Forbid(); // 403 Forbidden
+            }
 
-        var success = await Task.Run(() => _bookmarkService.RemoveBookmark(username, titleId));
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(titleId))
+                return BadRequest(new ErrorResponseDto { Error = "Username and TitleId are required" });
 
-        if (!success)
-            return NotFound(new ErrorResponseDto {Error = "Bookmark not found" });
+            var success = await Task.Run(() => _bookmarkService.RemoveBookmark(username, titleId));
 
-        return Ok();
+            if (!success)
+                return NotFound(new ErrorResponseDto { Error = "Bookmark not found" });
+
+            _logger.LogInformation("User {Username} removed bookmark for title {TitleId}", username, titleId);
+
+            return Ok(new { message = "Bookmark deleted successfully" });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new ErrorResponseDto { Error = "User not authenticated" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error removing bookmark for user");
+            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while removing bookmark" });
+        }
     }
 }
