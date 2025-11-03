@@ -31,7 +31,6 @@ public class UserController : ControllerBase
         _configuration = configuration;
     }
 
-    [AllowAnonymous]
     [HttpPost("create")]
     public async Task<IActionResult> CreateUser([FromBody] UserRegistrationModel model)
     {
@@ -80,8 +79,8 @@ public class UserController : ControllerBase
 
 
     // POST: api/users/login
-    [AllowAnonymous]
-    [HttpPost("login")]
+    [allowAnonymous]
+    [HttpPut("login")]
     public IActionResult Login(UserLoginModel model)
     {
         var user = _dataService.GetUserByUsername(model.Username);
@@ -114,7 +113,6 @@ public class UserController : ControllerBase
             );
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-        _dataService.UpdateUserToken(user.Username, jwt);
 
         return Ok(new { user.Username, token = jwt });
     }
