@@ -7,8 +7,6 @@ public class Users
     public string Username { get; set; }
     public string HashedPassword { get; set; }
     public string Salt { get; set; }
-    public string? Token { get; set; }
-    public DateTime? LastLogin { get; set; }
 }
 
 public class UserRatings

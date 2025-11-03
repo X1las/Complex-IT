@@ -109,12 +109,11 @@ public class UserController : ControllerBase
 
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.Now.AddDays(4),
+            expires: DateTime.Now.AddMinutes(60),
             signingCredentials: creds
             );
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-        _dataService.UpdateUserToken(user.Username, jwt);
 
         return Ok(new { user.Username, token = jwt });
     }
