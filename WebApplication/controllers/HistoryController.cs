@@ -40,7 +40,7 @@ public class HistoryController : ControllerBase
     }
 
     [HttpPost("{titleId}")]
-    public IActionResult RecordHistory(string username, string titleId)
+    public async Task<IActionResult> RecordHistory(string username, string titleId)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
@@ -52,7 +52,7 @@ public class HistoryController : ControllerBase
 
         try
         {
-            _historyService.RecordUserHistory(username, titleId);
+            await Task.Run(() => _historyService.RecordUserHistory(username, titleId));
 
             _logger.LogInformation("User {Username} recorded history for title {TitleId}", username, titleId);
 
@@ -66,14 +66,14 @@ public class HistoryController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetHistory(string username)
+    public async Task<IActionResult> GetHistory(string username)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
 
         try
         {
-            var (history, totalCount) = _historyService.GetUserHistory(username);
+            var (history, totalCount) = await Task.Run(() => _historyService.GetUserHistory(username));
             
             var historyDtos = history.Select(h => new HistoryItemDto
             {
@@ -97,7 +97,7 @@ public class HistoryController : ControllerBase
     }
 
     [HttpGet("recent")]
-    public IActionResult GetRecentHistory(string username, [FromQuery] int limit = 10)
+    public async Task<IActionResult> GetRecentHistory(string username, [FromQuery] int limit = 10)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
@@ -109,7 +109,7 @@ public class HistoryController : ControllerBase
 
         try
         {
-            var history = _historyService.GetRecentHistory(username, limit);
+            var history = await Task.Run(() => _historyService.GetRecentHistory(username, limit));
             
             var historyDtos = history.Select(h => new HistoryItemDto
             {
@@ -129,14 +129,14 @@ public class HistoryController : ControllerBase
     }
 
     [HttpGet("count")]
-    public IActionResult GetHistoryCount(string username)
+    public async Task<IActionResult> GetHistoryCount(string username)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
 
         try
         {
-            var count = _historyService.GetHistoryCount(username);
+            var count = await Task.Run(() => _historyService.GetHistoryCount(username));
             
             return Ok(new {count});
         }
@@ -148,7 +148,7 @@ public class HistoryController : ControllerBase
     }
 
     [HttpDelete("{titleId}/{timestamp}")]
-    public IActionResult DeleteHistoryItem(string username, string titleId, DateTime timestamp)
+    public async Task<IActionResult> DeleteHistoryItem(string username, string titleId, DateTime timestamp)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
@@ -160,7 +160,7 @@ public class HistoryController : ControllerBase
 
         try
         {
-            var success = _historyService.DeleteHistoryItem(username, titleId, timestamp);
+            var success = await Task.Run(() => _historyService.DeleteHistoryItem(username, titleId, timestamp));
 
             if (!success)
             {
@@ -180,7 +180,7 @@ public class HistoryController : ControllerBase
     }
 
     [HttpDelete("{titleId}")]
-    public IActionResult DeleteTitleHistory(string username, string titleId)
+    public async Task<IActionResult> DeleteTitleHistory(string username, string titleId)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
@@ -192,7 +192,7 @@ public class HistoryController : ControllerBase
 
         try
         {
-            var success = _historyService.DeleteTitleHistory(username, titleId);
+            var success = await Task.Run(() => _historyService.DeleteTitleHistory(username, titleId));
             
             if (!success)
             {
@@ -211,14 +211,14 @@ public class HistoryController : ControllerBase
     }
 
     [HttpDelete]
-    public IActionResult ClearHistory(string username)
+    public async Task<IActionResult> ClearHistory(string username)
     {
         var validationResult = ValidateUserAccess(username);
         if (validationResult != null) return validationResult;
 
         try
         {
-            _historyService.ClearUserHistory(username);
+            await Task.Run(() => _historyService.ClearUserHistory(username));
             
             _logger.LogInformation("User {Username} cleared their entire history", username);
             

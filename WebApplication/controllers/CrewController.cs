@@ -17,16 +17,16 @@ public class CrewController : ControllerBase
 
     // GET: api/crew
     [HttpGet]
-    public IActionResult GetAllCrewMembers(
+    public async Task<IActionResult> GetAllCrewMembers(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string? search = null)
     {
-        var (crewMembers, totalCount) = _crewService.GetCrew();
+        var (crewMembers, totalCount) = await Task.Run(() => _crewService.GetCrew());
 
         if (!string.IsNullOrEmpty(search))
         {
-            var (searchedCrew, searchedCount) = _crewService.SearchCrew(search, crewMembers);
+            var (searchedCrew, searchedCount) = await Task.Run(() => _crewService.SearchCrew(search, crewMembers));
             crewMembers = searchedCrew ?? new List<Crew>();
             totalCount = searchedCount;
         }
@@ -66,9 +66,9 @@ public class CrewController : ControllerBase
 
     // GET: api/crew/{id}
     [HttpGet("{id}")]
-    public IActionResult GetCrewById(string id)
+    public async Task<IActionResult> GetCrewById(string id)
     {
-        var crew = _crewService.GetCrew(id);
+        var crew = await Task.Run(() => _crewService.GetCrew(id));
         if (crew == null)
         {
             return NotFound($"Crew member with ID {id} not found.");
@@ -89,16 +89,16 @@ public class CrewController : ControllerBase
 
     // GET: api/crew/{id}/titles
     [HttpGet("{id}/titles")]
-    public IActionResult GetCrewTitles(string id)
+    public async Task<IActionResult> GetCrewTitles(string id)
     {
         // Input validation
-        var crew = _crewService.GetCrew(id);
+        var crew = await Task.Run(() => _crewService.GetCrew(id));
         if (crew == null)
         {
             return NotFound($"Crew member with ID {id} not found.");
         }
 
-        var (titles, totalCount) = _crewService.GetCrewTitles(id);
+        var (titles, totalCount) = await Task.Run(() => _crewService.GetCrewTitles(id));
 
         if (titles == null || totalCount == 0)
         {
