@@ -17,7 +17,7 @@ public class TitleController : ControllerBase
 
     // GET: api/titles
     [HttpGet]
-    public IActionResult GetTitles(
+    public async Task<IActionResult> GetTitles(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string? search = null)
@@ -27,11 +27,11 @@ public class TitleController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            (titlesList, totalCount) = _titleService.SearchTitles(search);
+            (titlesList, totalCount) = await Task.Run(() => _titleService.SearchTitles(search));
         }
         else
         {
-            (titlesList, totalCount) = _titleService.GetTitles();
+            (titlesList, totalCount) = await Task.Run(() => _titleService.GetTitles());
         }
         
         // Calculate pagination
@@ -68,12 +68,12 @@ public class TitleController : ControllerBase
 
     // GET: api/titles/{id}
     [HttpGet("{id}")]
-    public IActionResult GetTitle(string id)
+    public async Task<IActionResult> GetTitle(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        var title = _titleService.GetTitle(id);
+        var title = await Task.Run(() => _titleService.GetTitle(id));
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
@@ -100,34 +100,34 @@ public class TitleController : ControllerBase
 
     // GET: api/titles/{id}/genres
     [HttpGet("{id}/genres")]
-    public IActionResult GetTitleGenres(string id)
+    public async Task<IActionResult> GetTitleGenres(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        var title = _titleService.GetTitle(id);
+        var title = await Task.Run(() => _titleService.GetTitle(id));
 
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
-        var genres = _titleService.GetTitleGenres(id);
+        var genres = await Task.Run(() => _titleService.GetTitleGenres(id));
         return Ok(genres);
     }
 
     // GET: api/titles/{id}/crew
     [HttpGet("{id}/crew")]
-    public IActionResult GetTitleCrew(string id,
+    public async Task<IActionResult> GetTitleCrew(string id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        var title = _titleService.GetTitle(id);
+        var title = await Task.Run(() => _titleService.GetTitle(id));
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Title not found" });
 
-        var crew = _titleService.GetTitleCrew(id) ?? new List<Attends>();
+        var crew = await Task.Run(() => _titleService.GetTitleCrew(id)) ?? new List<Attends>();
         var totalCount = crew.Count;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
@@ -158,14 +158,14 @@ public class TitleController : ControllerBase
 
     // GET: api/titles/genres
     [HttpGet("genres")]
-    public IActionResult GetGenres()
+    public async Task<IActionResult> GetGenres()
     {
-        var genres = _titleService.GetAllGenres();
+        var genres = await Task.Run(() => _titleService.GetAllGenres());
         return Ok(genres);
     }
 
     [HttpGet("genres/{genre}")]
-    public IActionResult GetTitlesBySpecificGenre(string genre,
+    public async Task<IActionResult> GetTitlesBySpecificGenre(string genre,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
@@ -173,7 +173,7 @@ public class TitleController : ControllerBase
         if (string.IsNullOrWhiteSpace(genre))
             return BadRequest(new ErrorResponseDto { Error = "Genre is required" });
 
-        var (titles, totalCount) = _titleService.GetTitlesByGenre(genre);
+        var (titles, totalCount) = await Task.Run(() => _titleService.GetTitlesByGenre(genre));
         titles ??= new List<Titles>();
 
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -206,18 +206,18 @@ public class TitleController : ControllerBase
 
     // GET: api/titles/{id}/episodes
     [HttpGet("{id}/episodes")]
-    public IActionResult GetTitleEpisodes(string id,
+    public async Task<IActionResult> GetTitleEpisodes(string id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest(new ErrorResponseDto { Error = "Series ID is required" });
 
-        var title = _titleService.GetTitle(id);
+        var title = await Task.Run(() => _titleService.GetTitle(id));
         if (title == null)
             return NotFound(new ErrorResponseDto { Error = "Series not found" });
 
-        var episodes = _titleService.GetTitleEpisodes(id) ?? new List<Episodes>();
+        var episodes = await Task.Run(() => _titleService.GetTitleEpisodes(id)) ?? new List<Episodes>();
 
         // NOTE: possible N+1 below; consider optimizing in the service layer
         var episodeDtos = episodes.Select(e => new TitleEpisodesModel
@@ -250,14 +250,14 @@ public class TitleController : ControllerBase
     }
 
     [HttpGet("{id}/alternates")]
-    public IActionResult GetAlternateTitles(string id,
+    public async Task<IActionResult> GetAlternateTitles(string id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        var alternateTitles = _titleService.GetTitleAlternates(id) ?? new List<AlternateTitles>();
+        var alternateTitles = await Task.Run(() => _titleService.GetTitleAlternates(id)) ?? new List<AlternateTitles>();
 
         var totalCount = alternateTitles.Count;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -289,14 +289,14 @@ public class TitleController : ControllerBase
     }
 
     [HttpGet("{id}/regions")]
-    public IActionResult GetTitleRegions(string id,
+    public async Task<IActionResult> GetTitleRegions(string id,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest(new ErrorResponseDto { Error = "Title ID is required" });
 
-        var titleRegions = _titleService.GetTitleRegions(id) ?? new List<TitleRegions>();
+        var titleRegions = await Task.Run(() => _titleService.GetTitleRegions(id)) ?? new List<TitleRegions>();
 
         var totalCount = titleRegions.Count;
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -311,7 +311,7 @@ public class TitleController : ControllerBase
         var regionDtos = paginatedRegions.Select(r => new TitleRegionModel
         {
             Region = r.Region ?? string.Empty,
-            Language = _titleService.GetTitleRegionDetails(r.Region)?.Language ?? string.Empty
+            Language = string.IsNullOrWhiteSpace(r.Region) ? string.Empty : (_titleService.GetTitleRegionDetails(r.Region)?.Language ?? string.Empty)
         }).ToList();
 
         var response = new PagedResultDto<TitleRegionModel>
