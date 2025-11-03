@@ -114,6 +114,7 @@ public class UserController : ControllerBase
             );
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        _dataService.UpdateUserToken(user.Username, jwt);
 
         return Ok(new { user.Username, token = jwt });
     }

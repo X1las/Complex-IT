@@ -25,16 +25,16 @@ public class TitleDataService
         return (titles, totalCount);
     }
 
-    public Titles? GetTitle(string id, int? userId = null)
+    public Titles? GetTitle(string id, string? username = null)
     {
         using var db = new ImdbContext();
 
         var title = db.Title
             .FirstOrDefault(t => t.Id == id);
 
-        if (userId.HasValue && title != null)
+        if (!string.IsNullOrWhiteSpace(username) && title != null)
         {
-            _historyServices.RecordUserHistory(userId.Value, id);
+            _historyServices.RecordUserHistory(username, id);
         }
 
         return title;

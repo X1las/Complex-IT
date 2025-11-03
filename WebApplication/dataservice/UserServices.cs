@@ -190,18 +190,6 @@ public class UserDataService
         return true;
     }
     
-    // HELPER - Check if user exists
-    public bool UserExists(string username)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            return false;
-        }
-        
-        using var db = new ImdbContext();
-        return db.Users.Any(u => u.Username == username);
-    }
-
     // HELPER - Check if username is available
     public bool IsUsernameAvailable(string username)
     {
@@ -213,11 +201,50 @@ public class UserDataService
         using var db = new ImdbContext();
         return !db.Users.Any(u => u.Username == username);
     }
-    
+
     // COUNT - Get total users
     public int GetUserCount()
     {
         using var db = new ImdbContext();
         return db.Users.Count();
+    }
+
+    public void UpdateUserToken(string username, string token)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return;
+        }
+
+        using var db = new ImdbContext();
+
+        var user = db.Users.FirstOrDefault(u => u.Username == username);
+        if (user == null)
+        {
+            return;  // User not found
+        }
+
+        user.Token = token;
+        user.LastLogin = DateTime.UtcNow;
+
+        db.SaveChanges();
+    }
+    
+    public bool ValidateUserToken(string username, string token)
+    {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(token))
+        {
+            return false;
+        }
+
+        using var db = new ImdbContext();
+
+        var user = db.Users.FirstOrDefault(u => u.Username == username);
+        if (user == null || user.Token != token)
+        {
+            return false;  // User not found or token mismatch
+        }
+
+        return true;  // Token is valid
     }
 }

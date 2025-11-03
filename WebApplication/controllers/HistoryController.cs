@@ -7,28 +7,55 @@ namespace WebServiceLayer.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/users/{userId}/history")]
+[Route("api/users/{username}/history")]
 public class HistoryController : ControllerBase
 {
     private readonly UserHistoryDataService _historyService;
     private readonly ILogger<HistoryController> _logger;
 
-    public HistoryController(UserHistoryDataService historyService, ILogger<HistoryController> logger)
+    public HistoryController(
+        UserHistoryDataService historyService,
+        ILogger<HistoryController> logger)
     {
         _historyService = historyService;
         _logger = logger;
     }
 
-    // example: POST /api/users/1/history/tt0111161
-    [HttpPost("{titleId}")]
-    public IActionResult RecordHistory(int userId, string titleId)
+    // Helper method to validate the authenticated user matches the requested username
+    private IActionResult? ValidateUserAccess(string requestedUsername)
     {
+        var authenticatedUsername = User?.Identity?.Name;
+        
+        if (string.IsNullOrWhiteSpace(authenticatedUsername))
+        {
+            return Unauthorized(new ErrorResponseDto { Error = "Unable to determine authenticated user" });
+        }
+
+        if (authenticatedUsername != requestedUsername)
+        {
+            return Forbid(); // 403 - user is authenticated but trying to access another user's data
+        }
+
+        return null; // Validation passed
+    }
+
+    [HttpPost("{titleId}")]
+    public IActionResult RecordHistory(string username, string titleId)
+    {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
+        if (string.IsNullOrWhiteSpace(titleId))
+        {
+            return BadRequest(new ErrorResponseDto { Error = "TitleId cannot be empty" });
+        }
+
         try
         {
-            _historyService.RecordUserHistory(userId, titleId);
-            
-            _logger.LogInformation("User {UserId} recorded history for title {TitleId}", userId, titleId);
-            
+            _historyService.RecordUserHistory(username, titleId);
+
+            _logger.LogInformation("User {Username} recorded history for title {TitleId}", username, titleId);
+
             return Ok(new { message = "History recorded successfully" });
         }
         catch (Exception ex)
@@ -38,18 +65,20 @@ public class HistoryController : ControllerBase
         }
     }
 
-    // example: GET /api/users/1/history
     [HttpGet]
-    public IActionResult GetHistory(int userId)
+    public IActionResult GetHistory(string username)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            var (history, totalCount) = _historyService.GetUserHistory(userId);
+            var (history, totalCount) = _historyService.GetUserHistory(username);
             
             var historyDtos = history.Select(h => new HistoryItemDto
             {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{userId}/history/{h.TitleId}/{h.Date:O}",
-                Id = 0,  // Not used
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/history/{h.TitleId}/{h.Date:O}",
+                Id = 0,
                 TitleId = h.TitleId ?? "",
                 ViewedAt = h.Date
             }).ToList();
@@ -62,22 +91,29 @@ public class HistoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving user history for userId {UserId}", userId);
+            _logger.LogError(ex, "Error retrieving user history for username {Username}", username);
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving history" });
         }
     }
 
-    // example: GET /api/users/1/history/recent?limit=10
     [HttpGet("recent")]
-    public IActionResult GetRecentHistory(int userId, [FromQuery] int limit = 10)
+    public IActionResult GetRecentHistory(string username, [FromQuery] int limit = 10)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
+        if (limit <= 0)
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Limit must be greater than 0" });
+        }
+
         try
         {
-            var history = _historyService.GetRecentHistory(userId, limit);
+            var history = _historyService.GetRecentHistory(username, limit);
             
             var historyDtos = history.Select(h => new HistoryItemDto
             {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{userId}/history/{h.TitleId}/{h.Date:O}",
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/history/{h.TitleId}/{h.Date:O}",
                 Id = 0,
                 TitleId = h.TitleId ?? "",
                 ViewedAt = h.Date
@@ -87,43 +123,52 @@ public class HistoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving recent history for userId {UserId}", userId);
+            _logger.LogError(ex, "Error retrieving recent history for username {Username}", username);
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving recent history" });
         }
     }
 
-    // example: GET /api/users/1/history/count
     [HttpGet("count")]
-    public IActionResult GetHistoryCount(int userId)
+    public IActionResult GetHistoryCount(string username)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            var count = _historyService.GetHistoryCount(userId);
+            var count = _historyService.GetHistoryCount(username);
             
             return Ok(new {count});
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving history count for userId {UserId}", userId);
+            _logger.LogError(ex, "Error retrieving history count for username {Username}", username);
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving history count" });
         }
     }
 
-    // example: DELETE /api/users/1/history/tt0111161/2025-10-29T12:42:00.0000000Z
     [HttpDelete("{titleId}/{timestamp}")]
-    public IActionResult DeleteHistoryItem(int userId, string titleId, DateTime timestamp)
+    public IActionResult DeleteHistoryItem(string username, string titleId, DateTime timestamp)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
+        if (string.IsNullOrWhiteSpace(titleId))
+        {
+            return BadRequest(new ErrorResponseDto { Error = "TitleId cannot be empty" });
+        }
+
         try
         {
-            var success = _historyService.DeleteHistoryItem(userId, titleId, timestamp);
+            var success = _historyService.DeleteHistoryItem(username, titleId, timestamp);
 
             if (!success)
             {
                 return NotFound(new ErrorResponseDto { Error = "History item not found" });
             }
 
-            _logger.LogInformation("User {UserId} deleted history for title {TitleId} at {Timestamp}",
-                userId, titleId, timestamp);
+            _logger.LogInformation("User {Username} deleted history for title {TitleId} at {Timestamp}",
+                username, titleId, timestamp);
 
             return Ok(new { message = "History item deleted successfully" });
         }
@@ -134,20 +179,27 @@ public class HistoryController : ControllerBase
         }
     }
 
-    // example: DELETE /api/users/1/history/tt0111161
     [HttpDelete("{titleId}")]
-    public IActionResult DeleteTitleHistory(int userId, string titleId)
+    public IActionResult DeleteTitleHistory(string username, string titleId)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
+        if (string.IsNullOrWhiteSpace(titleId))
+        {
+            return BadRequest(new ErrorResponseDto { Error = "TitleId cannot be empty" });
+        }
+
         try
         {
-            var success = _historyService.DeleteTitleHistory(userId, titleId);
+            var success = _historyService.DeleteTitleHistory(username, titleId);
             
             if (!success)
             {
                 return NotFound(new ErrorResponseDto { Error = "No history found for this title" });
             }
             
-            _logger.LogInformation("User {UserId} deleted all history for title {TitleId}", userId, titleId);
+            _logger.LogInformation("User {Username} deleted all history for title {TitleId}", username, titleId);
             
             return Ok(new { message = "Title history deleted successfully" });
         }
@@ -158,21 +210,23 @@ public class HistoryController : ControllerBase
         }
     }
 
-    // example: DELETE /api/users/1/history
     [HttpDelete]
-    public IActionResult ClearHistory(int userId)
+    public IActionResult ClearHistory(string username)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            _historyService.ClearUserHistory(userId);
+            _historyService.ClearUserHistory(username);
             
-            _logger.LogInformation("User {UserId} cleared their entire history", userId);
+            _logger.LogInformation("User {Username} cleared their entire history", username);
             
             return Ok(new { message = "History cleared successfully" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error clearing user history for userId {UserId}", userId);
+            _logger.LogError(ex, "Error clearing user history for username {Username}", username);
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while clearing history" });
         }
     }
