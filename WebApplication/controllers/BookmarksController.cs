@@ -19,7 +19,7 @@ public class BookmarksController : ControllerBase
 
     // GET: api/users/{username}/bookmarks
     [HttpGet]
-    public IActionResult GetUserBookmarks(
+    public async Task<IActionResult> GetUserBookmarks(
         string username,
         [FromQuery] int page = 0,
         [FromQuery] int pageSize = 10)
@@ -28,7 +28,7 @@ public class BookmarksController : ControllerBase
         if (string.IsNullOrWhiteSpace(username))
             return BadRequest(new ErrorResponseDto {Error = "Username is required" });
 
-        var (bookmarks, totalCount) = _bookmarkService.GetUserBookmarks(username);
+        var (bookmarks, totalCount) = await Task.Run(() => _bookmarkService.GetUserBookmarks(username));
 
         if (bookmarks == null || bookmarks.Count == 0)
             return NotFound(new ErrorResponseDto {Error = "No bookmarks found for the user" });
@@ -58,7 +58,7 @@ public class BookmarksController : ControllerBase
 
     // POST: api/users/{username}/bookmarks
     [HttpPost]
-    public IActionResult AddBookmark(string username,
+    public async Task<IActionResult> AddBookmark(string username,
         [FromBody] CreateBookmarkDto request)
     {
         // Input validation
@@ -68,16 +68,16 @@ public class BookmarksController : ControllerBase
         if (request == null || string.IsNullOrWhiteSpace(request.TitleId))
             return BadRequest(new ErrorResponseDto {Error = "TitleId is required" });
 
-        if (_bookmarkService.BookmarkExists(username, request.TitleId))
+        if (await Task.Run(() => _bookmarkService.BookmarkExists(username, request.TitleId)))
             return Conflict(new ErrorResponseDto {Error = "Bookmark already exists" });
 
-        var success = _bookmarkService.AddBookmark(username, request.TitleId);
+        var success = await Task.Run(() => _bookmarkService.AddBookmark(username, request.TitleId));
 
         if (!success)
             return StatusCode(500, new ErrorResponseDto {Error = "Failed to create bookmark" });
 
         // Get the created bookmark
-        var bookmark = _bookmarkService.GetBookmark(username, request.TitleId);
+        var bookmark = await Task.Run(() => _bookmarkService.GetBookmark(username, request.TitleId));
 
         if (bookmark == null)
             return StatusCode(500, new ErrorResponseDto {Error = "Failed to retrieve created bookmark" });
@@ -87,12 +87,12 @@ public class BookmarksController : ControllerBase
 
     // DELETE: api/users/{username}/bookmarks/{titleId}
     [HttpDelete("{titleId}")]
-    public IActionResult RemoveBookmark(string username, string titleId)
+    public async Task<IActionResult> RemoveBookmark(string username, string titleId)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(titleId))
             return BadRequest(new ErrorResponseDto {Error = "Username and TitleId are required" });
 
-        var success = _bookmarkService.RemoveBookmark(username, titleId);
+        var success = await Task.Run(() => _bookmarkService.RemoveBookmark(username, titleId));
 
         if (!success)
             return NotFound(new ErrorResponseDto {Error = "Bookmark not found" });

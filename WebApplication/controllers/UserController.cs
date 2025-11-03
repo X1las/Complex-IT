@@ -35,16 +35,16 @@ public class UserController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("create")]
-    public async Task<IActionResult> CreateUser([FromBody] UserRegistrationModel model)
+    public async Task<IActionResult> CreateUser(UserCredentialsModel model)
     {
         if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
         {
-            return BadRequest();
+            return BadRequest(new ErrorResponseDto { Error = "Username and Password are required." });
         }
         var username = model.Username.Trim();
         var existingUser = await _context.Users.AnyAsync(u => u.Username == model.Username);
         if (existingUser)
-            return Conflict("Username already exists.");
+            return Conflict(new ErrorResponseDto { Error = "Username already exists." });
 
         var user = new Users
         {
@@ -75,19 +75,26 @@ public class UserController : ControllerBase
     [HttpGet("{username}")]
     public async Task<IActionResult> GetUserByUsername(string username)
     {
+        var authenticatedUser = User?.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        {
+            return Unauthorized(new ErrorResponseDto { Error = "Unable to determine authenticated user." });
+        }
         if (string.IsNullOrWhiteSpace(username))
         {
-            return BadRequest("Username is required.");
+            return BadRequest(new ErrorResponseDto { Error = "Username is required." });
         }
 
         var normalized = username.Trim().ToLower();
-       
-        var userDto = await _context.Users.AsNoTracking().Where(u => u.Username.ToLower() == normalized)
-            .Select(u => new { u.Username }).FirstOrDefaultAsync();
+
+        var userDto = await _context.Users.AsNoTracking()
+            .Where(u => u.Username.ToLower() == normalized)
+            .Select(u => new { u.Username })
+            .FirstOrDefaultAsync();
 
         if (userDto == null)
         {
-            return NotFound();
+            return NotFound(new { error = "User not found" });
         }
 
         return Ok(userDto);
@@ -96,18 +103,18 @@ public class UserController : ControllerBase
     // POST: api/users/login
     [AllowAnonymous]
     [HttpPost("login")]
-    public IActionResult Login(UserLoginModel model)
+    public async Task<IActionResult> Login(UserCredentialsModel model)
     {
-        var user = _dataService.GetUserByUsername(model.Username);
+        var user = await Task.Run(() => _dataService.GetUserByUsername(model.Username));
 
         if (user == null)
         {
-            return BadRequest();
+            return BadRequest(new ErrorResponseDto { Error = "User not found" });
         }
 
         if (!_hashing.Verify(model.Password, user.HashedPassword, user.Salt))
         {
-            return BadRequest();
+            return BadRequest(new ErrorResponseDto { Error = "Invalid Password" });
         }
 
         var claims = new List<Claim>
@@ -115,7 +122,8 @@ public class UserController : ControllerBase
             new Claim(ClaimTypes.Name, user.Username),
         };
 
-        var secret = _configuration.GetSection("Auth:Secret").Value;
+        var secret = _configuration.GetSection("Auth:Secret").Value 
+            ?? throw new InvalidOperationException("Auth:Secret is not configured");
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
@@ -129,27 +137,26 @@ public class UserController : ControllerBase
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return Ok(new { user.Username, token = jwt });
+        return Ok(new UserLoginResponseModel { Token = jwt });
     }
 
-
-  // DELETE: api/users/{username}
     [HttpDelete("{username}")]
     public async Task<IActionResult> DeleteOwnAccount()
     {
         
-        var username = User?.Identity?.Name
-                       ?? User?.FindFirst(ClaimTypes.Name)?.Value
-                       ?? User?.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (string.IsNullOrWhiteSpace(username))
-            return Unauthorized("Unable to determine authenticated user.");
-
-        var normalized = username.Trim().ToLowerInvariant();
+        var authenticatedUser = User?.Identity?.Name;
+        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        {
+            return Unauthorized(new ErrorResponseDto { Error = "Unable to determine authenticated user." });
+        }
+        if (string.IsNullOrWhiteSpace(authenticatedUser))
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Username is required." });
+        }
 
         
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Username.ToLower() == normalized);
+            .FirstOrDefaultAsync(u => u.Username.ToLower() == authenticatedUser.ToLower());
 
         if (user == null)
             return NotFound("User not found.");
@@ -158,8 +165,7 @@ public class UserController : ControllerBase
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
 
-
-        return NoContent();
+        return Ok();
     }
 
 }

@@ -22,7 +22,7 @@ public class RatingController : ControllerBase
     // POST /api/users/1/ratings
     // Create or update a rating
     [HttpPost]
-    public IActionResult CreateRating(int userId, [FromBody] CreateRatingDto dto)
+    public async Task<IActionResult> CreateRating(int userId, [FromBody] CreateRatingDto dto)
     {
         try
         {
@@ -36,7 +36,7 @@ public class RatingController : ControllerBase
                 return BadRequest(new ErrorResponseDto { Error = "Rating must be between 1 and 10" });
             }
             
-            var success = _ratingService.AddOrUpdateRating(userId, dto.TitleId, dto.Rating);
+            var success = await Task.Run(() => _ratingService.AddOrUpdateRating(userId, dto.TitleId, dto.Rating));
             
             if (!success)
             {
@@ -68,11 +68,11 @@ public class RatingController : ControllerBase
 
     // GET /api/users/1/ratings
     [HttpGet]
-    public IActionResult GetAllRatings(int userId)
+    public async Task<IActionResult> GetAllRatings(int userId)
     {
         try
         {
-            var (ratings, totalCount) = _ratingService.GetUserRatings(userId);
+            var (ratings, totalCount) = await Task.Run(() => _ratingService.GetUserRatings(userId));
             
             var ratingDtos = ratings.Select(r => new RatingDto
             {
@@ -98,11 +98,11 @@ public class RatingController : ControllerBase
     // GET /api/users/1/ratings/tt0111161
     // Get specific rating for a title
     [HttpGet("{titleId}")]
-    public IActionResult GetRating(int userId, string titleId)
+    public async Task<IActionResult> GetRating(int userId, string titleId)
     {
         try
         {
-            var rating = _ratingService.GetUserRating(userId, titleId);
+            var rating = await Task.Run(() => _ratingService.GetUserRating(userId, titleId));
             
             if (rating == null)
             {
@@ -129,11 +129,11 @@ public class RatingController : ControllerBase
     // GET /api/users/1/ratings/count
     // Get total number of ratings for user
     [HttpGet("count")]
-    public IActionResult GetRatingCount(int userId)
+    public async Task<IActionResult> GetRatingCount(int userId)
     {
         try
         {
-            var count = _ratingService.GetRatingCount(userId);
+            var count = await Task.Run(() => _ratingService.GetRatingCount(userId));
             return Ok(new {count});
         }
         catch (Exception ex)
@@ -145,7 +145,7 @@ public class RatingController : ControllerBase
 
     // PUT /api/users/1/ratings/tt0111161
     [HttpPut("{titleId}")]
-    public IActionResult UpdateRating(int userId, string titleId, [FromBody] UpdateRatingDto dto)
+    public async Task<IActionResult> UpdateRating(int userId, string titleId, [FromBody] UpdateRatingDto dto)
     {
         try
         {
@@ -155,13 +155,13 @@ public class RatingController : ControllerBase
             }
             
             // Check if rating exists
-            var existingRating = _ratingService.GetUserRating(userId, titleId);
+            var existingRating = await Task.Run(() => _ratingService.GetUserRating(userId, titleId));
             if (existingRating == null)
             {
                 return NotFound(new ErrorResponseDto { Error = "Rating not found" });
             }
             
-            var success = _ratingService.AddOrUpdateRating(userId, titleId, dto.Rating);
+            var success = await Task.Run(() => _ratingService.AddOrUpdateRating(userId, titleId, dto.Rating));
             
             if (!success)
             {
@@ -192,11 +192,11 @@ public class RatingController : ControllerBase
 
     // DELETE /api/users/1/ratings/tt0111161
     [HttpDelete("{titleId}")]
-    public IActionResult DeleteRating(int userId, string titleId)
+    public async Task<IActionResult> DeleteRating(int userId, string titleId)
     {
         try
         {
-            var success = _ratingService.DeleteRating(userId, titleId);
+            var success = await Task.Run(() => _ratingService.DeleteRating(userId, titleId));
             
             if (!success)
             {
@@ -216,11 +216,11 @@ public class RatingController : ControllerBase
 
     // DELETE /api/users/1/ratings
     [HttpDelete]
-    public IActionResult ClearAllRatings(int userId)
+    public async Task<IActionResult> ClearAllRatings(int userId)
     {
         try
         {
-            _ratingService.ClearUserRatings(userId);
+            await Task.Run(() => _ratingService.ClearUserRatings(userId));
             
             _logger.LogInformation("User {UserId} cleared all ratings", userId);
             
@@ -250,12 +250,12 @@ public class TitleRatingController : ControllerBase
     // GET /api/titles/tt0111161/ratings/average
     // Get average rating for a title across all users
     [HttpGet("average")]
-    public IActionResult GetAverageRating(string titleId)
+    public async Task<IActionResult> GetAverageRating(string titleId)
     {
         try
         {
-            var average = _ratingService.GetAverageUserRatingForTitle(titleId);
-            var count = _ratingService.GetTitleRatingCount(titleId);
+            var average = await Task.Run(() => _ratingService.GetAverageUserRatingForTitle(titleId));
+            var count = await Task.Run(() => _ratingService.GetTitleRatingCount(titleId));
             
             var response = new AverageRatingDto
             {

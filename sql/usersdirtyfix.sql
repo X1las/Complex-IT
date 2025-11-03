@@ -8,8 +8,6 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL,
     password VARCHAR(256) NOT NULL,
     salt VARCHAR(256) NOT NULL,
-    token VARCHAR(512),
-    last_login TIMESTAMP,
     PRIMARY KEY (username)
 );
 

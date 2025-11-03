@@ -208,43 +208,4 @@ public class UserDataService
         using var db = new ImdbContext();
         return db.Users.Count();
     }
-
-    public void UpdateUserToken(string username, string token)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            return;
-        }
-
-        using var db = new ImdbContext();
-
-        var user = db.Users.FirstOrDefault(u => u.Username == username);
-        if (user == null)
-        {
-            return;  // User not found
-        }
-
-        user.Token = token;
-        user.LastLogin = DateTime.UtcNow;
-
-        db.SaveChanges();
-    }
-    
-    public bool ValidateUserToken(string username, string token)
-    {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(token))
-        {
-            return false;
-        }
-
-        using var db = new ImdbContext();
-
-        var user = db.Users.FirstOrDefault(u => u.Username == username);
-        if (user == null || user.Token != token)
-        {
-            return false;  // User not found or token mismatch
-        }
-
-        return true;  // Token is valid
-    }
 }
