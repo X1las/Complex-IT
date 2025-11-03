@@ -764,25 +764,24 @@
     ]
   },
   "packageFolders": {
-    "/home/xilas/.nuget/packages/": {}
+    "C:\\Users\\malth\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj",
+      "projectUniqueName": "C:\\Users\\malth\\Documents\\Complex-IT\\Assignment4\\Assignment4.csproj",
       "projectName": "Assignment4",
-      "projectPath": "/home/xilas/Complex-IT/Assignment4/Assignment4.csproj",
-      "packagesPath": "/home/xilas/.nuget/packages/",
-      "outputPath": "/home/xilas/Complex-IT/Assignment4/obj/",
+      "projectPath": "C:\\Users\\malth\\Documents\\Complex-IT\\Assignment4\\Assignment4.csproj",
+      "packagesPath": "C:\\Users\\malth\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\malth\\Documents\\Complex-IT\\Assignment4\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/xilas/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\malth\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -801,7 +800,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -843,7 +842,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -5,7 +5,7 @@ using WebServiceLayer.Models;
 
 namespace WebServiceLayer.Controllers;
 
-[Authorize]
+
 [ApiController]
 [Route("api/users/{username}/history")]
 public class HistoryController : ControllerBase

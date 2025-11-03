@@ -31,6 +31,9 @@ public class UserController : ControllerBase
         _configuration = configuration;
     }
 
+
+
+    [AllowAnonymous]
     [HttpPost("create")]
     public async Task<IActionResult> CreateUser([FromBody] UserRegistrationModel model)
     {
@@ -56,6 +59,19 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(GetUserByUsername), new { username = user.Username }, new { user.Username });
     }
 
+    // GET: api/users
+    // Only for test
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await _context.Users
+            .Select(u => new { u.Username })
+            .ToListAsync();
+
+        return Ok(users);
+    }
+
     [HttpGet("{username}")]
     public async Task<IActionResult> GetUserByUsername(string username)
     {
@@ -65,7 +81,7 @@ public class UserController : ControllerBase
         }
 
         var normalized = username.Trim().ToLower();
-
+       
         var userDto = await _context.Users.AsNoTracking().Where(u => u.Username.ToLower() == normalized)
             .Select(u => new { u.Username }).FirstOrDefaultAsync();
 
@@ -77,10 +93,9 @@ public class UserController : ControllerBase
         return Ok(userDto);
     }
 
-
     // POST: api/users/login
-    [allowAnonymous]
-    [HttpPut("login")]
+    [AllowAnonymous]
+    [HttpPost("login")]
     public IActionResult Login(UserLoginModel model)
     {
         var user = _dataService.GetUserByUsername(model.Username);
@@ -108,7 +123,7 @@ public class UserController : ControllerBase
 
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.Now.AddDays(4),
+            expires: DateTime.Now.AddMinutes(60),
             signingCredentials: creds
             );
 
