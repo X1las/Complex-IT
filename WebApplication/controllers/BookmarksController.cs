@@ -33,45 +33,62 @@ public class BookmarksController : ControllerBase
 
     // GET: api/users/{username}/bookmarks
     [HttpGet]
-    public async Task<IActionResult> GetUserBookmarks(string username)
+    public async Task<IActionResult> GetUserBookmarks(
+    string username,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
     {
         try
         {
             if (!ValidateUsername(username))
             {
-                return Forbid(); // 403 Forbidden
+            return Forbid(); // 403 Forbidden
             }
 
-            // Input validation
-            if (string.IsNullOrWhiteSpace(username))
-                return BadRequest(new ErrorResponseDto { Error = "Username is required" });
+        // Input validation
+        if (string.IsNullOrWhiteSpace(username))
+            return BadRequest(new ErrorResponseDto { Error = "Username is required" });
 
-            var (bookmarks, totalCount) = await Task.Run(() => _bookmarkService.GetUserBookmarks(username));
+        var (bookmarks, totalCount) = await Task.Run(() => _bookmarkService.GetUserBookmarks(username));
 
-            if (bookmarks == null || bookmarks.Count == 0)
-                return NotFound(new ErrorResponseDto { Error = "No bookmarks found for the user" });
+        if (bookmarks == null || bookmarks.Count == 0)
+            return NotFound(new ErrorResponseDto { Error = "No bookmarks found for the user" });
 
-            // Create DTO
-            var bookmarkDtos = bookmarks.Select(b => new BookmarkDto
-            {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/bookmarks/{b.TitleId}",
-                TitleId = b.TitleId,
-            }).ToList();
+        // Calculate pagination
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        
+        // Apply pagination
+        var paginatedBookmarks = bookmarks
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-            return Ok(new
-            {
-                bookmarks = bookmarkDtos,
-                totalCount
-            });
+        // Create DTO
+        var bookmarkDtos = paginatedBookmarks.Select(b => new BookmarkDto
+        {
+            Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/bookmarks/{b.TitleId}",
+            TitleId = b.TitleId,
+        }).ToList();
+
+        var response = new PagedResultDto<BookmarkDto>
+        {
+            Items = bookmarkDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages
+        };
+
+        return Ok(response);
         }
         catch (UnauthorizedAccessException)
         {
-            return Unauthorized(new ErrorResponseDto { Error = "User not authenticated" });
+        return Unauthorized(new ErrorResponseDto { Error = "User not authenticated" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving bookmarks for user");
-            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving bookmarks" });
+        _logger.LogError(ex, "Error retrieving bookmarks for user");
+        return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving bookmarks" });
         }
     }
 

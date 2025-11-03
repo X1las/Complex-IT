@@ -5,7 +5,7 @@ namespace DataServiceLayer;
 public class UserHistoryDataService
 {
     // Record a new viewing
-    // example RecordUserHistory(1, "tt1234567");
+    // example RecordUserHistory("alice", "tt1234567");
     public void RecordUserHistory(string? username, string titleId)
     {
         using var db = new ImdbContext();
@@ -22,7 +22,7 @@ public class UserHistoryDataService
     }
 
     // Get all history for a user with total count
-    // example: GetUserHistory(1); returns all viewings for user 1
+    // example: GetUserHistory("alice"); returns all viewings for user alice
     public (List<UserHistory> history, int totalCount) GetUserHistory(string? username)
     {
         using var db = new ImdbContext();
@@ -41,7 +41,7 @@ public class UserHistoryDataService
     }
 
     // Get recent history entries with limit
-    // example: GetRecentHistory(1, 10); returns the 10 most recent viewings for user 1
+    // example: GetRecentHistory("alice", 10); returns the 10 most recent viewings for user alice
     public List<UserHistory> GetRecentHistory(string? username, int limit = 10)
     {
         using var db = new ImdbContext();
@@ -54,7 +54,7 @@ public class UserHistoryDataService
     }
 
     // Get count of history entries
-    // example: GetHistoryCount(1); returns the number of viewings for user 1
+    // example: GetHistoryCount("alice"); returns the number of viewings for user alice
     public int GetHistoryCount(string? username)
     {
         using var db = new ImdbContext();
@@ -62,14 +62,14 @@ public class UserHistoryDataService
     }
 
     // Delete a specific viewing by timestamp
-    // example: DeleteHistoryItem(1, "tt1234567", someDateTime);
-    public bool DeleteHistoryItem(string? userId, string titleId, DateTime timestamp)
+    // example: DeleteHistoryItem("alice", "tt1234567", someDateTime);
+    public bool DeleteHistoryItem(string? username, string titleId, DateTime timestamp)
     {
         using var db = new ImdbContext();
 
-        // Find the exact record by userId, titleId, and timestamp
+        // Find the exact record by username, titleId, and timestamp
         var item = db.UsersHistory.FirstOrDefault(h =>
-            h.Username == userId.ToString() &&
+            h.Username == username &&
             h.TitleId == titleId &&
             h.Date == timestamp);
 
@@ -82,7 +82,7 @@ public class UserHistoryDataService
     }
 
     // Delete all viewings of a specific title for a user
-    // example: DeleteTitleHistory(1, "tt1234567");
+    // example: DeleteTitleHistory("alice", "tt1234567");
     public bool DeleteTitleHistory(string? username, string titleId)
     {
         using var db = new ImdbContext();
@@ -101,7 +101,7 @@ public class UserHistoryDataService
     }
 
     // Clear all history for a user
-    // example: ClearUserHistory(1);
+    // example: ClearUserHistory("alice");
     public bool ClearUserHistory(string? username)
     {
         using var db = new ImdbContext();

@@ -85,35 +85,53 @@ public class RatingController : ControllerBase
 
     // GET /api/users/{username}/ratings
     [HttpGet]
-    public async Task<IActionResult> GetAllRatings(string username)
+    public async Task<IActionResult> GetAllRatings(
+    string username,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
     {
         try
         {
             if (!ValidateUsername(username))
             {
-                return Forbid(); // 403 Forbidden
+            return Forbid(); // 403 Forbidden
             }
 
-            var (ratings, totalCount) = await Task.Run(() => _ratingService.GetUserRatings(username));
-            
-            var ratingDtos = ratings.Select(r => new RatingDto
-            {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{r.TitleId}",
-                TitleId = r.TitleId,
-                Rating = int.TryParse(r.Rating, out int rating) ? rating : 0,
-                CreatedAt = DateTime.UtcNow
-            }).ToList();
-            
-            return Ok(new
-            {
-                ratings = ratingDtos,
-                totalCount
-            });
+        var (ratings, totalCount) = await Task.Run(() => _ratingService.GetUserRatings(username));
+        
+        // Calculate pagination
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        
+        // Apply pagination
+        var paginatedRatings = ratings
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+        
+        var ratingDtos = paginatedRatings.Select(r => new RatingDto
+
+        {
+            Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{r.TitleId}",
+            TitleId = r.TitleId,
+            Rating = int.TryParse(r.Rating, out int rating) ? rating : 0,
+            CreatedAt = DateTime.UtcNow
+        }).ToList();
+        
+        var response = new PagedResultDto<RatingDto>
+        {
+            Items = ratingDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages
+        };
+        
+            return Ok(response);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving ratings");
-            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving ratings" });
+        _logger.LogError(ex, "Error retrieving ratings");
+        return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving ratings" });
         }
     }
 
@@ -303,14 +321,14 @@ public class TitleRatingController : ControllerBase
         {
             var average = await Task.Run(() => _ratingService.GetAverageUserRatingForTitle(titleId));
             var count = await Task.Run(() => _ratingService.GetTitleRatingCount(titleId));
-            
+
             var response = new AverageRatingDto
             {
                 TitleId = titleId,
                 AverageRating = Math.Round(average, 2),
                 TotalRatings = count
             };
-            
+
             return Ok(response);
         }
         catch (Exception ex)
@@ -319,4 +337,5 @@ public class TitleRatingController : ControllerBase
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while getting average rating" });
         }
     }
+    
 }
