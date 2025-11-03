@@ -5,7 +5,7 @@ namespace DataServiceLayer;
 public class UserRatingDataService
 {
     // DB stores rating as string, API uses int
-    public bool AddOrUpdateRating(int userId, string titleId, int rating)
+    public bool AddOrUpdateRating(string username, string titleId, int rating)
     {
         // Validate rating range (1-10)
         if (rating < 1 || rating > 10)
@@ -13,7 +13,7 @@ public class UserRatingDataService
             return false;
         }
         
-        if (string.IsNullOrWhiteSpace(titleId))
+        if (string.IsNullOrWhiteSpace(titleId) || string.IsNullOrWhiteSpace(username))
         {
             return false;
         }
@@ -22,7 +22,7 @@ public class UserRatingDataService
         
         // Check if rating already exists
         var existingRating = db.UsersRating.FirstOrDefault(r => 
-            r.Username == userId.ToString() && r.TitleId == titleId);
+            r.Username == username && r.TitleId == titleId);
         
         if (existingRating != null)
         {
@@ -34,7 +34,7 @@ public class UserRatingDataService
             // Create new rating
             var newRating = new UserRatings
             {
-                Username = userId.ToString(),
+                Username = username,
                 TitleId = titleId,
                 Rating = rating.ToString()
             };
@@ -46,12 +46,12 @@ public class UserRatingDataService
     }
     
     // READ - Get all ratings for a user
-    public (List<UserRatings> ratings, int totalCount) GetUserRatings(int userId)
+    public (List<UserRatings> ratings, int totalCount) GetUserRatings(string username)
     {
         using var db = new ImdbContext();
         
         var query = db.UsersRating
-            .Where(r => r.Username == userId.ToString())
+            .Where(r => r.Username == username)
             .AsQueryable();
         
         var totalCount = query.Count();
@@ -64,22 +64,22 @@ public class UserRatingDataService
     }
     
     // READ - Get specific rating for a title
-    public UserRatings? GetUserRating(int userId, string titleId)
+    public UserRatings? GetUserRating(string username, string titleId)
     {
-        if (string.IsNullOrWhiteSpace(titleId))
+        if (string.IsNullOrWhiteSpace(titleId) || string.IsNullOrWhiteSpace(username))
         {
             return null;
         }
         
         using var db = new ImdbContext();
         return db.UsersRating
-            .FirstOrDefault(r => r.Username == userId.ToString() && r.TitleId == titleId);
+            .FirstOrDefault(r => r.Username == username && r.TitleId == titleId);
     }
     
     // DELETE - Remove rating
-    public bool DeleteRating(int userId, string titleId)
+    public bool DeleteRating(string username, string titleId)
     {
-        if (string.IsNullOrWhiteSpace(titleId))
+        if (string.IsNullOrWhiteSpace(titleId) || string.IsNullOrWhiteSpace(username))
         {
             return false;
         }
@@ -87,7 +87,7 @@ public class UserRatingDataService
         using var db = new ImdbContext();
         
         var rating = db.UsersRating.FirstOrDefault(r => 
-            r.Username == userId.ToString() && r.TitleId == titleId);
+            r.Username == username && r.TitleId == titleId);
         
         if (rating == null)
         {
@@ -101,11 +101,11 @@ public class UserRatingDataService
     }
     
     // DELETE - Clear all ratings for a user
-    public bool ClearUserRatings(int userId)
+    public bool ClearUserRatings(string username)
     {
         using var db = new ImdbContext();
         
-        var ratings = db.UsersRating.Where(r => r.Username == userId.ToString());
+        var ratings = db.UsersRating.Where(r => r.Username == username);
         db.UsersRating.RemoveRange(ratings);
         db.SaveChanges();
         
@@ -141,10 +141,10 @@ public class UserRatingDataService
     }
       
     // COUNT - Get total ratings count for user
-    public int GetRatingCount(int userId)
+    public int GetRatingCount(string username)
     {
         using var db = new ImdbContext();
-        return db.UsersRating.Count(r => r.Username == userId.ToString());
+        return db.UsersRating.Count(r => r.Username == username);
     }
     
     // COUNT - Get total ratings for a title
