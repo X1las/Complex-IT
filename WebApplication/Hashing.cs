@@ -9,8 +9,6 @@ public class Hashing
     protected const byte saltBytesize = saltBitsize / 8;
     protected const int hashBitsize = 512;
     protected const int hashBytesize = hashBitsize / 8;
-
-    private HashAlgorithm sha512 = SHA512.Create();
     protected RandomNumberGenerator rand = RandomNumberGenerator.Create();
 
     // hash(string password)
@@ -41,7 +39,8 @@ public class Hashing
 
     private string HashSHA512(string password, string saltString)
     {
-        byte[] hashInput = Encoding.UTF8.GetBytes(saltString + password); // perhaps encode only the password part?
+        byte[] hashInput = Encoding.UTF8.GetBytes(saltString + password);
+        using var sha512 = SHA512.Create();
         byte[] hashOutput = sha512.ComputeHash(hashInput);
         return Convert.ToHexString(hashOutput);
     }
