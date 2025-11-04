@@ -110,29 +110,22 @@ namespace WebApplicationTests
         {
             // Arrange
             var uniqueUser = "testuser_" + Guid.NewGuid().ToString().Substring(0, 8);
-            var titleId = "tt33982100"; // Angel of the Warrior - known to exist
+            var titleId = "tt33982100"; // Angel of the Warrior - exists in DB
             
-            // CRITICAL: Create the user first (bookmarks table has FK to users table)
             var userService = new UserDataService(new Hashing());
             var createdUser = userService.RegisterUser(uniqueUser, "TestPassword123!");
             Assert.NotNull(createdUser); // Ensure user was created
             
             var controller = CreateAuthenticatedController(uniqueUser);
-            var request = new CreateBookmarkDto { TitleId = titleId };
+            var request = new UserBookmarkDto { Username = uniqueUser, TitleId = titleId };
 
             // Act
-            var result = await controller.AddBookmark(uniqueUser, request);
+            var result = await controller.AddBookmark(request);
 
             // Assert
-            var createdResult = result as CreatedAtActionResult;
+            var createdResult = result as CreatedResult;
             Assert.NotNull(createdResult);
             Assert.Equal(201, createdResult.StatusCode);
-            
-            var response = createdResult.Value as BookmarkDto;
-            Assert.NotNull(response);
-            Assert.Equal(titleId, response.TitleId);
-            Assert.Contains("http", response.Url);
-            Assert.Contains(uniqueUser, response.Url);
 
             // Cleanup
             var bookmarkService = new BookmarkDataService();
@@ -145,21 +138,21 @@ namespace WebApplicationTests
         {
             // Arrange
             var uniqueUser = "testuser_" + Guid.NewGuid().ToString().Substring(0, 8);
-            var titleId = "tt33982100"; // Known to exist
+            var titleId = "tt33982100"; // exists in DB
             
             // Create user first
             var userService = new UserDataService(new Hashing());
             userService.RegisterUser(uniqueUser, "TestPassword123!");
             
             var controller = CreateAuthenticatedController(uniqueUser);
-            var request = new CreateBookmarkDto { TitleId = titleId };
+            var request = new UserBookmarkDto { Username = uniqueUser, TitleId = titleId };
 
             // Add bookmark first time
             var bookmarkService = new BookmarkDataService();
             bookmarkService.AddBookmark(uniqueUser, titleId);
 
             // Act - try to add same bookmark again
-            var result = await controller.AddBookmark(uniqueUser, request);
+            var result = await controller.AddBookmark(request);
 
             // Assert
             var conflictResult = result as ConflictObjectResult;
@@ -180,10 +173,10 @@ namespace WebApplicationTests
         {
             // Arrange - logged in as "user1"
             var controller = CreateAuthenticatedController("user1");
-            var request = new CreateBookmarkDto { TitleId = TestTitleId };
+            var request = new UserBookmarkDto { Username = "user2", TitleId = TestTitleId };
 
             // Act - trying to add bookmark for "user2"
-            var result = await controller.AddBookmark("user2", request);
+            var result = await controller.AddBookmark(request);
 
             // Assert
             Assert.IsType<ForbidResult>(result);
@@ -196,7 +189,7 @@ namespace WebApplicationTests
             var controller = CreateAuthenticatedController("validuser");
 
             // Act
-            var result = await controller.AddBookmark("validuser", null!);
+            var result = await controller.AddBookmark(null!);
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
@@ -209,10 +202,10 @@ namespace WebApplicationTests
         {
             // Arrange
             var controller = CreateAuthenticatedController("validuser");
-            var request = new CreateBookmarkDto { TitleId = "" };
+            var request = new UserBookmarkDto { Username = "validuser", TitleId = "" };
 
             // Act
-            var result = await controller.AddBookmark("validuser", request);
+            var result = await controller.AddBookmark(request);
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
@@ -238,10 +231,11 @@ namespace WebApplicationTests
             bookmarkService.AddBookmark(uniqueUser, titleId);
 
             // Act
-            var result = await controller.RemoveBookmark(uniqueUser, titleId);
+            var request = new UserBookmarkDto { Username = uniqueUser, TitleId = titleId };
+            var result = await controller.RemoveBookmark(request);
 
             // Assert
-            var okResult = result as OkObjectResult;
+            var okResult = result as OkResult;
             Assert.NotNull(okResult);
             Assert.Equal(200, okResult.StatusCode);
             
@@ -250,7 +244,7 @@ namespace WebApplicationTests
         }
 
         [Fact]
-        public async Task RemoveBookmark_WhenNotFound_ReturnsNotFound()
+        public async Task RemoveBookmark_WhenNotFound_ReturnsOk()
         {
             // Arrange
             var uniqueUser = "user_" + Guid.NewGuid().ToString().Substring(0, 8);
@@ -258,12 +252,13 @@ namespace WebApplicationTests
             var controller = CreateAuthenticatedController(uniqueUser);
 
             // Act
-            var result = await controller.RemoveBookmark(uniqueUser, nonExistentTitle);
+            var request = new UserBookmarkDto { Username = uniqueUser, TitleId = nonExistentTitle };
+            var result = await controller.RemoveBookmark(request);
 
-            // Assert
-            var notFoundResult = result as NotFoundObjectResult;
-            Assert.NotNull(notFoundResult);
-            Assert.Equal(404, notFoundResult.StatusCode);
+            // Assert - RemoveBookmark returns Ok even if bookmark doesn't exist (idempotent operation)
+            var okResult = result as OkResult;
+            Assert.NotNull(okResult);
+            Assert.Equal(200, okResult.StatusCode);
         }
 
         [Fact]
@@ -273,7 +268,8 @@ namespace WebApplicationTests
             var controller = CreateAuthenticatedController("user1");
 
             // Act - trying to delete "user2" bookmark
-            var result = await controller.RemoveBookmark("user2", TestTitleId);
+            var request = new UserBookmarkDto { Username = "user2", TitleId = TestTitleId };
+            var result = await controller.RemoveBookmark(request);
 
             // Assert
             Assert.IsType<ForbidResult>(result);
@@ -286,7 +282,8 @@ namespace WebApplicationTests
             var controller = CreateAuthenticatedController("validuser");
 
             // Act
-            var result = await controller.RemoveBookmark("", TestTitleId);
+            var request = new UserBookmarkDto { Username = "", TitleId = TestTitleId };
+            var result = await controller.RemoveBookmark(request);
 
             // Assert: username doesn't match authenticated user => Forbid
             Assert.IsType<ForbidResult>(result);
@@ -299,7 +296,8 @@ namespace WebApplicationTests
             var controller = CreateAuthenticatedController("validuser");
 
             // Act
-            var result = await controller.RemoveBookmark("validuser", "");
+            var request = new UserBookmarkDto { Username = "validuser", TitleId = "" };
+            var result = await controller.RemoveBookmark(request);
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
@@ -323,8 +321,7 @@ namespace WebApplicationTests
             // Use real title IDs that exist (repeat the same known title)
             var titleId = "tt33982100";
             
-            // Note: Can only add 1 bookmark per user per title due to composite key
-            // So we'll just test with 1 bookmark for pagination
+            // Can only add 1 bookmark per user per title due to composite key
             bookmarkService.AddBookmark(uniqueUser, titleId);
 
             // Act - get page 1 with page size 10
@@ -334,13 +331,13 @@ namespace WebApplicationTests
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             
-            var response = okResult.Value as PagedResultDto<BookmarkDto>;
+            var response = okResult.Value as PagedResultDto<BookmarkDisplayItemDto>;
             Assert.NotNull(response);
             Assert.Equal(1, response.CurrentPage);
             Assert.Equal(10, response.PageSize);
             Assert.Equal(1, response.TotalItems);
             Assert.Equal(1, response.TotalPages);
-            Assert.Equal(1, response.Items.Count);
+            Assert.Single(response.Items);
 
             // Cleanup
             bookmarkService.RemoveBookmark(uniqueUser, titleId);
@@ -371,7 +368,7 @@ namespace WebApplicationTests
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             
-            var response = okResult.Value as PagedResultDto<BookmarkDto>;
+            var response = okResult.Value as PagedResultDto<BookmarkDisplayItemDto>;
             Assert.NotNull(response);
             Assert.Equal(10, response.PageSize); // Default is 10
 
@@ -404,7 +401,7 @@ namespace WebApplicationTests
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             
-            var response = okResult.Value as PagedResultDto<BookmarkDto>;
+            var response = okResult.Value as PagedResultDto<BookmarkDisplayItemDto>;
             Assert.NotNull(response);
             Assert.True(response.Items.Count > 0);
             

@@ -56,20 +56,15 @@ namespace WebApplicationTests
             userService.RegisterUser(uniqueUser, "TestPassword123!");
             
             var controller = CreateAuthenticatedController(uniqueUser);
-            var request = new CreateRatingDto { TitleId = TestTitleId, Rating = 8 };
+            var request = new UserRatingDto { Username = uniqueUser, TitleId = TestTitleId, Rating = 8 };
 
             // Act
-            var result = await controller.CreateRating(uniqueUser, request);
+            var result = await controller.CreateRating(request);
 
             // Assert
-            var createdResult = result as CreatedAtActionResult;
+            var createdResult = result as CreatedResult;
             Assert.NotNull(createdResult);
             Assert.Equal(201, createdResult.StatusCode);
-            
-            var response = createdResult.Value as RatingDto;
-            Assert.NotNull(response);
-            Assert.Equal(TestTitleId, response.TitleId);
-            Assert.Equal(8, response.Rating);
 
             // Cleanup
             new UserRatingDataService().DeleteRating(uniqueUser, TestTitleId);
@@ -82,10 +77,10 @@ namespace WebApplicationTests
         {
             // Arrange
             var controller = CreateAuthenticatedController("validuser");
-            var request = new CreateRatingDto { TitleId = TestTitleId, Rating = 11 };
+            var request = new UserRatingDto { Username = "validuser", TitleId = TestTitleId, Rating = 11 };
 
             // Act
-            var result = await controller.CreateRating("validuser", request);
+            var result = await controller.CreateRating(request);
 
             // Assert
             var badRequestResult = result as BadRequestObjectResult;
@@ -103,10 +98,10 @@ namespace WebApplicationTests
         {
             // Arrange - logged in as "user1"
             var controller = CreateAuthenticatedController("user1");
-            var request = new CreateRatingDto { TitleId = TestTitleId, Rating = 7 };
+            var request = new UserRatingDto { Username = "user2", TitleId = TestTitleId, Rating = 7 };
 
             // Act - trying to create rating for "user2"
-            var result = await controller.CreateRating("user2", request);
+            var result = await controller.CreateRating(request);
 
             // Assert
             Assert.IsType<ForbidResult>(result);
@@ -133,18 +128,18 @@ namespace WebApplicationTests
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             
-            var response = okResult.Value as RatingDto;
+            var response = okResult.Value as RatingDisplayItemDto;
             Assert.NotNull(response);
             Assert.Equal(TestTitleId, response.TitleId);
             Assert.Equal(7, response.Rating);
-            Assert.Contains("http", response.Url); // UI test: correct format
+            Assert.Contains("http", response.Url); // correct format
 
             // Cleanup
             ratingService.DeleteRating(uniqueUser, TestTitleId);
             userService.DeleteUser(uniqueUser);
         }
 
-        // 5: Pagination - demonstrates UI data structure (PagedResultDto)
+        // Pagination - demonstrates UI data structure (PagedResultDto)
         [Fact]
         public async Task GetAllRatings_ReturnsPaginatedFormat()
         {
@@ -161,11 +156,11 @@ namespace WebApplicationTests
             // Act
             var result = await controller.GetAllRatings(uniqueUser, 1, 10);
 
-            // Assert - UI test: validate correct data format
+            // Assert validate correct data format
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
             
-            var response = okResult.Value as PagedResultDto<RatingDto>;
+            var response = okResult.Value as PagedResultDto<RatingDisplayItemDto>;
             Assert.NotNull(response);
             Assert.Equal(1, response.CurrentPage);
             Assert.Equal(10, response.PageSize);
@@ -190,60 +185,55 @@ namespace WebApplicationTests
             ratingService.AddOrUpdateRating(uniqueUser, TestTitleId, 5);
             
             var controller = CreateAuthenticatedController(uniqueUser);
-            var updateDto = new UpdateRatingDto { Rating = 9 };
+            var updateDto = new UserRatingDto { Username = uniqueUser, TitleId = TestTitleId, Rating = 9 };
 
             // Act
-            var result = await controller.UpdateRating(uniqueUser, TestTitleId, updateDto);
+            var result = await controller.UpdateRating(updateDto);
 
             // Assert
-            var okResult = result as OkObjectResult;
-            Assert.NotNull(okResult);
+            var createdResult = result as CreatedResult;
+            Assert.NotNull(createdResult);
+            Assert.Equal(201, createdResult.StatusCode);
             
-            var response = okResult.Value as RatingDto;
-            Assert.NotNull(response);
-            Assert.Equal(9, response.Rating); // Verify change persisted
+            // Verify the rating was actually updated
+            var updatedRating = ratingService.GetUserRating(uniqueUser, TestTitleId);
+            Assert.NotNull(updatedRating);
+            Assert.Equal(9, updatedRating.Rating);
 
             // Cleanup
             ratingService.DeleteRating(uniqueUser, TestTitleId);
             userService.DeleteUser(uniqueUser);
         }
 
-        // Aggregate function - demonstrates TitleRatingController
+        // DELETE operation - demonstrates deletion logic
         [Fact]
-        public async Task GetAverageRating_CalculatesCorrectly()
+        public async Task DeleteRating_RemovesExistingRating()
         {
             // Arrange
-            var user1 = GenerateUniqueUsername("user1");
-            var user2 = GenerateUniqueUsername("user2");
+            var uniqueUser = GenerateUniqueUsername();
             var userService = new UserDataService(new Hashing());
-            userService.RegisterUser(user1, "TestPassword123!");
-            userService.RegisterUser(user2, "TestPassword123!");
+            userService.RegisterUser(uniqueUser, "TestPassword123!");
             
             var ratingService = new UserRatingDataService();
-            ratingService.AddOrUpdateRating(user1, TestTitleId, 8);
-            ratingService.AddOrUpdateRating(user2, TestTitleId, 6);
+            ratingService.AddOrUpdateRating(uniqueUser, TestTitleId, 7);
             
-            var logger = LoggerFactory.Create(builder => builder.AddConsole())
-                .CreateLogger<TitleRatingController>();
-            var controller = new TitleRatingController(ratingService, logger);
+            var controller = CreateAuthenticatedController(uniqueUser);
+            var deleteDto = new UserRatingDto { Username = uniqueUser, TitleId = TestTitleId };
 
             // Act
-            var result = await controller.GetAverageRating(TestTitleId);
+            var result = await controller.DeleteRating(deleteDto);
 
             // Assert
             var okResult = result as OkObjectResult;
             Assert.NotNull(okResult);
+            Assert.Equal(200, okResult.StatusCode);
             
-            var response = okResult.Value as AverageRatingDto;
-            Assert.NotNull(response);
-            Assert.Equal(7.0, response.AverageRating);
-            Assert.Equal(2, response.TotalRatings);
+            // Verify rating was actually deleted
+            var deletedRating = ratingService.GetUserRating(uniqueUser, TestTitleId);
+            Assert.Null(deletedRating);
 
             // Cleanup
-            ratingService.DeleteRating(user1, TestTitleId);
-            ratingService.DeleteRating(user2, TestTitleId);
-            userService.DeleteUser(user1);
-            userService.DeleteUser(user2);
+            userService.DeleteUser(uniqueUser);
         }
     }
 }

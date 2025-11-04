@@ -60,6 +60,7 @@ public class ImdbContext : DbContext
 
         // UsersHistory mapping
         modelBuilder.Entity<UserHistory>().ToTable("user_history");
+        modelBuilder.Entity<UserHistory>().HasKey(uh => new { uh.Username, uh.Date, uh.TitleId });
         modelBuilder.Entity<UserHistory>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<UserHistory>().Property(x => x.Date).HasColumnName("date_time");
         modelBuilder.Entity<UserHistory>().Property(x => x.TitleId).HasColumnName("title_id");
