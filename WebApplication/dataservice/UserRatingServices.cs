@@ -5,15 +5,20 @@ namespace DataServiceLayer;
 public class UserRatingDataService
 {
     // DB stores rating as string, API uses int
-    public bool AddOrUpdateRating(string username, string titleId, int rating)
+    public bool AddOrUpdateRating(string username, string titleId, int? rating)
     {
         // Validate rating range (1-10)
         if (rating < 1 || rating > 10)
         {
             return false;
         }
-        
+
         if (string.IsNullOrWhiteSpace(titleId) || string.IsNullOrWhiteSpace(username))
+        {
+            return false;
+        }
+        
+        if (rating == null)
         {
             return false;
         }

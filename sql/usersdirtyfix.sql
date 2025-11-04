@@ -23,8 +23,8 @@ CREATE TABLE user_ratings (
 CREATE TABLE user_history (
     username VARCHAR(50) NOT NULL,
     title_id VARCHAR(12) NOT NULL,
-    viewed_at TIMESTAMP NOT NULL,
-    PRIMARY KEY (username, title_id, viewed_at),
+    date_time TIMESTAMP NOT NULL,
+    PRIMARY KEY (username, title_id, date_time),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
 );

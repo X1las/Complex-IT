@@ -19,62 +19,55 @@ public class RatingController : ControllerBase
         _logger = logger;
     }
     
-    private string GetAuthenticatedUsername()
+    // Validation Helpter Method
+    private IActionResult? ValidateUserAccess(string requestedUsername)
     {
-        return User?.Identity?.Name ?? throw new UnauthorizedAccessException("User not authenticated");
-    }
+        var authenticatedUsername = User?.Identity?.Name;
+        
+        if (string.IsNullOrWhiteSpace(authenticatedUsername))
+        {
+            return Unauthorized(new ErrorResponseDto { Error = "Unable to determine authenticated user" });
+        }
 
-    // Validate that the route username matches the authenticated user
-    private bool ValidateUsername(string username)
-    {
-        var authenticatedUsername = GetAuthenticatedUsername();
-        return username.Equals(authenticatedUsername, StringComparison.OrdinalIgnoreCase);
+        if (authenticatedUsername != requestedUsername)
+        {
+            return Forbid(); // Sende a 403
+        }
+
+        return null;
     }
     
     // POST /api/users/{username}/ratings
-    // Create or update a rating
     [HttpPost]
-    public async Task<IActionResult> CreateRating(string username, CreateRatingDto dto)
+    public async Task<IActionResult> CreateRating(UserRatingDto model)
     {
+        // Helper Method Used
+        var validationResult = ValidateUserAccess(model.Username);
+        if (validationResult != null) return validationResult;
+        
         try
         {
-            if (!ValidateUsername(username))
-            {
-                return Forbid(); // 403 Forbidden
-            }
-
-            if (string.IsNullOrWhiteSpace(dto.TitleId))
+            if (string.IsNullOrWhiteSpace(model.TitleId))
             {
                 return BadRequest(new ErrorResponseDto { Error = "TitleId is required" });
             }
 
-            if (dto.Rating < 1 || dto.Rating > 10)
+            if (model.Rating < 1 || model.Rating > 10)
             {
                 return BadRequest(new ErrorResponseDto { Error = "Rating must be between 1 and 10" });
             }
 
-            var success = await Task.Run(() => _ratingService.AddOrUpdateRating(username, dto.TitleId, dto.Rating));
-            
-            if (!success)
+            if (model.Rating == null)
             {
-                return BadRequest(new ErrorResponseDto { Error = "Failed to create rating" });
+                return BadRequest(new ErrorResponseDto { Error = "Rating is required" });
             }
-            
-            _logger.LogInformation("User {Username} rated title {TitleId} with {Rating}", 
-                username, dto.TitleId, dto.Rating);
-            
-            // Get the created rating to return it
-            var rating = _ratingService.GetUserRating(username, dto.TitleId);
-            
-            var response = new RatingDto
-            {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{dto.TitleId}",
-                TitleId = dto.TitleId,
-                Rating = int.TryParse(rating?.Rating, out int r) ? r : 0,
-                CreatedAt = DateTime.UtcNow
-            };
-            
-            return CreatedAtAction(nameof(GetRating), new { username, titleId = dto.TitleId }, response);
+
+            await Task.Run(() => _ratingService.AddOrUpdateRating(model.Username, model.TitleId, model.Rating));
+
+            _logger.LogInformation("User {Username} rated title {TitleId} with {Rating}",
+                model.Username, model.TitleId, model.Rating);
+
+            return Created();
         }
         catch (Exception ex)
         {
@@ -85,46 +78,40 @@ public class RatingController : ControllerBase
 
     // GET /api/users/{username}/ratings
     [HttpGet]
-    public async Task<IActionResult> GetAllRatings(
-    string username,
-    [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAllRatings(string username,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+            
         try
         {
-            if (!ValidateUsername(username))
+            var (ratings, totalCount) = await Task.Run(() => _ratingService.GetUserRatings(username));
+        
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            
+            var paginatedRatings = ratings
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            
+            var ratingDtos = paginatedRatings.Select(r => new RatingDisplayItemDto
             {
-            return Forbid(); // 403 Forbidden
-            }
-
-        var (ratings, totalCount) = await Task.Run(() => _ratingService.GetUserRatings(username));
-        
-        // Calculate pagination
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-        
-        // Apply pagination
-        var paginatedRatings = ratings
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-        
-        var ratingDtos = paginatedRatings.Select(r => new RatingDto
-
-        {
-            Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{r.TitleId}",
-            TitleId = r.TitleId,
-            Rating = int.TryParse(r.Rating, out int rating) ? rating : 0,
-            CreatedAt = DateTime.UtcNow
-        }).ToList();
-        
-        var response = new PagedResultDto<RatingDto>
-        {
-            Items = ratingDtos,
-            CurrentPage = page,
-            PageSize = pageSize,
-            TotalItems = totalCount,
-            TotalPages = totalPages
-        };
+                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{r.TitleId}",
+                TitleId = r.TitleId,
+                Rating = int.TryParse(r.Rating, out int rating) ? rating : 0,
+                
+            }).ToList();
+            
+            var response = new PagedResultDto<RatingDisplayItemDto>
+            {
+                Items = ratingDtos,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalCount,
+                TotalPages = totalPages
+            };
         
             return Ok(response);
         }
@@ -136,17 +123,14 @@ public class RatingController : ControllerBase
     }
 
     // GET /api/users/{username}/ratings/{titleId}
-    // Get specific rating for a title
     [HttpGet("{titleId}")]
     public async Task<IActionResult> GetRating(string username, string titleId)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            if (!ValidateUsername(username))
-            {
-                return Forbid(); // 403 Forbidden
-            }
-
             var rating = await Task.Run(() => _ratingService.GetUserRating(username, titleId));
             
             if (rating == null)
@@ -154,12 +138,11 @@ public class RatingController : ControllerBase
                 return NotFound(new ErrorResponseDto { Error = "Rating not found" });
             }
             
-            var response = new RatingDto
+            var response = new RatingDisplayItemDto
             {
                 Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{rating.TitleId}",
                 TitleId = rating.TitleId,
-                Rating = int.TryParse(rating.Rating, out int r) ? r : 0,
-                CreatedAt = DateTime.UtcNow
+                Rating = int.TryParse(rating.Rating, out int r) ? r : 0
             };
             
             return Ok(response);
@@ -176,13 +159,11 @@ public class RatingController : ControllerBase
     [HttpGet("count")]
     public async Task<IActionResult> GetRatingCount(string username)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            if (!ValidateUsername(username))
-            {
-                return Forbid(); // 403 Forbidden
-            }
-
             var count = await Task.Run(() => _ratingService.GetRatingCount(username));
             return Ok(new { count });
         }
@@ -195,81 +176,66 @@ public class RatingController : ControllerBase
 
     // PUT /api/users/{username}/ratings/{titleId}
     [HttpPut("{titleId}")]
-    public async Task<IActionResult> UpdateRating(string username, string titleId, [FromBody] UpdateRatingDto dto)
+    public async Task<IActionResult> UpdateRating(UserRatingDto model)
     {
+        var validationResult = ValidateUserAccess(model.Username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            if (!ValidateUsername(username))
+            if (model.Rating < 1 || model.Rating > 10)
             {
-                return Forbid(); // 403 Forbidden
+                return BadRequest(new ErrorResponseDto { Error = "New rating must be between 1 and 10" });
             }
 
-            if (dto.Rating < 1 || dto.Rating > 10)
-            {
-                return BadRequest(new ErrorResponseDto { Error = "Rating must be between 1 and 10" });
-            }
-            
             // Check if rating exists
-            var existingRating = await Task.Run(() => _ratingService.GetUserRating(username, titleId));
+            var existingRating = await Task.Run(() => _ratingService.GetUserRating(model.Username, model.TitleId));
+            
             if (existingRating == null)
             {
-                return NotFound(new ErrorResponseDto { Error = "Rating not found" });
+                return NotFound(new ErrorResponseDto { Error = "Old rating not found" });
             }
-            
-            var success = await Task.Run(() => _ratingService.AddOrUpdateRating(username, titleId, dto.Rating));
-            
+
+            var success = await Task.Run(() => _ratingService.AddOrUpdateRating(model.Username, model.TitleId, model.Rating));
             if (!success)
             {
                 return BadRequest(new ErrorResponseDto { Error = "Failed to update rating" });
             }
             
             _logger.LogInformation("User {Username} updated rating for title {TitleId} to {Rating}", 
-                username, titleId, dto.Rating);
+                model.Username, model.TitleId, model.Rating);
             
-            var rating = _ratingService.GetUserRating(username, titleId);
-            
-            var response = new RatingDto
-            {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{rating?.TitleId}",
-                TitleId = rating?.TitleId ?? "",
-                Rating = int.TryParse(rating?.Rating, out int r) ? r : 0,
-                CreatedAt = DateTime.UtcNow
-            };
-            
-            return Ok(response);
+            return Created();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating rating for title {TitleId}", titleId);
+            _logger.LogError(ex, "Error updating rating for title {TitleId}", model.TitleId);
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while updating rating" });
         }
     }
 
     // DELETE /api/users/{username}/ratings/{titleId}
     [HttpDelete("{titleId}")]
-    public async Task<IActionResult> DeleteRating(string username, string titleId)
+    public async Task<IActionResult> DeleteRating(UserRatingDto model)
     {
+        var validationResult = ValidateUserAccess(model.Username);
+        if (validationResult != null) return validationResult;
         try
         {
-            if (!ValidateUsername(username))
-            {
-                return Forbid(); // 403 Forbidden
-            }
+            var success = await Task.Run(() => _ratingService.DeleteRating(model.Username, model.TitleId));
 
-            var success = await Task.Run(() => _ratingService.DeleteRating(username, titleId));
-            
             if (!success)
             {
-                return NotFound(new ErrorResponseDto { Error = "Rating not found" });
+                return NotFound(new ErrorResponseDto { Error = "No rating to delete" });
             }
-            
-            _logger.LogInformation("User {Username} deleted rating for title {TitleId}", username, titleId);
-            
+
+            _logger.LogInformation("User {Username} deleted rating for title {TitleId}", model.Username, model.TitleId);
+
             return Ok(new { message = "Rating deleted successfully" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting rating for title {TitleId}", titleId);
+            _logger.LogError(ex, "Error deleting rating for title {TitleId}", model.TitleId);
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while deleting rating" });
         }
     }
@@ -278,13 +244,11 @@ public class RatingController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> ClearAllRatings(string username)
     {
+        var validationResult = ValidateUserAccess(username);
+        if (validationResult != null) return validationResult;
+
         try
         {
-            if (!ValidateUsername(username))
-            {
-                return Forbid(); // 403 Forbidden
-            }
-
             await Task.Run(() => _ratingService.ClearUserRatings(username));
             
             _logger.LogInformation("User {Username} cleared all ratings", username);
@@ -297,45 +261,4 @@ public class RatingController : ControllerBase
             return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while clearing ratings" });
         }
     }
-}
-
-[ApiController]
-[Route("api/titles/{titleId}/ratings")]
-public class TitleRatingController : ControllerBase
-{
-    private readonly UserRatingDataService _ratingService;
-    private readonly ILogger<TitleRatingController> _logger;
-
-    public TitleRatingController(UserRatingDataService ratingService, ILogger<TitleRatingController> logger)
-    {
-        _ratingService = ratingService;
-        _logger = logger;
-    }
-
-    // GET /api/titles/{titleId}/ratings/average
-    // Get average rating for a title across all users
-    [HttpGet("average")]
-    public async Task<IActionResult> GetAverageRating(string titleId)
-    {
-        try
-        {
-            var average = await Task.Run(() => _ratingService.GetAverageUserRatingForTitle(titleId));
-            var count = await Task.Run(() => _ratingService.GetTitleRatingCount(titleId));
-
-            var response = new AverageRatingDto
-            {
-                TitleId = titleId,
-                AverageRating = Math.Round(average, 2),
-                TotalRatings = count
-            };
-
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting average rating for title {TitleId}", titleId);
-            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while getting average rating" });
-        }
-    }
-    
 }
