@@ -38,7 +38,7 @@ public class CrewController : ControllerBase
 
         if (crew.Count == 0)
         {
-            return NotFound("No crew members found.");
+            return NotFound(new ErrorResponseDto { Error = "No crew members found."});
         }
 
         var CrewModelDTO = crew.Select(c => new CrewModel
@@ -68,10 +68,14 @@ public class CrewController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCrewById(string id)
     {
+        if (string.IsNullOrWhiteSpace(id)){
+            return BadRequest(new ErrorResponseDto { Error = "Crew ID can't be empty." });
+        }
+
         var crew = await Task.Run(() => _crewService.GetCrew(id));
         if (crew == null)
         {
-            return NotFound($"Crew member with ID {id} not found.");
+            return NotFound(new ErrorResponseDto { Error = $"Crew member with ID {id} not found." });
         }
 
         var crewModel = new CrewModel
@@ -79,7 +83,7 @@ public class CrewController : ControllerBase
             CrewId = crew.CrewId,
             Fullname = crew.Fullname ?? string.Empty,
             BirthYear = crew.BirthYear,
-            DeathYear = crew.DeathYear,
+            DeathYear = crew.DeathYear ?? string.Empty,
             AverageRating = crew.AverageRating,
             Url = $"/api/crew/{crew.CrewId}"
         };
@@ -89,23 +93,36 @@ public class CrewController : ControllerBase
 
     // GET: api/crew/{id}/titles
     [HttpGet("{id}/titles")]
-    public async Task<IActionResult> GetCrewTitles(string id)
+    public async Task<IActionResult> GetCrewTitles(
+        string id,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         // Input validation
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest(new ErrorResponseDto { Error = "Crew ID is required" });
+
+        
         var crew = await Task.Run(() => _crewService.GetCrew(id));
         if (crew == null)
         {
-            return NotFound($"Crew member with ID {id} not found.");
+            return NotFound(new ErrorResponseDto { Error = $"Crew member with ID {id} not found." });
         }
 
         var (titles, totalCount) = await Task.Run(() => _crewService.GetCrewTitles(id));
 
         if (titles == null || totalCount == 0)
         {
-            return NotFound($"No titles found for crew member with ID {id}.");
+            return NotFound(new ErrorResponseDto { Error = $"No titles found for crew member with ID {id}." });
         }
 
-        var titlesModel = titles.Select(t => new CrewTitlesModel
+        // Pagination
+        var paginatedTitles = titles
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var titlesModel = paginatedTitles.Select(t => new CrewTitlesModel
         {
             TitleId = t.TitleId,
             Title = t.Title,
@@ -115,12 +132,12 @@ public class CrewController : ControllerBase
             Url = $"/api/titles/{t.TitleId}"
         }).ToList();
 
-        var TotalPages = (int)Math.Ceiling((double)totalCount / 10); // Default page size 10
+        var TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
         var response = new PagedResultDto<CrewTitlesModel>
         {
             Items = titlesModel,
-            CurrentPage = 1,
-            PageSize = 10,
+            CurrentPage = page,
+            PageSize = pageSize,
             TotalItems = totalCount,
             TotalPages = TotalPages,
         };
