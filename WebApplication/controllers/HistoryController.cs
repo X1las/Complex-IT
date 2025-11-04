@@ -33,7 +33,7 @@ public class HistoryController : ControllerBase
 
         if (authenticatedUsername != requestedUsername)
         {
-            return Forbid(); // Sende a 403
+            return Forbid(); // Sends a 403
         }
 
         return null; // Validation passed
