@@ -23,6 +23,14 @@ public class UserHistory
     public string? TitleId { get; set; }
 }
 
+public class UserLog
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+    public string? Action { get; set; }
+    public DateTime? Timestamp { get; set; }
+}
+
 public class Attends
 {
     public string TitleId { get; set; }
