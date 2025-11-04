@@ -29,18 +29,18 @@ public class Program
         builder.Services.AddScoped<CrewDataService>();
         builder.Services.AddScoped<BookmarkDataService>();
         builder.Services.AddScoped<UserRatingDataService>();
-        
+
         // Register utility services
         builder.Services.AddScoped<Hashing>();
-        
+
         // Register Mapster for object mapping
         builder.Services.AddMapster();
-        
+
         // Configure JWT Authentication
-        var secret = builder.Configuration.GetSection("Auth:Secret").Value 
+        var secret = builder.Configuration.GetSection("Auth:Secret").Value
             ?? throw new InvalidOperationException("Auth:Secret is not configured");
         var key = Encoding.UTF8.GetBytes(secret);
-        
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -53,9 +53,9 @@ public class Program
                     ClockSkew = TimeSpan.Zero
                 };
             });
-        
+
         builder.Services.AddAuthorization();
-        
+
         // Add controllers
         builder.Services.AddControllers();
 

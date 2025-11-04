@@ -6,6 +6,7 @@ using WebServiceLayer.Models;
 namespace WebServiceLayer.Controllers;
 
 
+[Authorize]
 [ApiController]
 [Route("api/users/{username}/history")]
 public class HistoryController : ControllerBase
@@ -25,7 +26,7 @@ public class HistoryController : ControllerBase
     private IActionResult? ValidateUserAccess(string requestedUsername)
     {
         var authenticatedUsername = User?.Identity?.Name;
-        
+
         if (string.IsNullOrWhiteSpace(authenticatedUsername))
         {
             return Unauthorized(new ErrorResponseDto { Error = "Unable to determine authenticated user" });
