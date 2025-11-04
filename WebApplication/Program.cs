@@ -31,7 +31,7 @@ public class Program
         builder.Services.AddScoped<UserRatingDataService>();
 
         // Hasing service
-        builder.Services.AddSingleton<Utils.Hashing>();
+        builder.Services.AddSingleton<Hashing>();
         
         // Register utility services
         builder.Services.AddScoped<Hashing>();
