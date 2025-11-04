@@ -118,27 +118,7 @@ public class UserRatingDataService
     }
 
     // AGGREGATE - Get average rating for a title
-    public double GetAverageUserRatingForTitle(string titleId)
-    {
-        if (string.IsNullOrWhiteSpace(titleId))
-        {
-            return 0;
-        }
-
-        using var db = new ImdbContext();
-
-        var ratings = db.UsersRating
-            .Where(r => r.TitleId == titleId && r.Rating > 0)
-            .ToList();
-
-        if (!ratings.Any())
-        {
-            return 0;
-        }
-
-        // Rating is already double, calculate average directly
-        return ratings.Average(r => r.Rating);
-    }
+    
       
     // COUNT - Get total ratings count for user
     public int GetRatingCount(string username)
