@@ -70,7 +70,7 @@ public class RatingController : ControllerBase
             {
                 Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{dto.TitleId}",
                 TitleId = dto.TitleId,
-                Rating = int.TryParse(rating?.Rating, out int r) ? r : 0,
+                Rating = (int)(rating?.Rating ?? 0),
                 CreatedAt = DateTime.UtcNow
             };
             
@@ -113,7 +113,7 @@ public class RatingController : ControllerBase
         {
             Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{r.TitleId}",
             TitleId = r.TitleId,
-            Rating = int.TryParse(r.Rating, out int rating) ? rating : 0,
+            Rating = (int)r.Rating,
             CreatedAt = DateTime.UtcNow
         }).ToList();
         
@@ -158,7 +158,7 @@ public class RatingController : ControllerBase
             {
                 Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{rating.TitleId}",
                 TitleId = rating.TitleId,
-                Rating = int.TryParse(rating.Rating, out int r) ? r : 0,
+                Rating = (int)rating.Rating,
                 CreatedAt = DateTime.UtcNow
             };
             
@@ -232,7 +232,7 @@ public class RatingController : ControllerBase
             {
                 Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/ratings/{rating?.TitleId}",
                 TitleId = rating?.TitleId ?? "",
-                Rating = int.TryParse(rating?.Rating, out int r) ? r : 0,
+                Rating = (int)(rating?.Rating ?? 0),
                 CreatedAt = DateTime.UtcNow
             };
             

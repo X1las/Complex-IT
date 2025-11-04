@@ -13,7 +13,7 @@ public class UserRatings
 {
     public string Username { get; set; }
     public string TitleId { get; set; }
-    public string? Rating { get; set; }
+    public double Rating { get; set; }
 }
 
 public class UserHistory
