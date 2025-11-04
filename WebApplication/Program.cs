@@ -60,7 +60,7 @@ public class Program
         // Add CORS for frontend
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowFrotend", policy =>
+            options.AddPolicy("AllowFrontend", policy =>
             {
                 policy.WithOrigins("http://localhost:3000")
                       .AllowAnyMethod()

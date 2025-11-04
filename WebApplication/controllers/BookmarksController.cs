@@ -94,8 +94,7 @@ public class BookmarksController : ControllerBase
 
     // POST: api/users/{username}/bookmarks
     [HttpPost]
-    public async Task<IActionResult> AddBookmark(string username,
-        [FromBody] CreateBookmarkDto request)
+    public async Task<IActionResult> AddBookmark(string username, CreateBookmarkDto request)
     {
         try
         {

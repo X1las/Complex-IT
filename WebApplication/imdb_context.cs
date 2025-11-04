@@ -49,6 +49,7 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Users>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<Users>().Property(x => x.HashedPassword).HasColumnName("password");
         modelBuilder.Entity<Users>().Property(x => x.Salt).HasColumnName("salt");
+
         // UsersRating mapping
         modelBuilder.Entity<UserRatings>().ToTable("user_ratings");
         modelBuilder.Entity<UserRatings>().HasKey(ur => new { ur.Username, ur.TitleId });
@@ -58,10 +59,10 @@ public class ImdbContext : DbContext
 
         // UsersHistory mapping
         modelBuilder.Entity<UserHistory>().ToTable("user_history");
-        modelBuilder.Entity<UserHistory>().HasKey(uh => new { uh.Username, uh.TitleId, uh.Date });
         modelBuilder.Entity<UserHistory>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<UserHistory>().Property(x => x.Date).HasColumnName("date_time");
         modelBuilder.Entity<UserHistory>().Property(x => x.TitleId).HasColumnName("title_id");
+        modelBuilder.Entity<UserHistory>().HasKey(uh => new { uh.Username, uh.TitleId, uh.Date });
         
         // Attends mapping
         modelBuilder.Entity<Attends>().ToTable("attends");
