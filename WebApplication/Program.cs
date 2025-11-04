@@ -14,10 +14,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.WebHost.ConfigureKestrel(options =>
-        {
-            options.ListenLocalhost(5001); // HTTP only - no HTTPS certificate needed
-        });
+        // Configure Kestrel to listen on both HTTP and HTTPS
+        builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
 
         // Register DbContext
         builder.Services.AddDbContext<ImdbContext>();
@@ -42,7 +40,8 @@ public class Program
         builder.Services.AddControllers();
 
         // JWT Authentication
-        var jwtSecret = builder.Configuration.GetSection("Auth:Secret").Value;
+        var jwtSecret = builder.Configuration.GetSection("Auth:Secret").Value
+            ?? throw new InvalidOperationException("Auth:Secret is not configured");
 
          builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opt =>
@@ -62,7 +61,7 @@ public class Program
         {
             options.AddPolicy("AllowFrotend", policy =>
             {
-                policy.WithOrigins("http://localhost:3000")
+                policy.WithOrigins("https://localhost:3000", "http://localhost:3000") // Allow both HTTP and HTTPS
                       .AllowAnyMethod()
                       .AllowAnyHeader()
                       .AllowCredentials();
@@ -71,6 +70,9 @@ public class Program
 
         var app = builder.Build();
 
+        // Note: HTTPS redirection disabled to allow both HTTP and HTTPS during development
+        // app.UseHttpsRedirection();
+        
         app.UseCors("AllowFrontend"); // CORS first
         app.UseAuthentication();      // Authentication second
         app.UseAuthorization();       // Authorization third
