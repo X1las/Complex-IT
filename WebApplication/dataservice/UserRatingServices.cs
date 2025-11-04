@@ -32,7 +32,7 @@ public class UserRatingDataService
         if (existingRating != null)
         {
             // Update existing rating
-            existingRating.Rating = rating.ToString();
+            existingRating.Rating = rating;
         }
         else
         {
@@ -41,7 +41,7 @@ public class UserRatingDataService
             {
                 Username = username,
                 TitleId = titleId,
-                Rating = rating.ToString()
+                Rating = rating
             };
             db.UsersRating.Add(newRating);
         }
@@ -128,7 +128,7 @@ public class UserRatingDataService
         using var db = new ImdbContext();
 
         var ratings = db.UsersRating
-            .Where(r => r.TitleId == titleId && !string.IsNullOrEmpty(r.Rating))
+            .Where(r => r.TitleId == titleId && r.Rating > 0)
             .ToList();
 
         if (!ratings.Any())
@@ -136,13 +136,8 @@ public class UserRatingDataService
             return 0;
         }
 
-        // Convert string ratings to double and calculate average
-        var validRatings = ratings
-            .Select(r => double.TryParse(r.Rating, out double val) ? val : 0)
-            .Where(r => r > 0)
-            .ToList();
-
-        return validRatings.Any() ? validRatings.Average() : 0;
+        // Rating is already double, calculate average directly
+        return ratings.Average(r => r.Rating);
     }
       
     // COUNT - Get total ratings count for user

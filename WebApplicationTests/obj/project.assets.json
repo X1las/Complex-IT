@@ -2271,6 +2271,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Microsoft.NET.Test.Sdk >= 17.12.0",
+      "Newtonsoft.Json >= 13.0.3",
       "WebApplication >= 1.0.0",
       "coverlet.collector >= 6.0.2",
       "xunit >= 2.9.3",
@@ -2334,6 +2335,10 @@
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
             "version": "[17.12.0, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.3, )"
           },
           "coverlet.collector": {
             "target": "Package",
