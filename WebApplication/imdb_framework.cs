@@ -13,7 +13,7 @@ public class UserRatings
 {
     public string Username { get; set; }
     public string TitleId { get; set; }
-    public int Rating { get; set; }
+    public int? Rating { get; set; }
 }
 
 public class UserHistory
@@ -21,6 +21,14 @@ public class UserHistory
     public string Username { get; set; }
     public DateTime Date { get; set; }
     public string? TitleId { get; set; }
+}
+
+public class UserLog
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+    public string? Action { get; set; }
+    public DateTime? Timestamp { get; set; }
 }
 
 public class Attends

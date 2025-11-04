@@ -31,6 +31,7 @@ public class ImdbContext : DbContext
     public DbSet<WordIndex> WordIndex { get; set; }
     public DbSet<AlternateTitles> AlternateTitle { get; set; }
     public DbSet<Titles> Title { get; set; }
+    public DbSet<UserLog> UserLog { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -62,8 +63,15 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<UserHistory>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<UserHistory>().Property(x => x.Date).HasColumnName("date_time");
         modelBuilder.Entity<UserHistory>().Property(x => x.TitleId).HasColumnName("title_id");
-        modelBuilder.Entity<UserHistory>().HasKey(uh => new { uh.Username, uh.TitleId, uh.Date });
-        
+
+        // UserLog mapping
+        modelBuilder.Entity<UserLog>().ToTable("user_log");
+        modelBuilder.Entity<UserLog>().HasKey(ul => ul.Id);
+        modelBuilder.Entity<UserLog>().Property(x => x.Id).HasColumnName("id");
+        modelBuilder.Entity<UserLog>().Property(x => x.Username).HasColumnName("username");
+        modelBuilder.Entity<UserLog>().Property(x => x.Action).HasColumnName("action");
+        modelBuilder.Entity<UserLog>().Property(x => x.Timestamp).HasColumnName("timestamp");
+
         // Attends mapping
         modelBuilder.Entity<Attends>().ToTable("attends");
         modelBuilder.Entity<Attends>().HasKey(a => new { a.TitleId, a.CrewId });

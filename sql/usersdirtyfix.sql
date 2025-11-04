@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS user_ratings CASCADE;
 DROP TABLE IF EXISTS user_history CASCADE;
 DROP TABLE IF EXISTS bookmarks CASCADE;
+DROP TABLE IF EXISTS user_log CASCADE;
 
 CREATE TABLE users (
     username VARCHAR(50) NOT NULL,
@@ -23,8 +24,8 @@ CREATE TABLE user_ratings (
 CREATE TABLE user_history (
     username VARCHAR(50) NOT NULL,
     title_id VARCHAR(12) NOT NULL,
-    viewed_at TIMESTAMP NOT NULL,
-    PRIMARY KEY (username, title_id, viewed_at),
+    date_time TIMESTAMP NOT NULL,
+    PRIMARY KEY (username, title_id, date_time),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
 );
@@ -32,8 +33,15 @@ CREATE TABLE user_history (
 CREATE TABLE bookmarks (
     username VARCHAR(50) NOT NULL,
     title_id VARCHAR(12) NOT NULL,
-    bookmarked_at TIMESTAMP NOT NULL,
     PRIMARY KEY (username, title_id),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
 );
+
+CREATE TABLE user_log (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (username) REFERENCES users (username)
+)

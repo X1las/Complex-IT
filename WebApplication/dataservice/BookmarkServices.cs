@@ -40,8 +40,7 @@ public class BookmarkDataService
         return true;
     }
     
-    public (List<Bookmarks> bookmarks, int totalCount) GetUserBookmarks(
-        string username)
+    public (List<Bookmarks> bookmarks, int totalCount) GetUserBookmarks(string username)
     {
         using var db = new ImdbContext();
         

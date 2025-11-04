@@ -4,16 +4,21 @@ namespace DataServiceLayer;
 
 public class UserRatingDataService
 {
-    // DB stores rating as double, API uses int
-    public bool AddOrUpdateRating(string username, string titleId, int rating)
+    // DB stores rating as string, API uses int
+    public bool AddOrUpdateRating(string username, string titleId, int? rating)
     {
         // Validate rating range (1-10)
         if (rating < 1 || rating > 10)
         {
             return false;
         }
-        
+
         if (string.IsNullOrWhiteSpace(titleId) || string.IsNullOrWhiteSpace(username))
+        {
+            return false;
+        }
+        
+        if (rating == null)
         {
             return false;
         }
@@ -113,27 +118,7 @@ public class UserRatingDataService
     }
 
     // AGGREGATE - Get average rating for a title
-    public double GetAverageUserRatingForTitle(string titleId)
-    {
-        if (string.IsNullOrWhiteSpace(titleId))
-        {
-            return 0;
-        }
-
-        using var db = new ImdbContext();
-
-        var ratings = db.UsersRating
-            .Where(r => r.TitleId == titleId && r.Rating > 0)
-            .ToList();
-
-        if (!ratings.Any())
-        {
-            return 0;
-        }
-
-        // Rating is already double, calculate average directly
-        return ratings.Average(r => r.Rating);
-    }
+    
       
     // COUNT - Get total ratings count for user
     public int GetRatingCount(string username)
