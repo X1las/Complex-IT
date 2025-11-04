@@ -9,11 +9,9 @@ using WebServiceLayer.Utils;
 
 namespace WebApplicationTests
 {
-    /// <summary>
     /// Unit tests for BookmarksController
     /// Tests controller with logic from BookmarkDataService against the database
     /// Each test creates unique test data and cleans up after itself
-    /// </summary>
     public class BookmarksControllerTests
     {
     private const string TestTitleId = "tt33982100"; // Angel of the Warrior - exists in DB

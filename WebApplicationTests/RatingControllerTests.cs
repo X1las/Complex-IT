@@ -9,10 +9,8 @@ using WebServiceLayer.Utils;
 
 namespace WebApplicationTests
 {
-    /// <summary>
     /// Unit tests for RatingController
     /// Demonstrates testing different layers: controller validation, service integration, and data format
-    /// </summary>
     public class RatingControllerTests
     {
         private const string TestTitleId = "tt33982100"; // Angel of the Warrior - exists in DB
