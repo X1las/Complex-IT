@@ -32,7 +32,6 @@ CREATE TABLE user_history (
 CREATE TABLE bookmarks (
     username VARCHAR(50) NOT NULL,
     title_id VARCHAR(12) NOT NULL,
-    bookmarked_at TIMESTAMP NOT NULL,
     PRIMARY KEY (username, title_id),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
