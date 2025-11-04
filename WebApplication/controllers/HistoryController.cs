@@ -66,33 +66,51 @@ public class HistoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetHistory(string username)
+    public async Task<IActionResult> GetHistory(
+    string username,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
     {
-        var validationResult = ValidateUserAccess(username);
-        if (validationResult != null) return validationResult;
 
-        try
+    var validationResult = ValidateUserAccess(username);
+    if (validationResult != null) return validationResult;
+
+    try
+    {
+        var (history, totalCount) = await Task.Run(() => _historyService.GetUserHistory(username));
+        
+        // Calculate pagination
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+        
+        // Apply pagination
+        var paginatedHistory = history
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+        
+        var historyDtos = paginatedHistory.Select(h => new HistoryItemDto
         {
-            var (history, totalCount) = await Task.Run(() => _historyService.GetUserHistory(username));
-            
-            var historyDtos = history.Select(h => new HistoryItemDto
-            {
-                Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/history/{h.TitleId}/{h.Date:O}",
-                Id = 0,
-                TitleId = h.TitleId ?? "",
-                ViewedAt = h.Date
-            }).ToList();
-            
-            return Ok(new
-            {
-                history = historyDtos,
-                totalCount
-            });
+            Url = $"{Request.Scheme}://{Request.Host}/api/users/{username}/history/{h.TitleId}/{h.Date:O}",
+            Id = 0,
+            TitleId = h.TitleId ?? "",
+            ViewedAt = h.Date
+        }).ToList();
+        
+        var response = new PagedResultDto<HistoryItemDto>
+        {
+            Items = historyDtos,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalCount,
+            TotalPages = totalPages
+        };
+        
+            return Ok(response);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving user history for username {Username}", username);
-            return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving history" });
+        _logger.LogError(ex, "Error retrieving user history for username {Username}", username);
+        return StatusCode(500, new ErrorResponseDto { Error = "An error occurred while retrieving history" });
         }
     }
 
