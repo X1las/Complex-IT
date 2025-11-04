@@ -64,7 +64,6 @@ namespace WebApplicationTests
             Assert.NotNull(createdResult);
             Assert.Equal(201, createdResult.StatusCode);
 
-            // Cleanup
             new UserRatingDataService().DeleteRating(uniqueUser, TestTitleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -132,7 +131,6 @@ namespace WebApplicationTests
             Assert.Equal(7, response.Rating);
             Assert.Contains("http", response.Url); // correct format
 
-            // Cleanup
             ratingService.DeleteRating(uniqueUser, TestTitleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -165,7 +163,6 @@ namespace WebApplicationTests
             Assert.Equal(1, response.TotalItems);
             Assert.Single(response.Items);
 
-            // Cleanup
             ratingService.DeleteRating(uniqueUser, TestTitleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -198,7 +195,6 @@ namespace WebApplicationTests
             Assert.NotNull(updatedRating);
             Assert.Equal(9, updatedRating.Rating);
 
-            // Cleanup
             ratingService.DeleteRating(uniqueUser, TestTitleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -230,7 +226,6 @@ namespace WebApplicationTests
             var deletedRating = ratingService.GetUserRating(uniqueUser, TestTitleId);
             Assert.Null(deletedRating);
 
-            // Cleanup
             userService.DeleteUser(uniqueUser);
         }
     }

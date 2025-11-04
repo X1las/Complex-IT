@@ -125,7 +125,6 @@ namespace WebApplicationTests
             Assert.NotNull(createdResult);
             Assert.Equal(201, createdResult.StatusCode);
 
-            // Cleanup
             var bookmarkService = new BookmarkDataService();
             bookmarkService.RemoveBookmark(uniqueUser, titleId);
             userService.DeleteUser(uniqueUser);
@@ -161,7 +160,6 @@ namespace WebApplicationTests
             Assert.NotNull(error);
             Assert.Equal("Bookmark already exists", error.Error);
 
-            // Cleanup
             bookmarkService.RemoveBookmark(uniqueUser, titleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -237,7 +235,6 @@ namespace WebApplicationTests
             Assert.NotNull(okResult);
             Assert.Equal(200, okResult.StatusCode);
             
-            // Cleanup
             userService.DeleteUser(uniqueUser);
         }
 
@@ -337,7 +334,6 @@ namespace WebApplicationTests
             Assert.Equal(1, response.TotalPages);
             Assert.Single(response.Items);
 
-            // Cleanup
             bookmarkService.RemoveBookmark(uniqueUser, titleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -370,7 +366,6 @@ namespace WebApplicationTests
             Assert.NotNull(response);
             Assert.Equal(10, response.PageSize); // Default is 10
 
-            // Cleanup
             bookmarkService.RemoveBookmark(uniqueUser, titleId);
             userService.DeleteUser(uniqueUser);
         }
@@ -409,7 +404,6 @@ namespace WebApplicationTests
             Assert.Contains("http", firstBookmark.Url);
             Assert.Contains(uniqueUser, firstBookmark.Url);
 
-            // Cleanup
             bookmarkService.RemoveBookmark(uniqueUser, titleId);
             userService.DeleteUser(uniqueUser);
         }
