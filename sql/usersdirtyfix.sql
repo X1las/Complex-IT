@@ -15,7 +15,7 @@ CREATE TABLE users (
 CREATE TABLE user_ratings (
     username VARCHAR(50) NOT NULL,
     title_id VARCHAR(12) NOT NULL,
-    rating DOUBLE PRECISION NOT NULL,
+    rating INT NOT NULL,
     PRIMARY KEY (username, title_id),
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
@@ -37,11 +37,3 @@ CREATE TABLE bookmarks (
     FOREIGN KEY (username) REFERENCES users (username),
     FOREIGN KEY (title_id) REFERENCES titles (id)
 );
-
-CREATE TABLE user_log (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    action VARCHAR(100) NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (username) REFERENCES users (username)
-)
