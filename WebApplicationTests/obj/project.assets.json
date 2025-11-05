@@ -3819,39 +3819,33 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\JDorph\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/home/xilas/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj",
+      "projectUniqueName": "/home/xilas/Complex-IT/WebApplicationTests/WebApplicationTests.csproj",
       "projectName": "WebApplicationTests",
-      "projectPath": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplicationTests\\WebApplicationTests.csproj",
-      "packagesPath": "C:\\Users\\JDorph\\.nuget\\packages\\",
-      "outputPath": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplicationTests\\obj\\",
+      "projectPath": "/home/xilas/Complex-IT/WebApplicationTests/WebApplicationTests.csproj",
+      "packagesPath": "/home/xilas/.nuget/packages/",
+      "outputPath": "/home/xilas/Complex-IT/WebApplicationTests/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\JDorph\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/xilas/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplication\\WebApplication.csproj": {
-              "projectPath": "E:\\GithubV2\\ComplexITv2(28-10)\\Complex-IT\\WebApplication\\WebApplication.csproj"
+            "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj": {
+              "projectPath": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj"
             }
           }
         }
@@ -3866,7 +3860,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -3911,7 +3905,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
