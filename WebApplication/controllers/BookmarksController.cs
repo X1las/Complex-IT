@@ -95,6 +95,12 @@ public class BookmarksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddBookmark(UserBookmarkDto model)
     {
+        // Input validation - check for null model first
+        if (model == null)
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Request body is required" });
+        }
+        
         var validationResult = ValidateUserAccess(model.Username);
         if (validationResult != null) return validationResult;
         
@@ -106,7 +112,7 @@ public class BookmarksController : ControllerBase
                 return BadRequest(new ErrorResponseDto { Error = "Username is required" });
             }
 
-            if (model == null || string.IsNullOrWhiteSpace(model.TitleId))
+            if (string.IsNullOrWhiteSpace(model.TitleId))
             {
                 return BadRequest(new ErrorResponseDto { Error = "TitleId is required" });
             }
@@ -139,6 +145,12 @@ public class BookmarksController : ControllerBase
     [HttpDelete("{titleId}")]
     public async Task<IActionResult> RemoveBookmark(UserBookmarkDto model)
     {
+        // Input validation - check for null model first
+        if (model == null)
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Request body is required" });
+        }
+        
         var validationResult = ValidateUserAccess(model.Username);
         if (validationResult != null) return validationResult;
 

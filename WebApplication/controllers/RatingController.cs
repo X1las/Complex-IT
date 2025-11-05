@@ -41,6 +41,12 @@ public class RatingController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateRating(UserRatingDto model)
     {
+        // Input validation - check for null model first
+        if (model == null)
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Request body is required" });
+        }
+        
         // Helper Method Used
         var validationResult = ValidateUserAccess(model.Username);
         if (validationResult != null) return validationResult;
@@ -178,6 +184,12 @@ public class RatingController : ControllerBase
     [HttpPut("{titleId}")]
     public async Task<IActionResult> UpdateRating(UserRatingDto model)
     {
+        // Input validation - check for null model first
+        if (model == null)
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Request body is required" });
+        }
+        
         var validationResult = ValidateUserAccess(model.Username);
         if (validationResult != null) return validationResult;
 
@@ -218,6 +230,12 @@ public class RatingController : ControllerBase
     [HttpDelete("{titleId}")]
     public async Task<IActionResult> DeleteRating(UserRatingDto model)
     {
+        // Input validation - check for null model first
+        if (model == null)
+        {
+            return BadRequest(new ErrorResponseDto { Error = "Request body is required" });
+        }
+        
         var validationResult = ValidateUserAccess(model.Username);
         if (validationResult != null) return validationResult;
         try
