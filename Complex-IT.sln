@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationTests", "WebA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Security.csproj", "{100A2BEF-FD2D-4EDA-837B-456539AA18DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment5-1", "Assignment5-1\Assignment5-1.csproj", "{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment5-2", "Assignment5-2\Assignment5-2.csproj", "{D3083851-A714-446D-AA57-38E21E918596}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +54,14 @@ Global
 		{100A2BEF-FD2D-4EDA-837B-456539AA18DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{100A2BEF-FD2D-4EDA-837B-456539AA18DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100A2BEF-FD2D-4EDA-837B-456539AA18DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3083851-A714-446D-AA57-38E21E918596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3083851-A714-446D-AA57-38E21E918596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3083851-A714-446D-AA57-38E21E918596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3083851-A714-446D-AA57-38E21E918596}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

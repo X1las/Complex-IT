@@ -6,13 +6,13 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v9.0": {
-      "Security/1.0.0": {
+      "Assignment5-1/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "9.0.10",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
         "runtime": {
-          "Security.dll": {}
+          "Assignment5-1.dll": {}
         }
       },
       "Microsoft.AspNetCore.OpenApi/9.0.10": {
@@ -198,7 +198,7 @@
     }
   },
   "libraries": {
-    "Security/1.0.0": {
+    "Assignment5-1/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
