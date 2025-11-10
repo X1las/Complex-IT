@@ -1,12 +1,12 @@
 ﻿// Authenticator.cs
 
-using Npgsql; 
+using Npgsql;
 
 public class Authenticator {
 
   public Authenticator() {
     try {
-      string s = "Host=localhost;Username=nielsj;Password=pizza;Database=passwords";
+      string s = "Host=newtlike.com;Username=rucdb;Password=testdb;Database=university";
       con = new NpgsqlConnection(s);
       con.Open();
     } catch (Exception e) {
@@ -29,10 +29,12 @@ public class Authenticator {
     }
 
     // check the password
-    if (! passwordIsOK(password, username)) {
+    if (!passwordIsOK(password, username))
+    {
       Console.WriteLine("Password is too weak");
       return false;
     }
+  
  
     // obtain hash + salt
     Tuple<string, string> hs = hashing.hash(password);
@@ -79,16 +81,20 @@ public class Authenticator {
         Console.WriteLine("Password supplied does not match stored password");
         return false;
       }
-  } 
+  }
 
   // check the password
   // method passwordIsOK() is defined as virtual,
   // so that modifications may be implemented in a subclass
   // (but not required at all)
 
-  public virtual bool passwordIsOK(string password, string username) {
-    if (password.Length >= 1) return true;
-    else  return false;
+  public virtual bool passwordIsOK(string password, string username)
+  {
+    if (password.Length > 8) return false;
+
+    if (password.Contains(username)) return false;
+  
+    return true;
   }
 
   // sqlSetUserRecord is used in register()

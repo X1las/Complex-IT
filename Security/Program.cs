@@ -1,4 +1,5 @@
 ﻿// Program.cs
+using System;
 
 Console.WriteLine("Welcome to the password-based authenticator");
 Console.WriteLine("");
@@ -6,7 +7,7 @@ Console.WriteLine("");
 Authenticator auth = new Authenticator();
 
 Console.WriteLine("Registering user admin");
-auth.register("admin", "admindnc");
+auth.register("admin", "dnc12345");
 
 // the end-user interface
 string? s = "x";
