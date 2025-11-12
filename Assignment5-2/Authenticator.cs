@@ -30,7 +30,7 @@ public class Authenticator {
 
     // check the password
     if (!passwordIsOK(password, username))
-    {
+
       Console.WriteLine("Password is too weak");
       return false;
     }

@@ -41,4 +41,5 @@
 /obj
 /bin
 
-!*.http
+!react-frontend/
+!react-frontend/**
