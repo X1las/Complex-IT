@@ -1,45 +1,124 @@
-# Ignore all files by default
-*
+# .NET Core / ASP.NET Core
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.tmp
+*.user
+*.suo
+.vs/
+.vscode/
+*.AssemblyInfo.cs
+GlobalAssemblyInfo.cs
 
-# But keep .tex files
-!*.tex
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
 
-# But keep .pdf files
-!*.pdf
+# Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
 
-# But keep .sql files
-!*.sql
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
 
-# But keep .md files
-!*.md
+# Node.js / React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+build/
+dist/
 
-# But keep C# files
-!*.cs
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# But keep C# project files
-!*.csproj
-!*.sln
+# IDE files
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# But keep JSON configuration files
-!*.json
+# Logs
+*.log
+logs/
 
-# Keep directories so we can traverse into them
-!*/
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Keep svg and drawio
-!*.svg
-!*.drawio.svg
+# Coverage directory used by tools like istanbul
+coverage/
 
-# Keep this .gitignore file itself
-!.gitignore
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
-# Keep README files
-!README*
-!readme*
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
 
-# Ignore obj and bin folders completely (override the !*/ rule)
-/obj
-/bin
+# Environment files (but keep example files)
+.env
+!.env.example
+!.env.sample
 
-!react-frontend/
-!react-frontend/**
+# Security sensitive files
+*.key
+*.pem
+*.cert
+*.crt
+appsettings.Production.json
+
+# LaTeX auxiliary files (if you use LaTeX)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.lot
+*.lof
+*.idx
+*.ind
+*.ilg
+*.out
+*.nav
+*.snm
+*.vrb
