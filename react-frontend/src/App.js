@@ -1,17 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import { useEffect } from 'react'
+import './App.css'
 
-function App() {
+function App({ count }) {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetch("https://api.themoviedb.org/3/search/person?query=david&api_key=f7cb406cd3ce48761cb8749ec2be8e89")
+      .then(res => res.json())
+      .then(data => setUsers(data.results));
+  }, [count]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Woop woop
-        </p>
-      </header>
+    <div>
+      {users.map((u, index) => (
+        <p key={index}>{u.id}</p>
+      ))}
     </div>
   );
 }
 
-export default App;
+
+export default App
