@@ -28,7 +28,7 @@ function DisplayPerson({ person }) {
   if (!person) return <div>No person to display</div>;
 
   return (
-    <div style={{marginLeft: '60%', marginRight: '60%', backgroundColor: '#c2c1c1ff', padding: '1%', borderRadius: '8px'}}>
+    <div style={{marginLeft: '30%', marginRight: '30%', backgroundColor: '#c2c1c1ff', padding: '1%', borderRadius: '8px'}}>
       <h2>{person.name}</h2>
       <p>Known for: </p>
       <KnownFor person={person} />
