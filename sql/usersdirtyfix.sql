@@ -1,4 +1,4 @@
--- Active: 1756753311901@@newtlike.com@5432@rucdb
+-- Active: 1756753311901@@newtlike.com@5432@university
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS user_ratings CASCADE;
 DROP TABLE IF EXISTS user_history CASCADE;

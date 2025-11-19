@@ -1,44 +1,103 @@
-# Ignore all files by default
-*
+# .NET Core / ASP.NET Core
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.tmp
+*.user
+*.suo
+.vs/
+.vscode/
+*.AssemblyInfo.cs
+GlobalAssemblyInfo.cs
 
-# But keep .tex files
-!*.tex
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
 
-# But keep .pdf files
-!*.pdf
+# Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
 
-# But keep .sql files
-!*.sql
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
 
-# But keep .md files
-!*.md
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# But keep C# files
-!*.cs
+# IDE files
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# But keep C# project files
-!*.csproj
-!*.sln
+# Logs
+*.log
+logs/
 
-# But keep JSON configuration files
-!*.json
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Keep directories so we can traverse into them
-!*/
+# Coverage directory used by tools like istanbul
+coverage/
 
-# Keep svg and drawio
-!*.svg
-!*.drawio.svg
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
-# Keep this .gitignore file itself
-!.gitignore
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
 
-# Keep README files
-!README*
-!readme*
+# Environment files (but keep example files)
+.env
+!.env.example
+!.env.sample
 
-# Ignore obj and bin folders completely (override the !*/ rule)
-/obj
-/bin
-
-!*.http
+# LaTeX auxiliary files (if you use LaTeX)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.lot
+*.lof
+*.idx
+*.ind
+*.ilg
+*.out
+*.nav
+*.snm
+*.vrb
