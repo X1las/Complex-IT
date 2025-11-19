@@ -25,14 +25,14 @@ function DisplayPerson({ person }) {
   if (!person) return <div>No person to display</div>;
 
   return (
-    <div>
+    <div style={{marginLeft: '30%', marginRight: '30%', backgroundColor: '#c2c1c1ff', padding: '1%', borderRadius: '8px'}}>
       <h2>{person.name}</h2>
       <p>Known for: {person.known_for_department}</p>
       <p>Popularity: {person.popularity}</p>
       <img
-        src={`https://image.tmdb.org/t/p/w200${person.profile_path}`} 
+        src={`https://image.tmdb.org/t/p/original${person.profile_path}`} 
         alt={person.name}
-        style={{width: '100px', height: '150px', objectFit: 'cover'}}
+        style={{width: '70%', height: 'auto', objectFit: 'cover'}}
       />
     </div>
   );
@@ -46,8 +46,8 @@ function App({ name }) {
 
 
   return (
-    <div>
-      <input
+    <div style={{textAlign: 'center', paddingLeft: '10%', paddingRight: '10%', backgroundColor: '#f0f0f0', paddingBottom: '20%', borderRadius: '10px'}}>
+      <input 
         type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
