@@ -19,7 +19,7 @@ function Search({ name }) {
         setPersons([]);
       });
   }, [name]); 
-  
+  console.log("Searched for:", name, "Found persons:", persons);
   return persons;
 }
 
@@ -40,6 +40,7 @@ function DisplayPerson({ person }) {
           style={{ width: '100px', height: '150px', objectFit: 'cover' }}
         />
       )}
+      {console.log("Person Displayed:", person)}
     </div>
   );
 }
@@ -57,6 +58,7 @@ function KnownFor({ person }) {
             {work.title || work.name}
           </li>
         ))}
+        {console.log("Known works:", person.known_for)}
       </ul>
     </div>
   );
