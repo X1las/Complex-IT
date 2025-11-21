@@ -30,7 +30,6 @@ function DisplayPerson({ person }) {
   return (
     <div style={{marginLeft: '30%', marginRight: '30%', backgroundColor: '#c2c1c1ff', padding: '1%', borderRadius: '8px'}}>
       <h2>{person.name}</h2>
-      <p>Known for: </p>
       <KnownFor person={person} />
       <p>Popularity: {person.popularity}</p>
       {person.profile_path && (
