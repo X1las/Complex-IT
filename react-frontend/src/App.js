@@ -4,13 +4,13 @@ import './App.css'
 // Search function to fetch persons based on name, returns array of persons
 function Search({ name }) {
   const [persons, setPersons] = useState([]);
-  
+
   useEffect(() => {
     if (!name) {
       setPersons([]);
       return;
     }
-    
+
     fetch(`https://api.themoviedb.org/3/search/person?query=${name}&api_key=f7cb406cd3ce48761cb8749ec2be8e89`)
       .then(res => res.json())
       .then(data => setPersons(data.results || []))
@@ -18,7 +18,7 @@ function Search({ name }) {
         console.error('Error fetching data:', error);
         setPersons([]);
       });
-  }, [name]); 
+  }, [name]);
   console.log("Searched for:", name, "Found persons:", persons);
   return persons;
 }
@@ -28,17 +28,19 @@ function DisplayPerson({ person }) {
   if (!person) return <div>No person to display</div>;
 
   return (
-    <div style={{marginLeft: '30%', marginRight: '30%', backgroundColor: '#c2c1c1ff', padding: '1%', borderRadius: '8px'}}>
+    <div style={{ marginLeft: '30%', marginRight: '30%', backgroundColor: '#c2c1c1ff', padding: '1%', borderRadius: '8px' }}>
       <h2>{person.name}</h2>
-      <KnownFor person={person} />
-      <p>Popularity: {person.popularity}</p>
       {person.profile_path && (
         <img
-          src={`https://image.tmdb.org/t/p/w200${person.profile_path}`} 
+          src={`https://image.tmdb.org/t/p/w200${person.profile_path}`}
           alt={person.name}
           style={{ width: '100px', height: '150px', objectFit: 'cover' }}
         />
       )}
+      <p>Profession: {person.known_for_department}</p>
+      <KnownFor person={person} />
+      <p>Popularity: {person.popularity}</p>
+
       {console.log("Person Displayed:", person)}
     </div>
   );
@@ -51,14 +53,16 @@ function KnownFor({ person }) {
   return (
     <div>
       <h3>Known For:</h3>
-      <ul>
         {person.known_for.map((work) => (
-          <li key={work.id}>
-            {work.title || work.name}
-          </li>
+          <div key={work.id}>
+            <strong>{work.title}</strong><br></br>
+            <img src={`https://image.tmdb.org/t/p/w200${work.poster_path}`} alt={work.title} /><br></br>
+            <em>Media Type: {work.media_type}</em><br></br>
+            <em>Release Date: {work.release_date}</em><br></br>
+            <p>{work.overview}</p>
+          </div>
         ))}
         {console.log("Known works:", person.known_for)}
-      </ul>
     </div>
   );
 }
@@ -69,7 +73,7 @@ function App({ name }) {
   const persons = Search({ name: searchName });
 
   return (
-    <div>
+    <div style={{ textAlign: 'center', marginTop: '50px' }}>
       {/* Search Field, updates searchName state on change */}
       <input
         type="text"
@@ -79,16 +83,16 @@ function App({ name }) {
       />
 
       <h1>Showing search result {counter + 1} of {persons.length} for {searchName}:</h1>
-      
+
       {/* Navigation Buttons update counter */}
-      <button 
-        onClick={() => setCounter((prev) => Math.max(prev - 1, 0))} 
-        disabled={counter === 0} 
+      <button
+        onClick={() => setCounter((prev) => Math.max(prev - 1, 0))}
+        disabled={counter === 0}
       >
         Previous
       </button>
-      <button 
-        onClick={() => setCounter((prev) => Math.min(prev + 1, persons.length - 1))} 
+      <button
+        onClick={() => setCounter((prev) => Math.min(prev + 1, persons.length - 1))}
         disabled={counter >= persons.length - 1}
       >
         Next
