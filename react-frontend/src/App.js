@@ -34,7 +34,7 @@ function DisplayPerson({ person }) {
         <img
           src={`https://image.tmdb.org/t/p/w200${person.profile_path}`}
           alt={person.name}
-          style={{ width: '100px', height: '150px', objectFit: 'cover' }}
+          style={{ width: '50%', height: 'auto', objectFit: 'cover' }}
         />
       )}
       <p>Profession: {person.known_for_department}</p>
