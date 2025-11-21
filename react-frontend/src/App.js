@@ -1,7 +1,9 @@
+// Group 3 Members: Jonas Wolffrom Strandgaard Clausen, Malthe Tranberg Ørsted, Joakim Dorph Broager
+
 import { useState, useEffect } from 'react'
 import './App.css'
 
-// Search function to fetch persons based on name, returns array of persons
+// Search function to fetch persons based on name, returns person array
 function Search({ name }) {
   const [persons, setPersons] = useState([]);
 
@@ -14,10 +16,6 @@ function Search({ name }) {
     fetch(`https://api.themoviedb.org/3/search/person?query=${name}&api_key=f7cb406cd3ce48761cb8749ec2be8e89`)
       .then(res => res.json())
       .then(data => setPersons(data.results || []))
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setPersons([]);
-      });
   }, [name]);
   console.log("Searched for:", name, "Found persons:", persons);
   return persons;
@@ -25,6 +23,7 @@ function Search({ name }) {
 
 // Component to display details of a person, uses KnownFor component
 function DisplayPerson({ person }) {
+  // Out of bounds fix
   if (!person) return <div>No person to display</div>;
 
   return (
@@ -38,6 +37,7 @@ function DisplayPerson({ person }) {
         />
       )}
       <p>Profession: {person.known_for_department}</p>
+      {/* KnownFor component rendering */}
       <KnownFor person={person} />
       <p>Popularity: {person.popularity}</p>
 
