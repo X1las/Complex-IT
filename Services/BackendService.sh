@@ -5,7 +5,7 @@ set -e  # Exit on any error
 
 # Navigate to the WebApplication directory
 echo "Navigating to WebApplication directory..."
-cd "$HOME/Complex-IT/WebApplication" || { echo "Error: Cannot navigate to WebApplication directory"; exit 1; }
+cd "$HOME/Complex-IT/Backend/WebApplication" || { echo "Error: Cannot navigate to WebApplication directory"; exit 1; }
 
 # Restore dependencies and build project
 echo "Restoring .NET dependencies..."

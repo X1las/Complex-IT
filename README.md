@@ -12,7 +12,20 @@
 
 ## Nuget Packages
 
-- 
+- Mapster
+    - Version 7.4.0
+- Mapster.DependencyInjection
+    - Version 1.0.1
+- AspNetCore.Authentication.JwtBearer 
+    - Version 9.0.10
+- AspNetCore.JsonPatch 
+    - Version 9.0.10
+- AspNetCore.Mvc.NewtonsoftJson 
+    Version 9.0.10
+- EntityFrameworkCore 
+    - Version 9.0.10
+- Npgsql.EntityFrameworkCore.PostgreSQL 
+    - Version 9.0.4
 
 ## Handy SQL commands
 

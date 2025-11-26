@@ -2,23 +2,23 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment3", "Assignment3\Assignment3.csproj", "{A1B2C3D4-E5F6-7890-ABCD-123456789012}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment3", "Assignments\Assignment3\Assignment3.csproj", "{A1B2C3D4-E5F6-7890-ABCD-123456789012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment3-Tests", "Assignment3-Tests\Assignment3-Tests.csproj", "{B2C3D4E5-F6G7-8901-BCDE-234567890123}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment3-Tests", "Assignments\Assignment3-Tests\Assignment3-Tests.csproj", "{B2C3D4E5-F6G7-8901-BCDE-234567890123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment4", "Assignment4\Assignment4.csproj", "{626E54AD-1676-6BD5-C3B4-D881C7A3895D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment4", "Assignments\Assignment4\Assignment4.csproj", "{626E54AD-1676-6BD5-C3B4-D881C7A3895D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment4Tests", "Assignment4Tests\Assignment4Tests.csproj", "{4E09ECBF-4260-8CDD-B3DC-7E92C0A7CB16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment4Tests", "Assignments\Assignment4Tests\Assignment4Tests.csproj", "{4E09ECBF-4260-8CDD-B3DC-7E92C0A7CB16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{FA3884B1-4C90-4ABA-B113-23003FB9DA1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "Backend\WebApplication\WebApplication.csproj", "{FA3884B1-4C90-4ABA-B113-23003FB9DA1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationTests", "WebApplicationTests\WebApplicationTests.csproj", "{435CBD32-92A9-4020-AACB-7C6E47B731FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationTests", "Backend\WebApplicationTests\WebApplicationTests.csproj", "{435CBD32-92A9-4020-AACB-7C6E47B731FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Security.csproj", "{100A2BEF-FD2D-4EDA-837B-456539AA18DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Assignments\Assignment5-2\Security.csproj", "{100A2BEF-FD2D-4EDA-837B-456539AA18DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment5-1", "Assignment5-1\Assignment5-1.csproj", "{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment5-1", "Assignments\Assignment5-1\Assignment5-1.csproj", "{61589968-2CBB-4F8B-AD9D-C7ADC8786D1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment5-2", "Assignment5-2\Assignment5-2.csproj", "{D3083851-A714-446D-AA57-38E21E918596}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment5-2", "Assignments\Assignment5-2\Assignment5-2.csproj", "{D3083851-A714-446D-AA57-38E21E918596}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
