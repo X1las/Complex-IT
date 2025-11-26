@@ -14,8 +14,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Configure Kestrel to listen on HTTP
-        builder.WebHost.UseUrls("http://localhost:3000");
+        // Configure Kestrel to listen on all interfaces
+        builder.WebHost.UseUrls("http://0.0.0.0:3000");
 
         // Register DbContext
         builder.Services.AddDbContext<ImdbContext>();
@@ -61,7 +61,13 @@ public class Program
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins("http://localhost:80", "http://localhost:3001") // Allow frontend on port 80 and alternative port 3001
+                policy.WithOrigins(
+                    "http://localhost:80", 
+                    "http://localhost:3001",
+                    "http://newtlike.com",
+                    "http://newtlike.com:80",
+                    "http://newtlike.com:3001"
+                ) // Allow frontend from localhost and external domain
                       .AllowAnyMethod()
                       .AllowAnyHeader()
                       .AllowCredentials();
