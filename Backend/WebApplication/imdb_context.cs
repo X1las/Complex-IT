@@ -50,11 +50,6 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Users>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<Users>().Property(x => x.HashedPassword).HasColumnName("password");
         modelBuilder.Entity<Users>().Property(x => x.Salt).HasColumnName("salt");
-<<<<<<< HEAD:WebApplication/imdb_context.cs
-        
-=======
-
->>>>>>> fbad7a1fc76a51efa654479cde6c3c6d74ab9e17:Backend/WebApplication/imdb_context.cs
         // UsersRating mapping
         modelBuilder.Entity<UserRatings>().ToTable("user_ratings");
         modelBuilder.Entity<UserRatings>().HasKey(ur => new { ur.Username, ur.TitleId });
@@ -64,13 +59,6 @@ public class ImdbContext : DbContext
 
         // UsersHistory mapping
         modelBuilder.Entity<UserHistory>().ToTable("user_history");
-<<<<<<< HEAD:WebApplication/imdb_context.cs
-        modelBuilder.Entity<UserHistory>().Property(x => x.Username).HasColumnName("username");
-        modelBuilder.Entity<UserHistory>().Property(x => x.Date).HasColumnName("date_time");
-        modelBuilder.Entity<UserHistory>().Property(x => x.TitleId).HasColumnName("title_id");
-        modelBuilder.Entity<UserHistory>().HasKey(uh => new { uh.Username, uh.TitleId, uh.Date });
-        
-=======
         modelBuilder.Entity<UserHistory>().HasKey(uh => new { uh.Username, uh.Date, uh.TitleId });
         modelBuilder.Entity<UserHistory>().Property(x => x.Username).HasColumnName("username");
         modelBuilder.Entity<UserHistory>().Property(x => x.Date).HasColumnName("date_time");
@@ -84,7 +72,6 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<UserLog>().Property(x => x.Action).HasColumnName("action");
         modelBuilder.Entity<UserLog>().Property(x => x.Timestamp).HasColumnName("timestamp");
 
->>>>>>> fbad7a1fc76a51efa654479cde6c3c6d74ab9e17:Backend/WebApplication/imdb_context.cs
         // Attends mapping
         modelBuilder.Entity<Attends>().ToTable("attends");
         modelBuilder.Entity<Attends>().HasKey(a => new { a.TitleId, a.CrewId });
