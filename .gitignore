@@ -1,0 +1,44 @@
+# Ignore all files by default
+*
+
+# But keep .tex files
+!*.tex
+
+# But keep .pdf files
+!*.pdf
+
+# But keep .sql files
+!*.sql
+
+# But keep .md files
+!*.md
+
+# But keep C# files
+!*.cs
+
+# But keep C# project files
+!*.csproj
+!*.sln
+
+# But keep JSON configuration files
+!*.json
+
+# Keep directories so we can traverse into them
+!*/
+
+# Keep svg and drawio
+!*.svg
+!*.drawio.svg
+
+# Keep this .gitignore file itself
+!.gitignore
+
+# Keep README files
+!README*
+!readme*
+
+# Ignore obj and bin folders completely (override the !*/ rule)
+/obj
+/bin
+
+!*.http

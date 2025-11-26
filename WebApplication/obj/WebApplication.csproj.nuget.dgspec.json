@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj": {}
+    "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj": {
+    "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj",
+        "projectUniqueName": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj",
         "projectName": "WebApplication",
-        "projectPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\WebApplication.csproj",
-        "packagesPath": "C:\\Users\\mto\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mto\\Documents\\GitHub\\Complex-IT\\WebApplication\\obj\\",
+        "projectPath": "/home/xilas/Complex-IT/WebApplication/WebApplication.csproj",
+        "packagesPath": "/home/xilas/.nuget/packages/",
+        "outputPath": "/home/xilas/Complex-IT/WebApplication/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mto\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/xilas/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,7 +39,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -51,6 +52,10 @@
             "Mapster.DependencyInjection": {
               "target": "Package",
               "version": "[1.0.1, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.10, )"
             },
             "Microsoft.AspNetCore.JsonPatch": {
               "target": "Package",
@@ -92,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

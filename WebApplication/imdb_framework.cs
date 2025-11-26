@@ -1,12 +1,12 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DataServiceLayer;
 
 public class Users
 {
     public string Username { get; set; }
-    public string Pswd { get; set; }
-    public List<UserRatings>? UserRatingsDetails { get; set; }
-    public List<UserHistory>? UserHistoryDetails { get; set; }
-    public List<Bookmarks>? BookmarksDetails { get; set; }
+    public string HashedPassword { get; set; }
+    public string Salt { get; set; }
 }
 
 public class UserRatings
@@ -62,7 +62,7 @@ public class Crew
     public string? Fullname { get; set; }
     public string? BirthYear { get; set; }
     public string? DeathYear { get; set; }
-    public double AverageRating { get; set; }
+    public double? AverageRating { get; set; }
 }
 
 public class DvdReleases
@@ -114,10 +114,10 @@ public class Regions
     public string? Language { get; set; }
 }
 
-public class RunTimes
+public class Runtimes
 {
     public  string TitleId { get; set; }
-    public string? RunTime { get; set; }
+    public string? Runtime { get; set; }
 }
 
 public class Series
@@ -177,12 +177,12 @@ public class AlternateTitles
     public  int Ordering { get; set; }
     public  string AltsTitle { get; set; }
     public string? Types { get; set; }
-    public string? IsOriginalTitle { get; set; }
+    public bool? IsOriginalTitle { get; set; }
 }
 
 public class Titles
 {
-    public  string Id { get; set; }
+    public string Id { get; set; }
     public string? Title { get; set; }
     public string? TitleType { get; set; }
     public string? Plot { get; set; }
@@ -191,8 +191,8 @@ public class Titles
     public string? EndYear { get; set; }
     public string? Release_Date { get; set; }
     public string? OriginalTitle { get; set; }
-    public bool IsAdult { get; set; }
-    public double Rating { get; set; }
-    public int Votes { get; set; }
+    public bool? IsAdult { get; set; }
+    public double? Rating { get; set; }
+    public int? Votes { get; set; }
 }
 
