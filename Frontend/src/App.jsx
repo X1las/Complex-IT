@@ -7,7 +7,7 @@ function App() {
 
   return (
     <div>
-        
+        <p>Hello, Welcome to Complex-IT Application Frontend!</p>
     </div>
   )
 }
