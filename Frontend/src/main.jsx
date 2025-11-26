@@ -13,6 +13,7 @@ import Person from './routes/person.jsx'
 import Title from './routes/title.jsx'
 import Search from './routes/search.jsx'
 
+
 const root = createRoot(document.getElementById('root'))
 root.render(
   <StrictMode>
