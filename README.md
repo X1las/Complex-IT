@@ -8,6 +8,7 @@
 - git (for linux AutoPull service)
 - dotnet-sdk 9
 - xunit (included in dotnet 9)
+- react-router-dom
 
 ## Nuget Packages
 
