@@ -15,7 +15,7 @@ echo "Building .NET project..."
 dotnet build || { echo "Error: Build failed"; exit 1; }
 
 # Run the application
-echo "Starting .NET backend server on port 5000..."
-dotnet run --urls "http://localhost:5000"
+echo "Starting .NET backend server on port 3000..."
+dotnet run --urls "http://localhost:3000"
 
 # End of Backend Server Startup Script

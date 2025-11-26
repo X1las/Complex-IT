@@ -6,7 +6,7 @@ set -e  # Exit on any error
 
 # Navigate to the React application directory
 echo "Navigating to React frontend directory..."
-cd "$HOME/Complex-IT/Frontend" || { echo "Error: Cannot navigate to Frontend directory"; exit 1; }
+cd "/home/xilas/Complex-IT/Frontend" || { echo "Error: Cannot navigate to Frontend directory"; exit 1; }
 
 # Install dependencies
 echo "Installing npm dependencies..."
@@ -17,7 +17,7 @@ echo "Building React application..."
 npm run build || { echo "Error: Build failed"; exit 1; }
 
 # Start the server
-echo "Starting React server on port 3000..."
-serve build -p 3000 -s
+echo "Starting React server on port 80..."
+serve build -p 80 -s
 
 # End of React Server Startup Script
