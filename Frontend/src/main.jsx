@@ -4,9 +4,14 @@ import {BrowserRouter,Routes, Route} from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import Profile from './routes/profile.jsx'
-import Bookmarks from './routes/Bookmarks.jsx'
-import History from './routes/History.jsx'
-import Ratings from './routes/Ratings.jsx'
+import Bookmarks from './routes/bookmarks.jsx'
+import History from './routes/history.jsx'
+import Ratings from './routes/ratings.jsx'
+import Login from './routes/login.jsx'
+import Register from './routes/register.jsx'
+import Person from './routes/person.jsx'
+import Title from './routes/title.jsx'
+import Search from './routes/search.jsx'
 
 const root = createRoot(document.getElementById('root'))
 root.render(
