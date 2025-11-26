@@ -20,7 +20,12 @@ REMOTE=$(git rev-parse "origin/$CURRENT_BRANCH")
 
 if [ "$LOCAL" != "$REMOTE" ]; then
     echo "Changes detected. Pulling latest changes..."
+    git refresh .
     git pull origin "$CURRENT_BRANCH" || { echo "Error: Failed to pull changes"; exit 1; }
+
+    sudo chmod +x Services/FrontendService.sh
+    sudo chmod +x Services/BackendService.sh
+    sudo chmod +x Services/AutoPull.sh
 
     echo "Restarting services..."
     
