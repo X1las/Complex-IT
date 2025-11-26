@@ -1,0 +1,120 @@
+body {
+  max-width: 10280px;
+  margin: 0 auto;
+    margin-top: 70px;
+  padding:0;
+  text-align: center;
+  background-color: rgb(43, 43, 43);
+
+}
+h1
+{
+  margin: 0px;
+  font-size: 5.2em;
+  line-height: 1.1;
+
+}
+nav {
+
+    display: flex;
+    position: fixed;
+    top: 0px;
+    z-index: 2;
+    flex-wrap: nowrap;
+    height: 50px;
+    justify-content: space-between;
+    top: 0;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(0px); 
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 5px;
+}
+.imgPlaceholder
+{
+    border-radius: 5px;
+    width: 150px;
+    height: 50px;
+    border: 2px dashed #ccc;
+    margin: 0;
+}
+.searchField
+{
+    padding: 10px;
+    font-size: 1em;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    margin: 0;
+    width: 500px;
+}
+.profileplaceholder
+{
+    width: 50px;
+    height: 50px;
+    border: 2px dashed #ccc;
+    margin: 0;
+}
+
+
+.imgContainer
+{
+    top: 200px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 20px;
+    border: 2px solid #ccc;
+    height: auto;
+    height: auto;
+    min-width: 500px;
+
+}
+
+.displayMovie
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    border: 2px solid #ccc;
+    margin: 15px;
+    padding: 2px;
+    width: auto;
+    height: auto;
+    /* min-width: 400px;
+    min-height: 200px; */
+}
+.moviePoster
+{
+    border: 2px dashed #ccc;
+    margin: 10px;
+}
+img
+ {
+
+    height: 300px;
+    width: auto;
+}
+.textholder
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5px;
+
+}
+.movieTitle
+{
+    border: #ccc solid 1px;
+    font-size: 2em;
+    font-weight: bold;
+    margin: 5px;
+}
+.movieDescription
+{
+    border: #ccc solid 1px;
+    text-align:  left;
+    font-size: 1em;
+    margin: 5px;
+}

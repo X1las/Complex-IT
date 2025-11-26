@@ -955,3 +955,10 @@ GROUP BY words_for_matches.word
 ORDER BY frequency DESC, word
 LIMIT max_results;
 $$ LANGUAGE sql;
+
+-- Insert Ratings Into Titles
+UPDATE titles
+SET rating = ir.user_rating,
+    votes = ir.num_user_ratings
+FROM imdb_ratings ir
+WHERE titles.id = ir.titles_id;
