@@ -6,7 +6,7 @@ set -e  # Exit on any error
 
 # Navigate to the React application directory
 echo "Navigating to React frontend directory..."
-cd "$HOME/Complex-IT/Frontend/react-frontend" || { echo "Error: Cannot navigate to react-frontend directory"; exit 1; }
+cd "$HOME/Complex-IT/Frontend" || { echo "Error: Cannot navigate to Frontend directory"; exit 1; }
 
 # Install dependencies
 echo "Installing npm dependencies..."

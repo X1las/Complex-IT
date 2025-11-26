@@ -132,6 +132,12 @@ if pgrep -f "serve.*build" > /dev/null; then
     pkill -f "serve.*build" || echo "  Warning: Failed to kill serve processes"
 fi
 
+# Kill any Vite dev server processes
+if pgrep -f "vite.*dev" > /dev/null; then
+    echo "  Terminating Vite dev server processes..."
+    pkill -f "vite.*dev" || echo "  Warning: Failed to kill Vite processes"
+fi
+
 echo -e "${GREEN}✓${NC} Process cleanup completed"
 
 # Optional: Ask if user wants to remove log files
