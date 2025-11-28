@@ -20,6 +20,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
+          <Route index element={<div><h2>Home Page</h2><p>Welcome to Complex-IT! Use the navigation above to explore.</p></div>} />
           
           <Route path="profile/:id/" element={<Profile/>}>
             <Route path="bookmarks" element={<Bookmarks/>} />
@@ -28,7 +29,7 @@ root.render(
           </Route>
 
           <Route path="login" element={<Login />}>
-            <Route path="Register" element={<Register />} />
+            <Route path="register" element={<Register />} />
           </Route>
           
           <Route path="person/:id" element={<Person />} />
