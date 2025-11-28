@@ -1,9 +1,15 @@
-import { useState } from 'react'
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div>
@@ -12,8 +18,18 @@ function App() {
         <nav>
           <Link to="/">Home</Link> | 
           <Link to="/search">Search</Link> | 
-          <Link to="/login">Login</Link> | 
-          <Link to="/profile/1">Profile</Link>
+          {user ? (
+            <>
+              <span>Welcome, {user.username || user.Username}!</span> | 
+              <Link to={`/profile/${user.id || user.username}`}>Profile</Link> | 
+              <button onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline' }}>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link> | 
+              <Link to="/register">Register</Link>
+            </>
+          )}
         </nav>
       </header>
       
