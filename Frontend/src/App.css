@@ -1,10 +1,11 @@
 body {
   max-width: 10280px;
   margin: 0 auto;
-    margin-top: 70px;
+  margin-top: 70px;
   padding:0;
   text-align: center;
   background-color: rgb(43, 43, 43);
+  justify-content: center ;
 
 }
 h1
@@ -24,9 +25,8 @@ h1
     flex-direction: column;
     margin: 0 auto;
     margin-top: 20px;
-    height: auto;
-    height: auto;
     min-width: 500px;
+    max-width: 1280px;
 
 }
 
@@ -35,7 +35,10 @@ h1
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 2px solid #ccc;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
     margin: 15px;
     padding: 2px;
     width: auto;
@@ -48,8 +51,8 @@ h1
 }
 img
  {
-
-    height: 300px;
+    border-radius: 5px;
+    height: 400px;
     width: auto;
 }
 .textholder
@@ -58,19 +61,27 @@ img
     flex-direction: column;
     justify-content: center;
     padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(24,24,24,0.4);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) outset;
+    width: 70%;
+    margin: 20px auto;
 
 }
 .movieTitle
 {
-    border: #ccc solid 1px;
     font-size: 2em;
     font-weight: bold;
+    border-bottom: 2px solid rgba(255, 195, 67, 0.95);
+    border-radius: 2px;
+    margin: 10px 10px 0 10px;
 }
 .movieDescription
 {
-    border: #ccc solid 1px;
+    margin-top:0px;
     text-align:  left;
     font-size: 1em;
-    padding: 20px;
+    padding: 10px;
 
 }
