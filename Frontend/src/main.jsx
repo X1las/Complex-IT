@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client'
 import {BrowserRouter,Routes, Route} from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-/* import Home from './home.jsx' */
-/* import Profile from './routes/profile.jsx'
+
+/* import Profile from './routes/profile.jsx' 
 import Bookmarks from './routes/Bookmarks.jsx'
 import History from './routes/History.jsx'
 import Ratings from './routes/Ratings.jsx' */
@@ -27,15 +27,15 @@ root.render(
             <Route path="bookmarks" element={<Bookmarks/>} />
             <Route path="history" element={<History/>} />
             <Route path="ratings" element={<Ratings/>} />
-          </Route>  */}
+          </Route> 
 
-          {/* <Route path="login" element={<Login />}>
+          <Route path="login" element={<Login />}>
             <Route path="register" element={<Register />} />
-          </Route> */}
+          </Route>
           
-          {/* <Route path="person/:id" element={<Person />} />
+          <Route path="person/:id" element={<Person />} />
           <Route path="title/:id" element={<Title />} /> */}
-         {/*  <Route path="search" element={<Search />} /> */}
+          <Route path="search" element={<Search />} />
 
           <Route path="*" element={<div>404 Not Found</div>} />
 
