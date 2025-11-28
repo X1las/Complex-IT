@@ -1,42 +1,76 @@
-#root {
-  max-width: 1280px;
+body {
+  max-width: 10280px;
   margin: 0 auto;
-  padding: 2rem;
+    margin-top: 70px;
+  padding:0;
   text-align: center;
+  background-color: rgb(43, 43, 43);
+
+}
+h1
+{
+  margin: 0px;
+  font-size: 5.2em;
+  line-height: 1.1;
+
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+.imgContainer
+{
+    top: 200px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 20px;
+    height: auto;
+    height: auto;
+    min-width: 500px;
+
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.displayMovie
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 2px solid #ccc;
+    margin: 15px;
+    padding: 2px;
+    width: auto;
+    height: auto;
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
 }
-
-.card {
-  padding: 2em;
+.moviePoster
+{
+    padding: 10px;
 }
+img
+ {
 
-.read-the-docs {
-  color: #888;
+    height: 300px;
+    width: auto;
+}
+.textholder
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+
+}
+.movieTitle
+{
+    border: #ccc solid 1px;
+    font-size: 2em;
+    font-weight: bold;
+}
+.movieDescription
+{
+    border: #ccc solid 1px;
+    text-align:  left;
+    font-size: 1em;
+    padding: 20px;
+
 }
