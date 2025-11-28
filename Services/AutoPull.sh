@@ -23,10 +23,6 @@ if [ "$LOCAL" != "$REMOTE" ]; then
     git restore .
     git pull origin "$CURRENT_BRANCH" || { echo "Error: Failed to pull changes"; exit 1; }
 
-    sudo chmod +x Services/FrontendService.sh
-    sudo chmod +x Services/BackendService.sh
-    sudo chmod +x Services/AutoPull.sh
-
     echo "Restarting services..."
     
     # Stop running services first

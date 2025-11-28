@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
+
+
 
 const Person = () => {
   const [personData, setPersonData] = useState(null);
-  const [filmography, setFilmography] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [personDataInternal, setPersonDataInternal] = useState([]);
+  const {id} = useParams();
 
-  const fetchPersonDetails = (personId) => {
-    // TODO: Fetch person/actor details from API
-  };
+  setLoading(true);
 
-  const fetchFilmography = (personId) => {
-    // TODO: Fetch person's filmography
-  };
+  fetch('http://newtlike.com:3000/crew/'+id)
+      .then(res => res.json())
+      .then(data => setPersonDataInternal(data))
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setPersonDataInternal([]);
+    });
 
-  const addPersonToFavorites = () => {
-    // TODO: Add person to user favorites
-  };
+  fetch(`https://api.themoviedb.org/3/find/${id}?external_source=imdb_id&api_key=f7cb406cd3ce48761cb8749ec2be8e89`)
+    .then(res => res.json())
+    .then(data => setPersonData(data.results || []))
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      setPersonData([]);
+  });
 
-  const getPersonAwards = () => {
-    // TODO: Get person's awards and nominations
-  };
-
-  const sharePersonProfile = () => {
-    // TODO: Share person profile functionality
-  };
-
-  const getRelatedPersons = () => {
-    // TODO: Get related persons (co-actors, directors, etc.)
-  };
+  setLoading(false);
 
   useEffect(() => {
     // TODO: Load person data on component mount
@@ -35,7 +35,7 @@ const Person = () => {
 
   return (
     <div className="person-container">
-      <h1>Person Details</h1>
+      <h1>{personDataInternal.fullname || personData.name}</h1>
       {/* TODO: Add person details UI */}
     </div>
   );
