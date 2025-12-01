@@ -2,23 +2,50 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../App.css';
 
+export async function searchTMDB(query) {
+  const API_KEY = '6d931505602649b6ba683649d9af5d82';
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${(query)}`;
+
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const data = await response.json();
+    return data.results || [];
+    
+}
+
 const Search = () => {
   const { q } = useParams();
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
   useEffect(() => {
     if (!q) return;
+    setLoading(true);
+    searchTMDB(q)
+      .then(results => { setMovies(results);})
+      .catch(err => {
+        console.error('Search error:', err);
+        setMovies([]);
+      })
+      .finally(() => setLoading(false));
+  }, [q]);
+     
+
+
+
+
+/*     useEffect(() => {
+    if (!q) return;
     
     setLoading(true);
-    const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${(q)}`;
+    const url = `http://newtlike.com:3000/api/titles?search=spiderman&page=1&pageSize=10`;
 
     fetch(url)
       .then(response => response.json())
       .then(data => {
         console.log('Search results:', data);
-        setMovies(data.results || []);
+        setMovies(data.items || []);
         setLoading(false);
       })
       .catch(err => {
@@ -26,6 +53,13 @@ const Search = () => {
         setLoading(false);
       });
   }, [q]); 
+ */
+
+
+
+
+
+
 
   if (loading) return <div style={{padding: 20}}>Loading...</div>;
   if (!movies.length) return <div className='pagestuff'>No results found for "{(q || '')}"</div>;

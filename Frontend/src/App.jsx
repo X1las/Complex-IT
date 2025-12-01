@@ -20,11 +20,11 @@ function App() {
   return (
     <>
         <nav>
-            <div >< img className='imgPlaceholder' src={logo} alt="Logo" /></div>
+            <div ><Link to="/"><img className='imgPlaceholder' src={logo} alt="Logo" /></Link></div>
             <form onSubmit={onSearchSubmit} style={{display:'inline'}}> 
               <input className='searchField' type="text" value={search} onChange={e => setSearch(e.target.value)} />
             </form>
-            <div><Link to="/profile/:id/"><img className='profileplaceholder' src={icon} alt="Logo" /></Link></div>
+            <div><Link to="/profile/John"><img className='profileplaceholder' src={icon} alt="profilePic" /></Link></div>
         </nav>
         <Outlet />
     </>
