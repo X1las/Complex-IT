@@ -17,8 +17,8 @@ const Person = () => {
       
       try {
         // Fetch internal data
-        console.log('Fetching internal data from:', `http://www.newtlike.com:3000/crew/${id}`);
-        const internalRes = await fetch(`http://www.newtlike.com:3000/api/crew/${id}`);
+        console.log('Fetching internal data from:', `http://localhost:3000/crew/${id}`);
+        const internalRes = await fetch(`http://localhost:3000/api/crew/${id}`);
         console.log('Internal response status:', internalRes.status);
         
         if (internalRes.ok) {

@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../css/login.css';
 
-const API_URL = 'http://newtlike.com:3000';
+const API_URL = 'http://localhost:3000';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
