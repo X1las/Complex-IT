@@ -17,6 +17,10 @@ public class Program
         // Configure Kestrel to listen on all interfaces
         builder.WebHost.UseUrls("http://0.0.0.0:3000");
 
+        // Add services to the container.
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+
         // Register DbContext
         builder.Services.AddDbContext<ImdbContext>();
 
@@ -28,22 +32,17 @@ public class Program
         builder.Services.AddScoped<BookmarkDataService>();
         builder.Services.AddScoped<UserRatingDataService>();
 
-        // Hasing service
-        builder.Services.AddSingleton<Hashing>();
-        
-        // Register utility services
+        // Hashing service - only register once
         builder.Services.AddScoped<Hashing>();
         
         // Register Mapster for object mapping
         builder.Services.AddMapster();
-        // Add controllers
-        builder.Services.AddControllers();
 
         // JWT Authentication
         var jwtSecret = builder.Configuration.GetSection("Auth:Secret").Value
             ?? throw new InvalidOperationException("Auth:Secret is not configured");
 
-         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
@@ -65,25 +64,25 @@ public class Program
                     "http://localhost:80", 
                     "http://localhost:3001",
                     "http://newtlike.com",
+                    "http://www.newtlike.com", // Added www subdomain
                     "http://newtlike.com:80",
-                    "http://newtlike.com:3001"
-                ) // Allow frontend from localhost and external domain
-                      .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .AllowCredentials();
+                    "http://newtlike.com:3001",
+                    "http://localhost:5173" // Vite dev server
+                )
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
             });
         });
 
         var app = builder.Build();
 
-        // Note: HTTPS redirection disabled to allow both HTTP and HTTPS during development
-        // app.UseHttpsRedirection();
-        
-        app.UseCors("AllowFrontend"); // CORS first
-        app.UseAuthentication();      // Authentication second
-        app.UseAuthorization();       // Authorization third
-        app.MapControllers();         // Controllers last
+        // Enable CORS - IMPORTANT: This must be before UseRouting and UseAuthorization
+        app.UseCors("AllowFrontend");
 
+        app.UseRouting();
+        app.UseAuthorization();
+        app.MapControllers();
 
         app.Run();
     }
