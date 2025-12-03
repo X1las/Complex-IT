@@ -19,7 +19,7 @@ public class Program
         {
             options.ListenAnyIP(3000, listenOptions =>
             {
-                listenOptions.UseHttps("/etc/letsencrypt/live/www.newtlike.com/cert.pem", "/etc/letsencrypt/live/www.newtlike.com/privkey.pem");
+                listenOptions.UseHttps("/etc/letsencrypt/live/www.newtlike.com/fullchain.pem", "/etc/letsencrypt/live/www.newtlike.com/privkey.pem");
             });
         });
 
