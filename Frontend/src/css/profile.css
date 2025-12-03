@@ -1,3 +1,14 @@
+body {
+  max-width: 10280px;
+  margin: 0 auto;
+  margin-top: 70px;
+  padding:0;
+  text-align: center;
+  background-color: rgb(43, 43, 43);
+  justify-content: center ; 
+    color:white; 
+}
+
 .profile {
     padding: 20px;
     max-width: 1280px;
@@ -18,14 +29,14 @@
 .buttonContainer {
     display: flex;
     justify-content: space-evenly;
-
     margin: 50px;
 }
+a{color: rgba(255, 195, 67, 0.95);}
 button{
     color:red;
+    opacity: 1;
 }
 .btnProfile {
-    background-color: white;
-    color: red;
-    border: px solid olive;
+    background-color: rgb(49, 49, 49);
+    border: 2px solid rgb(117, 117, 114);
 }

@@ -17,8 +17,6 @@ const Profile = () => {
       setLoading(false);
     }, [id]);
 
-
-
   if (loading) return <div style={{padding: 20}}>Loading profile...</div>;
   if (!profile) return <div style={{padding: 20}}>User not found</div>;
 
