@@ -16,8 +16,9 @@ npm install || { echo "Error: npm install failed"; exit 1; }
 echo "Building React application..."
 npm run build || { echo "Error: Build failed"; exit 1; }
 
-# Start the server
-echo "Starting React server on all interfaces port 443..."
-sudo serve -s build -l 443
+# Start the server with HTTPS
+echo "Starting React server on HTTPS port 443..."
+sudo serve -s build -l 443 \
+  --ssl-cert /home/xilas/ssl/fullchain.pem \
+  --ssl-key /home/xilas/ssl/privkey.pem
 
-# End of React Server Startup Script
