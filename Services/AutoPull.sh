@@ -25,26 +25,9 @@ if [ "$LOCAL" != "$REMOTE" ]; then
 
     echo "Restarting services..."
     
-    # Stop running services first
-    echo "Stopping existing services..."
-    pkill -f "serve.*build" || true  # Stop React server
-    pkill -f "vite.*dev" || true     # Stop Vite dev server
-    pkill -f "dotnet.*run" || true   # Stop .NET backend
-    pkill -f "FrontendService.sh" || true  # Stop frontend script
-    pkill -f "BackendService.sh" || true   # Stop backend script
-    sleep 3
-    
-    echo "Starting Frontend Service..."
-    nohup bash "$HOME/Complex-IT/Services/FrontendService.sh" > /dev/null 2>&1 &
-    FRONTEND_PID=$!
-    echo "Frontend service started with PID: $FRONTEND_PID"
+    systemctl --user restart complex-it-frontend.service
+    systemctl --user restart complex-it-backend.service
 
-    echo "Starting Backend Service..."
-    nohup bash "$HOME/Complex-IT/Services/BackendService.sh" > /dev/null 2>&1 &
-    BACKEND_PID=$!
-    echo "Backend service started with PID: $BACKEND_PID"
-
-    echo "Services restarted successfully."
 else
     echo "No changes detected. No action taken."
 fi
