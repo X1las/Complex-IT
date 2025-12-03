@@ -19,7 +19,7 @@ public class Program
         {
             options.ListenAnyIP(3000, listenOptions =>
             {
-                listenOptions.UseHttps("/home/xilas/ssl/fullchain.pem", "/home/xilas/ssl/privkey.pem");
+                listenOptions.UseHttps("/home/xilas/ssl/newtlike.pfx");
             });
         });
 
