@@ -27,7 +27,7 @@ function App() {
             <form onSubmit={onSearchSubmit} style={{display:'inline'}}> 
               <input className='searchField' type="text" value={search} onChange={e => setSearch(e.target.value)} />
             </form>
-            <div><Link to={`/profile/${user.username}`}> <img className='profileplaceholder' src={icon} alt="profilePic" /></Link></div>
+            <div><Link to={user ? `/profile/${user.username}` : `/login`}> <img className='profileplaceholder' src={icon} alt="profilePic" /></Link></div>
         </nav>
         <Outlet />
     </>
