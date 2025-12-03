@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { fetchUserRating, StarRatingWidget } from './ratings';
+import { fetchUserRating } from '../utils/ratingService';
+import { StarRatingWidget } from './ratings';
 import '../css/title.css';
 
 const Title = () => {
