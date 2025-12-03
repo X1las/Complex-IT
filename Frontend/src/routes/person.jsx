@@ -27,7 +27,7 @@ const FindPersonDetails = async (personId) => {
 }
 
 const FindPersonInternal = async (imdbId) => {
-  const response = await fetch(`http://www.newtlike.com:3000/api/crew/${imdbId}`);
+  const response = await fetch(`https://newtlike.com:3000/api/crew/${imdbId}`); // Changed to HTTPS
   if (response.ok) {
     const data = await response.json();
     return data;

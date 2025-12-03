@@ -14,8 +14,14 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Configure Kestrel to listen on all interfaces
-        builder.WebHost.UseUrls("http://0.0.0.0:3000");
+        // Configure Kestrel for HTTPS
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.ListenAnyIP(3000, listenOptions =>
+            {
+                listenOptions.UseHttps("/etc/letsencrypt/live/www.newtlike.com/cert.pem", "/etc/letsencrypt/live/www.newtlike.com/privkey.pem");
+            });
+        });
 
         // Add services to the container.
         builder.Services.AddControllers();
@@ -31,8 +37,6 @@ public class Program
         builder.Services.AddScoped<CrewDataService>();
         builder.Services.AddScoped<BookmarkDataService>();
         builder.Services.AddScoped<UserRatingDataService>();
-
-        // Hashing service - only register once
         builder.Services.AddScoped<Hashing>();
         
         // Register Mapster for object mapping
@@ -55,19 +59,16 @@ public class Program
                 };
             });
 
-        // Add CORS for frontend
+        // Update CORS for HTTPS
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
                 policy.WithOrigins(
-                    "http://localhost:80", 
-                    "http://localhost:3001",
-                    "http://newtlike.com",
-                    "http://www.newtlike.com", // Added www subdomain
-                    "http://newtlike.com:80",
-                    "http://newtlike.com:3001",
-                    "http://localhost:5173" // Vite dev server
+                    "https://newtlike.com",        // HTTPS
+                    "https://www.newtlike.com",    // HTTPS
+                    "http://localhost:5173",       // Dev server
+                    "http://localhost:3001"        // Dev server
                 )
                 .AllowAnyMethod()
                 .AllowAnyHeader()
@@ -77,7 +78,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Enable CORS - IMPORTANT: This must be before UseRouting and UseAuthorization
+        // Enable CORS
         app.UseCors("AllowFrontend");
 
         app.UseRouting();
