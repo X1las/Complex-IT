@@ -1,0 +1,36 @@
+.known-for {
+  flex: 1;
+  padding: 20px;
+  align-items: center;
+}
+
+.known-for h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.known-for ul {
+  flex: 1;
+  border-radius: 1%;
+  padding: 2%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; 
+  gap: 2%; 
+}
+
+.known-for-item {
+  flex: 1;
+  border-radius: 1%;
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 2%; 
+}
+
+.known-for-item:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s;
+}
