@@ -1,0 +1,31 @@
+.profile {
+    padding: 20px;
+    max-width: 1280px;
+    margin: -500px auto 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;    border-radius: 5px;
+}
+
+.top {
+    /* box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; */
+    border-radius: 5px;
+    color: antiquewhite;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+.buttonContainer {
+    display: flex;
+    justify-content: space-evenly;
+
+    margin: 50px;
+}
+button{
+    color:red;
+}
+.btnProfile {
+    background-color: white;
+    color: red;
+    border: px solid olive;
+}

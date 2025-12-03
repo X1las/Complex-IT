@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { fetchUserRating, StarRatingWidget } from './ratings';
 import '../css/title.css';
 
 const Title = () => {
   const { id: titleId } = useParams();
+  const { user } = useAuth();
   const [titleData, setTitleData] = useState(null);
   const [tmdbData, setTmdbData] = useState(null);
   const [castData, setCastData] = useState([]);
@@ -103,11 +106,6 @@ const Title = () => {
     setIsBookmarked(!isBookmarked);
   };
 
-  const submitRating = (rating) => {
-    // TODO: Submit user rating for this title
-    setUserRating(rating);
-  };
-
   // const fetchSimilarTitles = () => {
   //   // TODO: Fetch similar/related titles
   // };
@@ -117,11 +115,13 @@ const Title = () => {
   // };
 
   useEffect(() => {
-    // TODO: Replace with real API call
     if (titleId) {
       fetchTitleDetails(titleId);
+      if (user) {
+        fetchUserRating(user, titleId).then(rating => setUserRating(rating));
+      }
     }
-  }, [titleId]);
+  }, [titleId, user]);
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -143,12 +143,22 @@ const Title = () => {
       <header className="title-header">
         <h1 className="title-name">{titleData.title}</h1>
         <div className="rating-section">
-          <span className="rating"> {titleData.rating}</span>
+          <span className="rating">★ {titleData.rating}</span>
           <span className="rating-count">({titleData.votes?.toLocaleString()} votes)</span>
         </div>
-        <button className="rate-button" onClick={() => submitRating(userRating)}>
-          Rate Movie
-        </button>
+        <StarRatingWidget 
+          user={user}
+          titleId={titleId}
+          userRating={userRating}
+          onRatingChange={(rating) => {
+            setUserRating(rating);
+            fetchTitleDetails(titleId); // Refresh title data to get updated rating
+          }}
+          onRatingDelete={() => {
+            setUserRating(0);
+            fetchTitleDetails(titleId); // Refresh title data to get updated rating
+          }}
+        />
       </header>
 
       {/* Main Content - Two Column Layout */}

@@ -12,3 +12,51 @@
   text-align: center;
   padding: 20px;
 }
+
+.user-rating-widget {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.star-rating-container {
+  display: flex;
+  gap: 2px;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ddd;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.star-button:hover {
+  transform: scale(1.1);
+}
+
+.star-button.filled {
+  color: #ffd700;
+}
+
+.rating-display {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.delete-rating-btn {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.delete-rating-btn:hover {
+  background-color: #c82333;
+}

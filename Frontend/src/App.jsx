@@ -22,6 +22,7 @@ function App() {
             <>
               <span>Welcome, {user.username || user.Username}!</span> | 
               <Link to={`/profile/${user.id || user.username}`}>Profile</Link> | 
+              <Link to={`/profile/${user.id || user.username}/ratings`}>Ratings</Link> | 
               <button onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline' }}>Logout</button>
             </>
           ) : (

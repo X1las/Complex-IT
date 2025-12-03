@@ -69,6 +69,7 @@ public class RatingController : ControllerBase
             }
 
             await Task.Run(() => _ratingService.AddOrUpdateRating(model.Username, model.TitleId, model.Rating));
+            await Task.Run(() => _ratingService.UpdateTitleAggregateRating(model.TitleId));
 
             _logger.LogInformation("User {Username} rated title {TitleId} with {Rating}",
                 model.Username, model.TitleId, model.Rating);
@@ -214,6 +215,8 @@ public class RatingController : ControllerBase
                 return BadRequest(new ErrorResponseDto { Error = "Failed to update rating" });
             }
             
+            await Task.Run(() => _ratingService.UpdateTitleAggregateRating(model.TitleId));
+            
             _logger.LogInformation("User {Username} updated rating for title {TitleId} to {Rating}", 
                 model.Username, model.TitleId, model.Rating);
             
@@ -246,6 +249,8 @@ public class RatingController : ControllerBase
             {
                 return NotFound(new ErrorResponseDto { Error = "No rating to delete" });
             }
+
+            await Task.Run(() => _ratingService.UpdateTitleAggregateRating(model.TitleId));
 
             _logger.LogInformation("User {Username} deleted rating for title {TitleId}", model.Username, model.TitleId);
 
