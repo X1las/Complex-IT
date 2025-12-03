@@ -17,7 +17,7 @@ echo "Building React application..."
 npm run build || { echo "Error: Build failed"; exit 1; }
 
 # Start the server
-echo "Starting React server on all interfaces port 80..."
-sudo serve -s build -l 80
+echo "Starting React server on all interfaces port 443..."
+sudo serve -s build -l 443
 
 # End of React Server Startup Script
