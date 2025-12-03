@@ -20,7 +20,7 @@ const FindPersonDetails = async (personId) => {
   const response = await fetch(`https://api.themoviedb.org/3/person/${personId}?api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
   if (response.ok) {
     const data = await response.json();
-    return data;
+    return data.personDetails;
   } else {
     throw new Error('Failed to fetch person details');
   }
@@ -40,15 +40,13 @@ const FindPersonExternal = async (imdbId) => {
   const response = await fetch(`https://api.themoviedb.org/3/find/${imdbId}?external_source=imdb_id&api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
   if (response.ok) {
     const data = await response.json();
-    return data;
+    return data.person_results[0];
   } else {
     throw new Error('Failed to fetch external person details');
   }
 }
 
 const FindPersonMerged = async (imdbId) => {
-  
-
   // Using FindPersonInternal and FindPersonExternal to get merged data
   const internalData = await FindPersonInternal(imdbId);
   const externalData = await FindPersonExternal(imdbId);
@@ -119,7 +117,7 @@ const Person = () => {
       <div className="known-for">
         <h2>Known For</h2>
         <ul>
-          {personData?.person_results?.[0]?.known_for?.map((item) => (
+          {personData?.known_for?.map((item) => (
             <KnownForItem key={item.id} item={item} />
           )) || null}
         </ul>
