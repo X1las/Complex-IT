@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../App.css';
 
+export  const NL_API = 'https://www.newtlike.com:3000';
+export  const TMDB_API = 'https://api.themoviedb.org';
+export  const API_KEY = '6d931505602649b6ba683649d9af5d82';
+
 // Fetch poster New
 async function getPosterFromNewtlike(tconst) {
   try {
@@ -24,7 +28,7 @@ async function getPosterFromNewtlike(tconst) {
 
 async function searchNL(query) {
   const pagin = 'page=1&pageSize=10'
-  const url = `/api/titles?search=${(query)}&${pagin}`;
+  const url = `${NL_API}/api/titles?search=${(query)}&${pagin}`;
 
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -40,8 +44,7 @@ async function searchNL(query) {
 }
 // TMDB fallback
 async function searchTMDB(tconst) {
-  const API_KEY = '6d931505602649b6ba683649d9af5d82';
-  const url = `https://api.themoviedb.org/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
+  const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
 
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -99,7 +102,7 @@ async function searchTitlePosters(query) {
 // test når newtlike er nede
 async function searchTMDBOnly(query) {
   const API_KEY = '6d931505602649b6ba683649d9af5d82';
-  const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
+  const url = `${TMDB_API}/3/search/multi?api_key=${API_KEY}&query=${(query)}&page=1`;
 
   try {
     const response = await fetch(url);
@@ -141,7 +144,7 @@ const Search = () => {
     (async () => {
       try {
         setLoading(true);
-        // brug searchTitlePosters, TMDBOnly er til når newtlike ikke virker
+        // brug searchTitlePosters, searchTMDBOnly er til når newtlike ikke virker
         const results = await searchTMDBOnly(q);
         if (mounted) setMovies(results);
       } catch (err) {
