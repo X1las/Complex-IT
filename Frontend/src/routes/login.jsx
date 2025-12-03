@@ -65,7 +65,8 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/users/login`, {
+      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
+      const response = await fetch(`/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ const Title = () => {
       console.log('Fetching title:', titleId);
       
       // Fetch internal data from database
-      const response = await fetch(`http://localhost:3000/api/titles/${titleId}`);
+      const response = await fetch(`https://newtlike.com:3000/api/titles/${titleId}`);
       console.log('Database response status:', response.status);
       if (!response.ok) {
         throw new Error(`Failed to fetch title details: ${response.status}`);
@@ -66,7 +66,7 @@ const Title = () => {
 
       // Fetch cast/crew data
       console.log('Fetching cast data...');
-      const crewRes = await fetch(`http://localhost:3000/api/titles/${titleId}/crew`);
+      const crewRes = await fetch(`https://newtlike.com:3000/api/titles/${titleId}/crew`);
       if (crewRes.ok) {
         const crewData = await crewRes.json();
         console.log('Cast data received:', crewData);
@@ -76,7 +76,7 @@ const Title = () => {
           const detailedCast = await Promise.all(
             crewData.items.slice(0, 10).map(async (member) => {
               try {
-                const detailRes = await fetch(`http://localhost:3000${member.url}`);
+                const detailRes = await fetch(`https://newtlike.com:3000${member.url}`);
                 if (detailRes.ok) {
                   return await detailRes.json();
                 }

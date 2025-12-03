@@ -14,7 +14,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  
+  font-weight: 600;
 }
 
 body {
@@ -32,7 +32,7 @@ h1 {
 /* nav css */
 nav {
 
-    position: fixed;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
