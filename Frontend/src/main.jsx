@@ -22,7 +22,7 @@ root.render(
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          <Route index element={<div><h2>Home Page</h2><p>Welcome to Complex-IT! Use the navigation above to explore.</p></div>} />
+          <Route index element={<div className='pagestuff'><h2>Home Page</h2><p>Welcome to Complex-IT! Use the navigation above to explore.</p></div>} />
           
           <Route path="profile/:id/" element={<Profile/>}>
             <Route path="bookmarks" element={<Bookmarks/>} />
