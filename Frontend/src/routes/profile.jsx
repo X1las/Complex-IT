@@ -1,50 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
+import { useParams } from 'react-router-dom';
+import '../css/profile.css';
+import { Link, Outlet } from 'react-router-dom';
 
 const Profile = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({});
+    const { id } = useParams();
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  const loadUserProfile = () => {
-    // TODO: Load user profile data from API
-  };
+    useEffect(() => {
+/* const response = await fetch(`${API_URL}/api/users/{username} */
+      setProfile({
+        id: id,
+        username: id || 'John',
+      });
+      setLoading(false);
+    }, [id]);
 
-  const updateProfile = () => {
-    // TODO: Update user profile
-  };
+  if (loading) return <div style={{padding: 20}}>Loading profile...</div>;
+  if (!profile) return <div style={{padding: 20}}>User not found</div>;
 
-  const handleInputChange = (e) => {
-    // TODO: Handle form input changes
-  };
-
-  const toggleEditMode = () => {
-    // TODO: Toggle between view and edit modes
-  };
-
-  const changePassword = () => {
-    // TODO: Change user password
-  };
-
-  const deleteAccount = () => {
-    // TODO: Delete user account
-  };
-
-  const uploadProfilePicture = (file) => {
-    // TODO: Upload profile picture
-  };
-
-  const exportUserData = () => {
-    // TODO: Export user data
-  };
-
-  useEffect(() => {
-    // TODO: Load profile data on component mount
-  }, []);
-
-  return (
-    <div className="profile-container">
-      <h1>Profile</h1>
-      {/* TODO: Add profile UI */}
+    return (
+    <div className='profile'>
+      <div className='top'>
+        <h1>{profile.username}'s Page</h1>
+      </div>
+      
+      <div>
+          <div className='buttonContainer'>
+            <button className='btnProfile'><Link to={`/profile/${id}/bookmarks`} >Bookmarks</Link></button>
+            <button className='btnProfile'><Link to={`/profile/${id}/history`} >History</Link></button>
+            <button className='btnProfile'><Link to={`/profile/${id}/ratings`}>Ratings</Link></button>
+          </div>
+        </div>
+      <Outlet />
     </div>
   );
 };
