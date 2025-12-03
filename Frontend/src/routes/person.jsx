@@ -20,7 +20,7 @@ const FindPersonDetails = async (personId) => {
   const response = await fetch(`https://api.themoviedb.org/3/person/${personId}?api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
   if (response.ok) {
     const data = await response.json();
-    return data.personDetails;
+    return data;
   } else {
     throw new Error('Failed to fetch person details');
   }
@@ -40,7 +40,7 @@ const FindPersonExternal = async (imdbId) => {
   const response = await fetch(`https://api.themoviedb.org/3/find/${imdbId}?external_source=imdb_id&api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
   if (response.ok) {
     const data = await response.json();
-    return data.person_results[0];
+    return data;
   } else {
     throw new Error('Failed to fetch external person details');
   }
@@ -99,25 +99,25 @@ const Person = () => {
       <div className="poster-box">
         <img className="poster-image"
           src={
-            personData?.profile_path
-              ? `https://image.tmdb.org/t/p/w200${personData.profile_path}`
+            personData?.person_results?.length > 0 && personData.person_results[0].profile_path
+              ? `https://image.tmdb.org/t/p/w200${personData.person_results[0].profile_path}`
               : null
           }
           alt="No Image Available" />
         <div className="poster-content-box">
           <h1 className="poster-title">{personData?.name || personData?.fullname}</h1>
-          <p> <strong>{"Department: " + (personData?.known_for_department || "Unknown Department")}</strong></p>
-          <p>{"Birthdate: " + (personData?.birthdate || "Unknown Birthdate")}</p>
-          <p>{"Place of Birth: " + (personData?.place_of_birth || "Unknown Place of Birth")}</p>
-          <p>{"Death: " + (personData?.deathdate || "Unknown Deathdate")}</p>
-          <p>{"Age: " + (personData?.age || "Unknown Age")}</p>
-          <p className='poster-description'>{personData?.biography || "No Biography Available"}</p>
+          <p> <strong>{"Department: " + (personData?.personDetails?.known_for_department || "Unknown Department")}</strong></p>
+          <p>{"Born: " + (personData?.birthYear || null)}</p>
+          <p>{"Place of Birth: " + (personData?.personDetails?.place_of_birth || "Unknown Place of Birth")}</p>
+          <p>{personData?.deathYear || personData?.deathday ? ("Died: " + (personData?.deathYear || personData?.deathday)) : null}</p>
+          <p>{personData?.age ? `Age: ${personData.age}` : null}</p>
+          <p className='poster-description'>{personData?.personDetails?.biography || "No Biography Available"}</p>
         </div>
       </div>
       <div className="known-for">
         <h2>Known For</h2>
         <ul>
-          {personData?.known_for?.map((item) => (
+          {personData?.person_results?.[0]?.known_for?.map((item) => (
             <KnownForItem key={item.id} item={item} />
           )) || null}
         </ul>
