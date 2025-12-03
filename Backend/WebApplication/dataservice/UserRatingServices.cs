@@ -117,8 +117,48 @@ public class UserRatingDataService
         return true;
     }
 
-    // AGGREGATE - Get average rating for a title
+    // AGGREGATE - Get average rating for a title from user ratings
+    public (double averageRating, int totalVotes) CalculateTitleRating(string titleId)
+    {
+        if (string.IsNullOrWhiteSpace(titleId))
+        {
+            return (0, 0);
+        }
+        
+        using var db = new ImdbContext();
+        var ratings = db.UsersRating.Where(r => r.TitleId == titleId).ToList();
+        
+        if (ratings.Count == 0)
+        {
+            return (0, 0);
+        }
+        
+        var average = ratings.Average(r => r.Rating ?? 0);
+        return (Math.Round(average, 1), ratings.Count);
+    }
     
+    // UPDATE - Update title's aggregate rating in titles table
+    public void UpdateTitleAggregateRating(string titleId)
+    {
+        if (string.IsNullOrWhiteSpace(titleId))
+        {
+            return;
+        }
+        
+        using var db = new ImdbContext();
+        var title = db.Title.FirstOrDefault(t => t.Id == titleId);
+        
+        if (title == null)
+        {
+            return;
+        }
+        
+        var (averageRating, totalVotes) = CalculateTitleRating(titleId);
+        title.Rating = averageRating;
+        title.Votes = totalVotes;
+        
+        db.SaveChanges();
+    }
       
     // COUNT - Get total ratings count for user
     public int GetRatingCount(string username)
