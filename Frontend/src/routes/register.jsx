@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../css/register.css';
 
-const API_URL = 'https://newtlike.com:3000';
+const API_URL = 'https://www.newtlike.com:3000';
 
 const Register = () => {
   const [formData, setFormData] = useState({ 
@@ -93,7 +93,7 @@ const Register = () => {
       console.log('Attempting registration for:', formData.username);
       console.log('API URL:', `${API_URL}/api/users/create`);
       
-      const response = await fetch(`${API_URL}/api/users/create`, {
+      const response = await fetch(`/api/users/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

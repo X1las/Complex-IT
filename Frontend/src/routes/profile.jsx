@@ -12,7 +12,7 @@ const Profile = () => {
 /* const response = await fetch(`${API_URL}/api/users/{username} */
       setProfile({
         id: id,
-        username: id || 'John',
+        username: id,
       });
       setLoading(false);
     }, [id]);
