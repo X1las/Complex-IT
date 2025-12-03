@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { submitRating, deleteRating } from '../utils/ratingService';
+import { submitRating, deleteRating } from '../services/ratingService';
 
 // Star Rating Widget Component
 export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, onRatingDelete }) => {
