@@ -96,7 +96,38 @@ async function searchTitlePosters(query) {
   return resultsWithPosters;
 }
 
+// test når newtlike er nede
+async function searchTMDBOnly(query) {
+  const API_KEY = '6d931505602649b6ba683649d9af5d82';
+  const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`;
 
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const data = await response.json();
+    
+    const items = data.results
+      .filter(item => item.media_type === 'movie' || item.media_type === 'tv')
+      .slice(0, 10)
+      .map(item => ({
+        id: item.id.toString(),
+        title: item.title || item.name,
+        year: (item.release_date || item.first_air_date || '').split('-')[0],
+        rating: item.vote_average?.toFixed(1) || 'N/A',
+        titleType: item.media_type === 'movie' ? 'movie' : 'tvSeries',
+        poster_url: item.poster_path 
+          ? `https://image.tmdb.org/t/p/w342${item.poster_path}` 
+          : null
+      }));
+    
+    console.log(`[TMDB] Fandt ${items.length} resultater`);
+    return items;
+  } catch (err) {
+    console.error('TMDB fejl:', err);
+    return [];
+  }
+}
 
 const Search = () => {
   const { q } = useParams();
@@ -110,10 +141,11 @@ const Search = () => {
     (async () => {
       try {
         setLoading(true);
-        const results = await searchTitlePosters(q);
+        // brug searchTitlePosters, TMDBOnly er til når newtlike ikke virker
+        const results = await searchTMDBOnly(q);
         if (mounted) setMovies(results);
       } catch (err) {
-        console.error('Search error:', err);
+        
         if (mounted) setMovies([]);
       } finally {
         if (mounted) setLoading(false);
@@ -126,6 +158,8 @@ const Search = () => {
   if (loading) return <div style={{padding: 20}}>Loading...</div>;
   if (!movies.length) return <div className='pagestuff'>No results found for "{q || ''}"</div>;
 
+
+  
   return (
     <div className='imgContainer'>
       {movies.map(movie => (
