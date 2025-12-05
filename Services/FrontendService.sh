@@ -10,6 +10,7 @@ cd "/home/xilas/Complex-IT/Frontend" || { echo "Error: Cannot navigate to Fronte
 
 # Install dependencies
 echo "Installing npm dependencies..."
+rm -rf node_modules package-lock.json
 npm install || { echo "Error: npm install failed"; exit 1; }
 
 # Build the application using npx to ensure vite is found
