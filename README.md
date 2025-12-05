@@ -3,7 +3,7 @@
 ## Commands
 
 ```bash
-cd Complex-IT
+cd /home/xilas/Complex-IT/Services
 sudo chmod +x AutoPull.sh
 sudo chmod +x FrontendService.sh
 sudo chmod +x BackendService.sh
@@ -12,7 +12,7 @@ sudo chmod +x BackendService.sh
 ## Notes
 
 ### Services are located in:
-- **Service Scripts:** `Complex-IT/Services/`
+- **Service Scripts:** `/home/xilas/Complex-IT/Services/`
 - **Systemd Service Files:** `/etc/systemd/system/`
 - **Service Names:**
   - `complex-it-backend.service`
@@ -68,14 +68,14 @@ sudo systemctl disable complex-it-backend.service
 ```
 
 ## Application URLs:
-- **Frontend:** http://newtlike.com (port 80)
-- **Backend API:** http://newtlike.com:3000
+- **Frontend:** https://newtlike.com (port 443)
+- **Backend API:** https://newtlike.com:3000
 - **Local Development:** http://localhost:5173 (npm run dev)
 
 ## Troubleshooting:
 ```bash
 # Check if ports are in use
-sudo lsof -i :80
+sudo lsof -i :443
 sudo lsof -i :3000
 
 # Check service status
@@ -83,4 +83,13 @@ systemctl --failed
 
 # Reload systemd after changes
 sudo systemctl daemon-reload
+
+# Make scripts executable
+cd /home/xilas/Complex-IT/Services
+sudo chmod +x *.sh
+
+# Test scripts manually
+sudo -u xilas bash ./BackendService.sh
+sudo -u root bash ./FrontendService.sh
+sudo -u xilas bash ./AutoPull.sh
 ```
