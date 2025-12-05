@@ -25,8 +25,8 @@ if [ "$LOCAL" != "$REMOTE" ]; then
 
     echo "Restarting services..."
     
-    systemctl --user restart complex-it-frontend.service
-    systemctl --user restart complex-it-backend.service
+    systemctl --user restart FrontendService.service
+    systemctl --user restart BackendService.service
 
 else
     echo "No changes detected. No action taken."
