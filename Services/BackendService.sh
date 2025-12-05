@@ -14,8 +14,8 @@ export ASPNETCORE_HTTPS_PORT=3000
 # Certificate configuration (choose one method below):
 
 # METHOD 1: If using Let's Encrypt certificates
-export ASPNETCORE_Kestrel__Certificates__Default__Path="/home/xilas/ssl/fullchain.pem"
-export ASPNETCORE_Kestrel__Certificates__Default__KeyPath="/home/xilas/ssl/privkey.pem"
+export ASPNETCORE_Kestrel__Certificates__Default__Path="/etc/letsencrypt/live/www.newtlike.com/fullchain.pem"
+export ASPNETCORE_Kestrel__Certificates__Default__KeyPath="/etc/letsencrypt/live/www.newtlike.com/privkey.pem"
 
 # METHOD 2: If using .pfx certificate file (comment out METHOD 1 and uncomment this)
 # export ASPNETCORE_Kestrel__Certificates__Default__Path="/etc/ssl/certs/newtlike.pfx"
