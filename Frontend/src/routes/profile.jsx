@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../css/profile.css';
 import { Link, Outlet } from 'react-router-dom';
@@ -9,10 +9,10 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-/* const response = await fetch(`${API_URL}/api/users/{username} */
+/* const response = await fetch(${API_URL}/api/users/{username} */
       setProfile({
         id: id,
-        username: id || 'John',
+        username: id,
       });
       setLoading(false);
     }, [id]);
@@ -28,8 +28,8 @@ const Profile = () => {
       
       <div>
           <div className='buttonContainer'>
-            <button className='btnProfile'><Link to={`/profile/${id}/bookmarks`} >Bookmarks</Link></button>
-            <button className='btnProfile'><Link to={`/profile/${id}/history`} >History</Link></button>
+            <button className='btnProfile'><Link to={`/profile/${id}/bookmarks`}>Bookmarks</Link></button>
+            <button className='btnProfile'><Link to={`/profile/${id}/history`}>History</Link></button>
             <button className='btnProfile'><Link to={`/profile/${id}/ratings`}>Ratings</Link></button>
           </div>
         </div>

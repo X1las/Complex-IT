@@ -5,7 +5,7 @@ import '../App.css';
 // Fetch poster New
 async function getPosterFromNewtlike(tconst) {
   try {
-    const url = `https://newtlike.com:3000/api/titles/${(tconst)}`;
+    const url = `/api/titles/${(tconst)}`;
     const response = await fetch(url);
     
     if (!response.ok) return {};
@@ -17,14 +17,14 @@ async function getPosterFromNewtlike(tconst) {
 
     return data.posterUrl || null;
   } catch (err) {
-    console.error(`Fejl ved hentning af poster for ${tconst}:`, e.message);
+    console.error(`Fejl ved hentning af poster for ${tconst}:`, err.message);
     return null;
   }
 }
 
 async function searchNL(query) {
   const pagin = 'page=1&pageSize=10'
-  const url = `https://newtlike.com:3000/api/titles?search=${(query)}&${pagin}`;
+  const url = `/api/titles?search=${(query)}&${pagin}`;
 
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
