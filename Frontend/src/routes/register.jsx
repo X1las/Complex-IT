@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../css/register.css';
-import NL_API from './search.jsx';
+import {NL_API} from './search.jsx';
 
 const Register = () => {
   const [formData, setFormData] = useState({ 
@@ -91,7 +91,7 @@ const Register = () => {
     try {
       console.log('Attempting registration for:', formData.username);
       console.log('API URL:', `${NL_API}/api/users/create`);
-      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
+      // hvis det ikke fungere sådan her skal der stå ${NL_API}/api/users/login i fetch
       const response = await fetch(`${NL_API}/api/users/create`, {
         method: 'POST',
         headers: {

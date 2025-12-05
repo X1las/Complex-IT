@@ -1,15 +1,49 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import '../App.css';
+import useSWR from 'swr'; //husk at fjerne hvis inden du pusher til main
+import {useAddTitleToHistory} from './history.jsx';
 
 export  const NL_API = 'https://www.newtlike.com:3000';
 export  const TMDB_API = 'https://api.themoviedb.org';
 export  const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
+ async function SearchNL(query) {
+  const pagin = 'page=1&pageSize=10'
+  const url = `${NL_API}/api/titles?search=${(query)}&${pagin}`;
+
+     if (!query || query.trim() === '') return [];
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+  const data = await response.json();
+  
+  const items = data.items || [];
+  const filteredItems = items.filter(item => 
+    ['movie', 'tvSeries', 'tvMovie', 'short', 'tvShort'].includes(item.titleType)
+  );
+   
+  return filteredItems;
+}
+
+// TMDB fallback
+async function searchTMDB(tconst) {
+  const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
+
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+  const data = await response.json();
+  const movie = data.movie_results?.[0];
+  const tv = data.tv_results?.[0];
+  
+  return (movie?.poster_path || tv?.poster_path) || null;
+}
 // Fetch poster New
 async function getPosterFromNewtlike(tconst) {
   try {
-    const url = `/api/titles/${(tconst)}`;
+    const url = `${NL_API}/api/titles/${(tconst)}`;
     const response = await fetch(url);
     
     if (!response.ok) return {};
@@ -26,42 +60,8 @@ async function getPosterFromNewtlike(tconst) {
   }
 }
 
-async function searchNL(query) {
-  const pagin = 'page=1&pageSize=10'
-  const url = `${NL_API}/api/titles?search=${(query)}&${pagin}`;
-
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-  const data = await response.json();
-  
-  const items = data.items || [];
-  const filteredItems = items.filter(item => 
-    ['movie', 'tvSeries', 'tvMovie', 'short', 'tvShort'].includes(item.titleType)
-  );
-  
-  return filteredItems;
-}
-// TMDB fallback
-async function searchTMDB(tconst) {
-  const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
-
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-  const data = await response.json();
-  const movie = data.movie_results?.[0];
-  const tv = data.tv_results?.[0];
-  
-  return (movie?.poster_path || tv?.poster_path) || null;
-}
-
 async function searchTitlePosters(query) {
-  const items = await searchNL(query);
-  
-  let dbCount = 0;
-  let tmdbCount = 0;
-  let noneCount = 0;
+  const items = await SearchNL(query);
   
   const resultsWithPosters = await Promise.all(items.map(async (item) => {
     let posterUrl = null;
@@ -72,7 +72,7 @@ async function searchTitlePosters(query) {
 
       if (posterUrl) {
         
-        dbCount++;
+
         console.log(`[NEWTLIKE] ${item.title} (${item.id})`);
       } 
       //Fallback til TMDB hvis ingen poster i database
@@ -81,10 +81,10 @@ async function searchTitlePosters(query) {
         posterUrl = posterPath ? `https://image.tmdb.org/t/p/w342${posterPath}` : null;
         
         if (posterUrl) {
-          tmdbCount++;
+
           console.log(`[TMDB] ${item.title} (${item.id})`);
         } else {
-          noneCount++;
+
           console.log(`[INGEN] ${item.title} (${item.id})`);
         }
       }
@@ -100,19 +100,21 @@ async function searchTitlePosters(query) {
 }
 
 // test når newtlike er nede
-async function searchTMDBOnly(query) {
-  const API_KEY = '6d931505602649b6ba683649d9af5d82';
-  const url = `${TMDB_API}/3/search/multi?api_key=${API_KEY}&query=${(query)}&page=1`;
+function searchTMDBOnly(query) {
+  const fetcher = url => fetch(url).then(res => res.json());  
+  const url = query ? `${TMDB_API}/3/search/multi?api_key=${API_KEY}&query=${(query)}&page=1` : null;
+    
+    
+    const { data, error } = useSWR(url, fetcher);
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (error) console.error('TMDB SWR fejl:', error);
+    if (!data) return { results: [] };
     
-    const data = await response.json();
-    
-    const items = data.results
-      .filter(item => item.media_type === 'movie' || item.media_type === 'tv')
-      .slice(0, 10)
+
+
+    const items = data?.results
+      /* .filter(item => item.media_type === 'movie' || item.media_type === 'tv')
+      .slice(0, 10) */
       .map(item => ({
         id: item.id.toString(),
         title: item.title || item.name,
@@ -122,66 +124,69 @@ async function searchTMDBOnly(query) {
         poster_url: item.poster_path 
           ? `https://image.tmdb.org/t/p/w342${item.poster_path}` 
           : null
-      }));
+      })) || [];
     
     console.log(`[TMDB] Fandt ${items.length} resultater`);
-    return items;
-  } catch (err) {
-    console.error('TMDB fejl:', err);
-    return [];
-  }
-}
+      return { items, isLoading: !data && !error, error };
+  } ;
 
+
+ 
 const Search = () => {
   const { q } = useParams();
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { addToHistory } = useAddTitleToHistory();
+
+  //const { items, isLoading, error } = searchTMDBOnly(q);
 
   useEffect(() => {
-    if (!q) return;
-    let mounted = true;
-
-    (async () => {
-      try {
-        setLoading(true);
-        // brug searchTitlePosters, searchTMDBOnly er til når newtlike ikke virker
-        const results = await searchTMDBOnly(q);
-        if (mounted) setMovies(results);
-      } catch (err) {
-        
-        if (mounted) setMovies([]);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-
-    return () => { mounted = false; };
+    if (!q || q.trim() === '') {
+      return;
+    }
+    setIsLoading(true);
+    searchTitlePosters(q)
+      .then(responseItems => setItems(responseItems))
+      .catch(err => setError(err))
+      .finally(() => setIsLoading(false));
   }, [q]);
 
-  if (loading) return <div style={{padding: 20}}>Loading...</div>;
-  if (!movies.length) return <div className='pagestuff'>No results found for "{q || ''}"</div>;
+
+const HistoryHandler = async (titleId) => {
+  await addToHistory(titleId);
+  return addToHistory(titleId)
+}
 
 
-  
+  if (isLoading) 
+    return <div style={{padding: 20}}>Loading...</div>;
+  if (error) {
+    console.error('Search fejl:', error);
+    return <div className='pagestuff'>No results found for "{q || ''}"</div>;
+  }
+
   return (
     <div className='imgContainer'>
-      {movies.map(movie => (
+      {(items || []).map(movie => (
         <div className='displayMovie' key={movie.id}>
           <div className='moviePoster'>
-            {movie.poster_url ? (
-              <img src={movie.poster_url} alt={movie.title} />
-            ) : (
-              <div className='noImage'></div>
-            )}
+            
+          <Link to={`/title/${movie.id}`} onClick={() => HistoryHandler(movie.id)}>
+          <img src={movie.poster_url} alt={movie.title} />
+          </Link>
+            
           </div>
-          <div className='textholder'>
-            <p className='movieTitle'>{movie.title}</p>
+          <Link to={`/title/${movie.id}`} className='textholder' onClick={() => HistoryHandler(movie.id)} >
+           
+            <p className='movieTitle'>{movie.title}</p>           
             <div className='movieDescription'>
               <p>Rating: {movie.rating || 'N/A'}</p>
               <p className="year">Year: {movie.year || 'N/A'}</p>
               <p>Type: {movie.titleType || 'N/A'}</p>
             </div>
-          </div>
+          
+         </Link>
         </div>
       ))}
     </div>
