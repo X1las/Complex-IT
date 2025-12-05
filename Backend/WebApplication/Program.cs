@@ -5,6 +5,7 @@ using WebServiceLayer.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace WebServiceLayer;
 
@@ -19,7 +20,12 @@ public class Program
         {
             options.ListenAnyIP(3000, listenOptions =>
             {
-                listenOptions.UseHttps("/home/xilas/ssl/newtlike.pfx");
+                // Load certificate from PEM files
+                var cert = X509Certificate2.CreateFromPemFile(
+                    "/etc/letsencrypt/live/www.newtlike.com/fullchain.pem",
+                    "/etc/letsencrypt/live/www.newtlike.com/privkey.pem"
+                );
+                listenOptions.UseHttps(cert);
             });
         });
 
