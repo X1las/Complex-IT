@@ -78,7 +78,7 @@ function useHistory() {
         return;
       }
       
-      const response = await fetch(`${NL_API}/api/users/${encodeURIComponent(username)}/history`,{ 
+      const response = await fetch(`${NL_API}/api/users/${username}/history`,{ 
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,9 +87,9 @@ function useHistory() {
         credentials: 'include'
       });
 
-      console.log('Response status:', response.status);
+      //console.log('Response status:', response.status);
 
-      if (!response.ok) {
+     /*  if (!response.ok) {
         const txt = await response.text().catch(() => '');
         console.error('Failed to fetch history:', response.status, txt.slice(0, 300));
         setError(`Failed to fetch history: ${response.status}`);
@@ -102,7 +102,7 @@ function useHistory() {
         console.error('Expected JSON but got:', txt.slice(0, 300));
         setError('Unexpected response format');
         return;
-      }
+      } */
 
       const historyData = await response.json();
       console.log('Raw history data:', historyData);
@@ -120,12 +120,25 @@ function useHistory() {
     }
   }
   
+  const titleItems = history.map(item => ({
+    items: item.titleDtos || [],
+    titleId: item.titleId,
+    posterUrl: item.posterUrl,
+    title: item.title,
+    viewedAt: item.viewedAt ? new Date(item.viewedAt).toISOString() : null
+
+  }))
+  setHistory(titleItems)
+
+
+
   fetchHistory();
 }, [username]);
 
   return { history, error, loading };
   
 }
+
 
 /* 
 function removeHistoryItem(itemId) {
@@ -142,7 +155,6 @@ const History = () => {
   if (loading) return <div style={{ padding: 20 }}>Loading history...</div>;
   if (error) return <div className="pagestuff">Error: {error}</div>;
 
-
   return (
     <div>
       <h1>{user}'s History</h1>
@@ -151,7 +163,7 @@ const History = () => {
         <div key={item.titleId + item.viewedAt} className="history-item">
           <img src={item.posterUrl} alt={item.titleId} className="history-poster" />
           <div className="history-details">
-            <h3>{item.titleId}</h3>
+            <h3>{item.title}</h3>
             <p>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
             {/* <button onClick={() => removeHistoryItem(item.id)}>Remove</button> */}
           </div>
