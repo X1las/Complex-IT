@@ -78,7 +78,8 @@ function useHistory() {
         return;
       }
       
-      const response = await fetch(`${NL_API}/api/users/${username}/history`,{ 
+      const res = await fetch(`${NL_API}/api/users/${username}/history`, { 
+        
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,54 +88,48 @@ function useHistory() {
         credentials: 'include'
       });
 
-      //console.log('Response status:', response.status);
+      const historyData = await res.json();
 
-     /*  if (!response.ok) {
-        const txt = await response.text().catch(() => '');
-        console.error('Failed to fetch history:', response.status, txt.slice(0, 300));
-        setError(`Failed to fetch history: ${response.status}`);
-        return;
-      }
+      const items = Array.isArray(historyData.items) ? historyData.items : [];
 
-      const ct = response.headers.get('content-type') || '';
-      if (!ct.includes('application/json')) {
-        const txt = await response.text().catch(() => '');
-        console.error('Expected JSON but got:', txt.slice(0, 300));
-        setError('Unexpected response format');
-        return;
-      } */
+      console.log('Processed history items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
+      const titlelist = items.map(item => item.titleId);
 
-      const historyData = await response.json();
-      console.log('Raw history data:', historyData);
-      const items = Array.isArray(historyData.items) ? historyData.items : 
-                       Array.isArray(historyData) ? historyData : [];
-              
-      console.log('Fetched history data:', items);
-      setHistory(items);
+      const titleDataArray = await Promise.all(titlelist.map(async (titleId) => {
+        const url = `${NL_API}/api/titles/${titleId}`;
+        const resp = await fetch(url);
+        if (!resp.ok) {
+          console.error(`Failed to fetch title data for ${titleId}:`, resp.status);
+          return null;
+        }
+        const titleData = await resp.json();
+        return titleData;
+      }));
+
+      // Merge history items with title data, keeping viewedAt and other fields
+      const data = items.map((item, idx) => {
+        const titleData = titleDataArray[idx];
+        return {
+          ...item,
+          title: titleData?.title ?? titleData?.Title ?? item.titleName ?? item.titleId,
+          posterUrl: titleData?.posterUrl ?? titleData?.PosterUrl ?? '',
+          viewedAt: item.viewedAt 
+        };
+      });
+
+      console.log('Fetched title data for history items:', data);
+      setHistory(data);
       
+
     } catch (err) {
       console.error('Error fetching history:', err);
-      setError(err.message || 'Unknown error');
+      setError('Error fetching history');
     } finally {
       setLoading(false);
     }
   }
-  
-  const titleItems = history.map(item => ({
-    items: item.titleDtos || [],
-    titleId: item.titleId,
-    posterUrl: item.posterUrl,
-    title: item.title,
-    viewedAt: item.viewedAt ? new Date(item.viewedAt).toISOString() : null
-
-  }))
-  setHistory(titleItems)
-
-
-
   fetchHistory();
 }, [username]);
-
   return { history, error, loading };
   
 }
@@ -156,14 +151,14 @@ const History = () => {
   if (error) return <div className="pagestuff">Error: {error}</div>;
 
   return (
-    <div>
+    <div className='posterContainer'>
       <h1>{user}'s History</h1>
       {(!history || history.length === 0) ? (<p>No history available.</p>) : (
         history.map(item => (
         <div key={item.titleId + item.viewedAt} className="history-item">
-          <img src={item.posterUrl} alt={item.titleId} className="history-poster" />
+          <img src={item.posterUrl} alt={item.title} className="history-poster" />
           <div className="history-details">
-            <h3>{item.title}</h3>
+            <h2>{item.title}</h2>
             <p>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
             {/* <button onClick={() => removeHistoryItem(item.id)}>Remove</button> */}
           </div>
@@ -173,21 +168,5 @@ const History = () => {
     </div>
   );
 };
-
-/* const History = (username) => {
-
-return ( <>
- 
-    <div className='profile'>
-      <h1>{username.username}'s Page</h1>
-    </div>
-    
-      <div>
-        <p>asdasdasdgasdfjhgsdhjgfahjsdgfhjasgkjhfgasjdg</p>
-      </div>
-      
-      
-  </>);
-}; */
 
 export default History;

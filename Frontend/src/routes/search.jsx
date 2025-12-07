@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import '../App.css';
-import useSWR from 'swr'; //husk at fjerne hvis inden du pusher til main
 import {useAddTitleToHistory} from './history.jsx';
 
 export  const NL_API = 'https://www.newtlike.com:3000';
@@ -99,37 +98,6 @@ async function searchTitlePosters(query) {
   return resultsWithPosters;
 }
 
-// test når newtlike er nede
-function searchTMDBOnly(query) {
-  const fetcher = url => fetch(url).then(res => res.json());  
-  const url = query ? `${TMDB_API}/3/search/multi?api_key=${API_KEY}&query=${(query)}&page=1` : null;
-    
-    
-    const { data, error } = useSWR(url, fetcher);
-
-    if (error) console.error('TMDB SWR fejl:', error);
-    if (!data) return { results: [] };
-    
-
-
-    const items = data?.results
-      /* .filter(item => item.media_type === 'movie' || item.media_type === 'tv')
-      .slice(0, 10) */
-      .map(item => ({
-        id: item.id.toString(),
-        title: item.title || item.name,
-        year: (item.release_date || item.first_air_date || '').split('-')[0],
-        rating: item.vote_average?.toFixed(1) || 'N/A',
-        titleType: item.media_type === 'movie' ? 'movie' : 'tvSeries',
-        poster_url: item.poster_path 
-          ? `https://image.tmdb.org/t/p/w342${item.poster_path}` 
-          : null
-      })) || [];
-    
-    console.log(`[TMDB] Fandt ${items.length} resultater`);
-      return { items, isLoading: !data && !error, error };
-  } ;
-
 
  
 const Search = () => {
@@ -154,7 +122,6 @@ const Search = () => {
 
 
 const HistoryHandler = async (titleId) => {
-  await addToHistory(titleId);
   return addToHistory(titleId)
 }
 
