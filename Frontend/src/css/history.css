@@ -24,8 +24,8 @@ h3:hover{
 
 }
 .posterContainer{
-    width: 400px;
-    left: 50%;
+/*     width: 400px;
+ */    /* left: 50%; */
     position: relative;
     top: 50px;
     padding: 20px;
