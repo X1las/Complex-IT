@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import {  Link } from 'react-router-dom';
 import '../App.css';
+import '../css/history.css';
 import '../css/bookmarks.css';
 import {NL_API} from './search';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -148,19 +150,20 @@ const History = () => {
 
   if (!user) return <div>Please log in to see your history.</div>;
   if (loading) return <div style={{ padding: 20 }}>Loading history...</div>;
-  if (error) return <div className="pagestuff">Error: {error}</div>;
+  if (error) return <div className="pagestuff" style={{ top: '500px' }}>Error: {error} Try to sign out and sign in again.</div>;
 
   return (
-    <div className='posterContainer'>
-      <h1>{user}'s History</h1>
+    <div className='container'>
+      <h2>User History</h2>
       {(!history || history.length === 0) ? (<p>No history available.</p>) : (
         history.map(item => (
-        <div key={item.titleId + item.viewedAt} className="history-item">
-          <img src={item.posterUrl} alt={item.title} className="history-poster" />
-          <div className="history-details">
-            <h2>{item.title}</h2>
-            <p>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
-            {/* <button onClick={() => removeHistoryItem(item.id)}>Remove</button> */}
+        <div key={item.titleId + item.viewedAt} className='posterContainer'>
+          <img src={item.posterUrl} alt={item.title} className="historyPoster" />
+          <div >
+            <Link to={`/title/${item.titleId}`}><h3>{item.title}</h3></Link>
+            <p className="historyDetails" style={{fontSize: '12px' }}>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
+            <button className='bookmark'>Bookmark</button>
+            {/* <button onClick={() => removeHistoryItem(item.id)}>Remove</button>  ved ikke om, vi skal lave sådan en function*/ } 
           </div>
         </div>
      ))

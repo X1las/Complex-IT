@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 import '../css/profile.css';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+
  /* 
- testprofile
- ruccer123
+testprofile
+ruccer123
  */
 const Profile = () => {
     const { id } = useParams();
@@ -39,6 +40,9 @@ const Profile = () => {
             <button className='btnProfile'><Link to={`/profile/${id}/ratings`}>Ratings</Link></button>
             <button className='btnProfile' onClick={handleLogout}> <Link to={`/`}>logout</Link></button>
            </div>
+        </div>
+        <div className='bookmarkscontainer'>
+
         </div>
       <Outlet />
     </div>
