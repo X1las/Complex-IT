@@ -77,7 +77,9 @@ const Login = () => {
         credentials: 'include'
       });
 
+      console.log('Login response:', response);
       const data = await response.json();
+      console.log('Login data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || data.Error || data.message || 'Login failed');
