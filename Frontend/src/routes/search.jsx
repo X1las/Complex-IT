@@ -68,7 +68,7 @@ async function searchTitlePosters(query) {
     if (item.id) {
       posterUrl = await getPosterFromNewtlike(item.id);
       
-
+      
       if (posterUrl) {
         
 
