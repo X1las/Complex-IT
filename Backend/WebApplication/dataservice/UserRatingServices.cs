@@ -126,14 +126,17 @@ public class UserRatingDataService
         }
         
         using var db = new ImdbContext();
-        var ratings = db.UsersRating.Where(r => r.TitleId == titleId).ToList();
+        var ratings = db.UsersRating
+            .Where(r => r.TitleId == titleId && r.Rating.HasValue)
+            .Select(r => (int)r.Rating!)
+            .ToList();
         
         if (ratings.Count == 0)
         {
             return (0, 0);
         }
         
-        var average = ratings.Average(r => r.Rating ?? 0);
+        var average = ratings.Average();
         return (Math.Round(average, 1), ratings.Count);
     }
     

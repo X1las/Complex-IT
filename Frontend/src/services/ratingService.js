@@ -65,7 +65,7 @@ export const submitRating = async (user, titleId, rating) => {
         'Authorization': `Bearer ${token}`, 
         'Content-Type': 'application/json' 
       },
-      body: JSON.stringify({ username, titleId, rating })
+      body: JSON.stringify({ Username: username, TitleId: titleId, Rating: rating })
     });
     
     if (!res.ok) {
