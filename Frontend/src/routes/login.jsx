@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../css/login.css';
 
-const API_URL = 'http://newtlike.com:3000';
+const API_URL = 'https://www.newtlike.com:3000';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -65,8 +65,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
-      const response = await fetch(`/api/users/login`, {
+      const response = await fetch(`${API_URL}/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
