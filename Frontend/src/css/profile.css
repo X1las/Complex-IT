@@ -54,36 +54,44 @@ a{color: rgba(255, 195, 67, 0.95);}
     border: rgb(13, 13, 26) 4px solid;
     width: 700px;
     margin: 5px;
+    
+    
 }
 .bookmarkPosterContainer {
+
     width: 600px;
     height: 120px;
     position: relative;
     top: 0px;
     padding: 10px;
     margin: 10px auto 10px;
+    border-radius: 3px;
+    background-color: rgb(34, 34, 34);
     border: 1px solid rgba(255,255,255,0.08);
-    border: blue 4px solid;
-    background: rgba(255,255,255,0.03);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
 }
+
 .bookmarkTitle{
-    font-size: 12px;
-    margin: 0 auto;
+    font-size: 18px;
+    text-align: left;
+    margin: 5px 100px;
     width: 300px;
-    height: 50px;
+    min-height: 30px;
+    height: auto;
     color: rgba(255, 195, 67, 0.95);
     background-color: rgb(48, 48, 48);
     padding: 10px;
     border-radius: 3px;
-    min-height: 50px;
     border: #333 1px solid;
-    transition: all .5s ease;
+    transition: all .3s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+
 }
+
 .bookmarkTitle:hover{
     color: rgba(48, 48, 48);
     background-color: rgb(255, 195, 67, 0.95);
-    transition: all .5s ease;
+    transition: all .3s ease;
 
 }
 .bookmarkPoster{
@@ -95,10 +103,11 @@ a{color: rgba(255, 195, 67, 0.95);}
     margin-right: 10px;
     
 }
+
 .removeBtn {
     position: absolute;
-    left: 500px;
-    top:30px; 
+    left: 510px;
+    top: 15px; 
     padding: 8px 12px;
     background-color: rgba(255, 195, 67, 0.95);
     color: #000;
@@ -106,12 +115,12 @@ a{color: rgba(255, 195, 67, 0.95);}
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
     transition: all 0.2s ease;
 }
 .removeBtn:hover {
     background-color: rgb(60, 60, 60);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
-    border: #333 1px solid;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset; 
     transition: all 0.2s ease;
 }
 .outlet {

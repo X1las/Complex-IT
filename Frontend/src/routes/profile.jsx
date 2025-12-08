@@ -27,6 +27,7 @@ const Profile = () => {
 
     const { removeBookmark } = useRemoveBookmark();
 
+
   //if (loading) return <div style={{padding: 20}}>Loading profile...</div>;
   if (!user) return <Link to={`/`}>logout<div style={{padding: 20}}>User not found</div></Link>;
 
@@ -51,8 +52,10 @@ const Profile = () => {
         bookmarks.map(item => (
         <div key={item.titleId + item.viewedAt} className='bookmarkPosterContainer'>
           <img src={item.posterUrl} alt={item.title} className="bookmarkPoster" />
-          <div>
+          <div> 
             <Link to={`/title/${item.titleId}`}><h3 className='bookmarkTitle'>{item.title}</h3></Link>
+            {console.log('Rendering bookmark item:', item)}
+            <p>{'22'}</p>
             <button className='removeBtn' onClick={() => {removeBookmark(item.titleId);}}>Remove</button>
           </div>
         </div>

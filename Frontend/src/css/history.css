@@ -7,15 +7,17 @@
     width: 300px;
     color: rgba(255, 195, 67, 0.95);
     background-color: rgb(34, 34, 34);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
     padding: 10px;
     border-radius: 3px;
     min-height: 50px;
-    transition: all .5s ease;
+    transition: all .3s ease;
 }
 .historyTitle:hover{
     color: rgba(48, 48, 48);
     background-color: rgb(255, 195, 67, 0.95);
-    transition: all .5s ease;
+    transition: all .3s ease;
 
 }
 .historyPosterContainer{
@@ -41,7 +43,7 @@
     float: left;
     margin: 5px 0 0 25px;
 }
-.bookmark {
+/* .bookmark {
     position: absolute;
     top: 110px;
     right: 145px;
@@ -52,4 +54,4 @@
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-}
+} */
