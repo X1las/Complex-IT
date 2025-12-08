@@ -9,7 +9,7 @@ export const fetchUserRating = async (user, titleId) => {
       return 0;
     }
     const username = user.username || user.Username;
-    const res = await fetch(`http://localhost:3000/api/users/${username}/ratings/${titleId}`, {
+    const res = await fetch(`https://newtlike.com:3000/api/users/${username}/ratings/${titleId}`, {
       headers: { 
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ export const submitRating = async (user, titleId, rating) => {
     const username = user.username || user.Username;
     
     // Check if rating exists without triggering auth error
-    const checkRes = await fetch(`http://localhost:3000/api/users/${username}/ratings/${titleId}`, {
+    const checkRes = await fetch(`https://newtlike.com:3000/api/users/${username}/ratings/${titleId}`, {
       headers: { 
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export const submitRating = async (user, titleId, rating) => {
     
     const hasExistingRating = checkRes.ok;
     const method = hasExistingRating ? 'PUT' : 'POST';
-    const url = `http://localhost:3000/api/users/${username}/ratings${hasExistingRating ? `/${titleId}` : ''}`;
+    const url = `https://newtlike.com:3000/api/users/${username}/ratings${hasExistingRating ? `/${titleId}` : ''}`;
     
     const res = await fetch(url, {
       method,
@@ -93,7 +93,7 @@ export const deleteRating = async (user, titleId) => {
   try {
     const token = localStorage.getItem('authToken');
     const username = user.username || user.Username;
-    const res = await fetch(`http://localhost:3000/api/users/${username}/ratings/${titleId}`, {
+    const res = await fetch(`https://newtlike.com:3000/api/users/${username}/ratings/${titleId}`, {
       method: 'DELETE',
       headers: { 
         'Authorization': `Bearer ${token}`, 
