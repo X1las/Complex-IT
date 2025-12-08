@@ -64,7 +64,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
+      
       const response = await fetch(`${NL_API}/api/users/login`, {
         method: 'POST',
         headers: {
