@@ -1,3 +1,4 @@
+-- Active: 1756753311901@@newtlike.com@5432@rucdb
 -- Create Functions and Triggers
 
 -- 1.D-1
@@ -108,10 +109,10 @@ BEGIN
   INSERT INTO avg_ratings (title_id, combined_ratings, overall_users_rated)
   SELECT 
     title_id, 
-    ROUND((AVG(rating) + AVG(user_rating))/2,1) AS combined_ratings, 
-    COUNT(rating) + AVG(num_user_ratings) AS overall_users_rated
+    ROUND(((COALESCE(AVG(user_rating), 0) + COALESCE(AVG(rating), 0))/2)::NUMERIC, 1) AS combined_ratings, 
+    COUNT(rating) + COALESCE(AVG(num_user_ratings), 0) AS overall_users_rated
   FROM user_ratings
-  LEFT JOIN imdb_ratings on title_id = titles_id
+  LEFT JOIN imdb_ratings on user_ratings.title_id = imdb_ratings.titles_id
   WHERE title_id = v_title
   GROUP BY title_id;
 
