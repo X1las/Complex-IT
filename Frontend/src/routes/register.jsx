@@ -205,16 +205,14 @@ const Register = () => {
           )}
         </div>
 
-        <div className="form-group">
-          <label style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={(e) => setShowPassword(e.target.checked)}
-              disabled={isLoading}
-            />
-            Show passwords
-          </label>
+           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={(e) => setShowPassword(e.target.checked)}
+            disabled={isLoading}
+          />
+          <span>Show password</span>
         </div>
 
         <button 
