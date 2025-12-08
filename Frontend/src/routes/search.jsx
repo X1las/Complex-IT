@@ -8,10 +8,10 @@ export  const TMDB_API = 'https://api.themoviedb.org';
 export  const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
  async function SearchNL(query) {
-  const pagin = 'page=1&pageSize=10'
-  const url = `${NL_API}/api/titles?search=${(query)}&${pagin}`;
 
-     if (!query || query.trim() === '') return [];
+  const url = `${NL_API}/api/titles?search=${(query)}`;
+
+    if (!query || query.trim() === '') return [];
 
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -19,11 +19,8 @@ export  const API_KEY = '6d931505602649b6ba683649d9af5d82';
   const data = await response.json();
   
   const items = data.items || [];
-  const filteredItems = items.filter(item => 
-    ['movie', 'tvSeries', 'tvMovie', 'short', 'tvShort'].includes(item.titleType)
-  );
-   
-  return filteredItems;
+
+  return items;
 }
 
 // TMDB fallback
@@ -70,8 +67,6 @@ async function searchTitlePosters(query) {
       
       
       if (posterUrl) {
-        
-
         console.log(`[NEWTLIKE] ${item.title} (${item.id})`);
       } 
       //Fallback til TMDB hvis ingen poster i database
