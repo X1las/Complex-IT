@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import { fetchUserRating } from '../services/ratingService';
 import { StarRatingWidget } from './ratings';
 import '../css/title.css';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import logo from '../assets/image.png';
+import icon from '../assets/icon.png';
 
 const Title = () => {
   const { id: titleId } = useParams();
@@ -14,6 +17,8 @@ const Title = () => {
   const [loading, setLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
   const fetchTitleDetails = async (titleId) => {
     try {
@@ -132,13 +137,25 @@ const Title = () => {
     return <div className="error">Title not found</div>;
   }
 
+
+
+  /* console.log('Current user in App component:', user); */
+  const onSearchSubmit = (e) => {
+    e.preventDefault();
+    if (!search.trim()) return;
+    navigate(`/search/${(search)}`);
+  }
+
   return (
     <div className="title-page">
       {/* Top Navigation Bar */}
-      <nav className="top-nav">
-        <div className="logo">MovieDB</div>
-        <button className="user-icon"></button>
-      </nav>
+      <nav>
+            <div ><Link to="/"><img className='imgPlaceholder' src={logo} alt="Logo" /></Link></div>
+            <form onSubmit={onSearchSubmit} style={{display:'inline'}}> 
+              <input className='searchField' type="text" value={search} onChange={e => setSearch(e.target.value)} />
+            </form>
+            <div><Link to={user ? `/profile/${user.username}` : `/login`}> <img className='profileplaceholder' src={icon} alt="profilePic" /></Link></div>
+        </nav>
 
       {/* Header Row */}
       <header className="title-header">
