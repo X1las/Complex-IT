@@ -92,8 +92,7 @@ const Register = () => {
     try {
       console.log('Attempting registration for:', formData.username);
       console.log('API URL:', `${API_URL}/api/users/create`);
-      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
-      const response = await fetch(`/api/users/create`, {
+      const response = await fetch(`${API_URL}/api/users/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
