@@ -137,7 +137,7 @@ public class UserRatingDataService
         }
         
         var average = ratings.Average();
-        return (Math.Round(average, 1), ratings.Count);
+        return (average, ratings.Count);
     }
     
     // UPDATE - Update title's aggregate rating in titles table
@@ -157,7 +157,7 @@ public class UserRatingDataService
         }
         
         var (averageRating, totalVotes) = CalculateTitleRating(titleId);
-        title.Rating = averageRating;
+        title.Rating = averageRating > 0 ? Math.Round(averageRating, 1, MidpointRounding.AwayFromZero) : null;
         title.Votes = totalVotes;
         
         db.SaveChanges();
