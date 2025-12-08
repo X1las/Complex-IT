@@ -1,25 +1,24 @@
 body {
-  max-width: 10280px;
-  margin: 0 auto;
-  margin-top: 70px;
+  max-width: 1680px;
+  margin: 70px 0 0 0 ;
   padding:0;
-  text-align: center;
-  background-color: rgb(43, 43, 43);
-  justify-content: center ; 
-    color:white; 
+  background-color: rgb(43, 43, 43);color:white; 
+  height: 100%;
 }
 
 .profile {
     padding: 20px;
-    max-width: 1280px;
-    margin: -500px auto 0 auto;
+    margin-top: -600px;
+/*     width: 1080px;
+ */    margin: 0 auto 600px auto;
     font-family: Arial, sans-serif;
     background-color: #333;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;    border-radius: 5px;
 }
 
 .top {
-    /* box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
+    padding: 10px;
     border-radius: 5px;
     color: antiquewhite;
     justify-content: center;
@@ -32,11 +31,16 @@ body {
     margin: 50px;
 }
 a{color: rgba(255, 195, 67, 0.95);}
-button{
-    color:red;
-    opacity: 1;
-}
+
+
 .btnProfile {
     background-color: rgb(49, 49, 49);
-    border: 2px solid rgb(117, 117, 114);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
+
+}
+.btnProfile:hover {
+    background-color: rgb(60, 60, 60);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
+    border: #333 1px solid;
+    transition: all 0.3s ease;
 }

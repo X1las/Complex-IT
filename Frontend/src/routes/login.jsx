@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../css/login.css';
-
-const API_URL = 'https://www.newtlike.com:3000';
+import { NL_API } from './search';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -65,7 +64,8 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/users/login`, {
+      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
+      const response = await fetch(`${NL_API}/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container pagestuff" style={{padding:'50px'}}>
       <h1>Login</h1>
       
       {apiError && (

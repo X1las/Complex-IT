@@ -13,7 +13,7 @@ function App() {
   const navigate = useNavigate();
   const {user} = useAuth();
 
-  console.log('Current user in App component:', user);
+  /* console.log('Current user in App component:', user); */
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (!search.trim()) return;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../css/person.css';
 import '../css/general.css';
+import { NL_API,TMDB_API,API_KEY } from './search';
 
 const KnownForItem = ({ item }) => {
   return (
@@ -32,8 +33,8 @@ const Person = () => {
 
       try {
         // Fetch internal data
-        console.log('Fetching internal data from:', `http://www.newtlike.com:3000/crew/${id}`);
-        const internalRes = await fetch(`http://www.newtlike.com:3000/api/crew/${id}`);
+        console.log('Fetching internal data from:', `${NL_API}/crew/${id}`);
+        const internalRes = await fetch(`${NL_API}/api/crew/${id}`);
         console.log('Internal response status:', internalRes.status);
 
         if (internalRes.ok) {
@@ -46,7 +47,7 @@ const Person = () => {
 
         // Fetch external data
         console.log('Fetching external data from TMDB...');
-        const externalRes = await fetch(`https://api.themoviedb.org/3/find/${id}?external_source=imdb_id&api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
+        const externalRes = await fetch(`${TMDB_API}/3/find/${id}?external_source=imdb_id&api_key=${API_KEY}`);
         console.log('External response status:', externalRes.status);
 
         if (externalRes.ok) {
@@ -58,7 +59,7 @@ const Person = () => {
           if (externalData.person_results?.length > 0) {
             const personId = externalData.person_results[0].id;
             console.log('Fetching person details for ID:', personId);
-            const personDetailsRes = await fetch(`https://api.themoviedb.org/3/person/${personId}?api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
+            const personDetailsRes = await fetch(`${TMDB_API}/3/person/${personId}?api_key=${API_KEY}`);
             console.log('Person details response status:', personDetailsRes.status);
 
             if (personDetailsRes.ok) {

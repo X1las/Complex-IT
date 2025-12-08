@@ -14,7 +14,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 body {
@@ -89,6 +89,7 @@ nav {
 }
 /* nav css */
 .pagestuff {
+  top: 100px;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03);
   box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
