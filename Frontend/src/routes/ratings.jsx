@@ -122,6 +122,24 @@ const Ratings = () => {
           ))}
         </div>
       )}
+      <p>Rating management functionality is available on individual title pages.</p>
+      <div className="user-ratings" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '20px'
+      }}>
+        {userRatings.length > 0 ? (
+          userRatings.map((rating, index) => (
+            <DisplayTitleItem 
+              key={rating.id || index} 
+              tconst={rating.titleId} 
+              suppressDate={true} 
+            />
+          ))
+        ) : (
+          <p>You haven't rated any titles yet.</p>
+        )}
+      </div>
     </div>
   );
 };

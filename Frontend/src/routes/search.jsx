@@ -1,32 +1,27 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useAddTitleToHistory } from './history.jsx';
+import DisplayTitleItem from '../services/titlefunctions.jsx';
 import '../App.css';
-import {useAddTitleToHistory} from './history.jsx';
 
-export  const NL_API = 'https://www.newtlike.com:3000';
-export  const TMDB_API = 'https://api.themoviedb.org';
-export  const API_KEY = '6d931505602649b6ba683649d9af5d82';
+export const NL_API = 'https://www.newtlike.com:3000';
+export const TMDB_API = 'https://api.themoviedb.org';
+export const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
- async function SearchNL(query) {
+// Search local database
+async function searchNL(query) {
+  if (!query || query.trim() === '') return [];
 
-  const url = `${NL_API}/api/titles?search=${(query)}`;
-
-    if (!query || query.trim() === '') return [];
-
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-  const data = await response.json();
+  const response = await fetch(`${NL_API}/api/titles?search=${encodeURIComponent(query)}`);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
   
-  const items = data.items || [];
-
-  return items;
+  const data = await response.json();
+  return data.items || [];
 }
 
-// TMDB fallback
+// TMDB fallback for posters
 async function searchTMDB(tconst) {
   const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
-
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
@@ -36,28 +31,24 @@ async function searchTMDB(tconst) {
   
   return (movie?.poster_path || tv?.poster_path) || null;
 }
-// Fetch poster New
+
+// Get poster from local database
 async function getPosterFromNewtlike(tconst) {
   try {
-    const url = `${NL_API}/api/titles/${(tconst)}`;
-    const response = await fetch(url);
-    
-    if (!response.ok) return {};
+    const response = await fetch(`${NL_API}/api/titles/${encodeURIComponent(tconst)}`);
+    if (!response.ok) return null;
     
     const data = await response.json();
-
-    const posterUrl = data.posterUrl;
-    if (!posterUrl || posterUrl.trim() === '') return null;
-
     return data.posterUrl || null;
   } catch (err) {
-    console.error(`Fejl ved hentning af poster for ${tconst}:`, err.message);
+    console.error(`Error fetching poster for ${tconst}:`, err.message);
     return null;
   }
 }
 
+// Search with poster URLs
 async function searchTitlePosters(query) {
-  const items = await SearchNL(query);
+  const items = await searchNL(query);
   
   const resultsWithPosters = await Promise.all(items.map(async (item) => {
     let posterUrl = null;
@@ -65,36 +56,22 @@ async function searchTitlePosters(query) {
     if (item.id) {
       posterUrl = await getPosterFromNewtlike(item.id);
       
-      
-      if (posterUrl) {
-        console.log(`[NEWTLIKE] ${item.title} (${item.id})`);
-      } 
-      //Fallback til TMDB hvis ingen poster i database
-      else {
+      if (!posterUrl) {
         const posterPath = await searchTMDB(item.id);
         posterUrl = posterPath ? `https://image.tmdb.org/t/p/w342${posterPath}` : null;
-        
-        if (posterUrl) {
-
-          console.log(`[TMDB] ${item.title} (${item.id})`);
-        } else {
-
-          console.log(`[INGEN] ${item.title} (${item.id})`);
-        }
       }
     }
     
     return {
-        ...item,
-        poster_url: posterUrl
-      };
+      ...item,
+      poster_url: posterUrl
+    };
   }));
   
   return resultsWithPosters;
 }
 
-
- 
+// Main Search component
 const Search = () => {
   const { q } = useParams();
   const [items, setItems] = useState([]);
@@ -102,55 +79,48 @@ const Search = () => {
   const [error, setError] = useState(null);
   const { addToHistory } = useAddTitleToHistory();
 
-  //const { items, isLoading, error } = searchTMDBOnly(q);
-
   useEffect(() => {
     if (!q || q.trim() === '') {
+      setItems([]);
       return;
     }
+
     setIsLoading(true);
+    setError(null);
+
     searchTitlePosters(q)
       .then(responseItems => setItems(responseItems))
       .catch(err => setError(err))
       .finally(() => setIsLoading(false));
   }, [q]);
 
-
-const HistoryHandler = async (titleId) => {
-  return addToHistory(titleId)
-}
-
+  const handleTitleClick = async (titleId) => {
+    return addToHistory(titleId);
+  };
 
   if (isLoading) 
-    return <div style={{padding: 20}}>Loading...</div>;
+    return <div style={{ padding: 20 }}>Loading...</div>;
   if (error) {
-    console.error('Search fejl:', error);
+    console.error('Search error:', error);
     return <div className='pagestuff'>No results found for "{q || ''}"</div>;
   }
 
   return (
-    <div className='imgContainer'>
-      {(items || []).map(movie => (
-        <div className='displayMovie' key={movie.id}>
-          <div className='moviePoster'>
-            
-          <Link to={`/title/${movie.id}`} onClick={() => HistoryHandler(movie.id)}>
-          <img src={movie.poster_url} alt={movie.title} />
-          </Link>
-            
-          </div>
-          <Link to={`/title/${movie.id}`} className='textholder' onClick={() => HistoryHandler(movie.id)} >
-           
-            <p className='movieTitle'>{movie.title}</p>           
-            <div className='movieDescription'>
-              <p>Rating: {movie.rating || 'N/A'}</p>
-              <p className="year">Year: {movie.year || 'N/A'}</p>
-              <p>Type: {movie.titleType || 'N/A'}</p>
-            </div>
-          
-         </Link>
-        </div>
-      ))}
+    <div className='search-results-container' style={{ 
+      padding: '20px', 
+      backgroundColor: '#1a1a1a', 
+      minHeight: '100vh' 
+    }}>
+      <h2 style={{ color: 'white', marginBottom: '20px' }}>
+        Search Results for "{q}"
+      </h2>
+      {(items || []).length === 0 ? (
+        <div style={{ color: 'white' }}>No results found</div>
+      ) : (
+        items.map(movie => (
+          <DisplayTitleItem key={movie.id} tconst={movie.id} />
+        ))
+      )}
     </div>
   );
 };

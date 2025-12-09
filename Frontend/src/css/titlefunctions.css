@@ -1,0 +1,128 @@
+/* DisplayTitleItem component styling - fully scalable */
+.title-item-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.title-item-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) inset;
+  margin: 2%;
+  padding: 2%;
+  width: auto;
+  height: auto;
+}
+
+.title-poster {
+  padding: 1%;
+  height: 25vh;
+  width: auto;
+  max-width: 40%;
+  aspect-ratio: 17/20;
+  margin-right: 2%;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+.title-poster img {
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.title-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2vw;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(24, 24, 24, 0.4);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) outset;
+  flex: 1;
+  margin: 1.5%;
+  text-decoration: none;
+  color: inherit;
+  height: auto;
+}
+
+.title-name {
+  font-size: 1.2vw;
+  font-weight: bold;
+  border-bottom: 2px solid rgba(255, 195, 67, 0.95);
+  border-radius: 2px;
+  margin: 1.5% 1.5% 2% 1.5%;
+  line-height: 1.1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.title-details {
+  margin-top: 0;
+  text-align: left;
+  font-size: 0.8vw;
+  padding: 1.5%;
+  flex-grow: 1;
+}
+
+.title-details p {
+  margin: 1% 0;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 767px) {
+  .title-item-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 3%;
+    margin: 3%;
+  }
+  
+  .title-poster {
+    margin-right: 0;
+    margin-bottom: 3%;
+    height: 40vh;
+    max-width: 80%;
+  }
+  
+  .title-link {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .title-name {
+    text-align: center;
+    margin: 2% 0 3% 0;
+    font-size: 2.5vw;
+  }
+  
+  .title-details {
+    text-align: center;
+    padding: 2%;
+    font-size: 1.5vw;
+  }
+}
+
+/* Loading and error states */
+.title-loading,
+.title-error {
+  padding: 3vw;
+  text-align: center;
+  font-size: 0.8vw;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 2%;
+}
+
+.title-error {
+  color: #dc3545;
+  background: #f8d7da;
+}
