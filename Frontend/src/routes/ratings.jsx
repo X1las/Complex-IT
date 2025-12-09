@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { submitRating, deleteRating, fetchAllUserRatings } from '../services/ratingService';
+import DisplayTitleItem from '../services/titlefunctions.jsx';
+import '../App.css';
+import '../css/ratings.css';
 
 // Custom hook to get the current username
 function useUser() {
@@ -84,54 +87,28 @@ export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, on
   );
 };
 
-// Ratings page component - displays all user ratings
+// Main Ratings component - uses DisplayTitleItem for consistent UI
 const Ratings = () => {
-  const { ratings, error, loading, removeRatingFromState } = useUserRatings();
+  const { ratings, error, loading } = useUserRatings();
   const { user } = useAuth();
-
-  const handleDeleteRating = async (titleId) => {
-    if (!confirm('Delete your rating?')) return;
-    
-    const success = await deleteRating(user, titleId);
-    if (success) {
-      removeRatingFromState(titleId);
-    }
-  };
 
   if (loading) return <div className="ratings-container"><p>Loading ratings...</p></div>;
   if (error) return <div className="ratings-container"><p>Error: {error}</p></div>;
+  if (!user) return <div className="ratings-container"><p>Please log in to view your ratings.</p></div>;
 
   return (
     <div className="ratings-container">
       <h2>Your Ratings</h2>
-      {(!ratings || ratings.length === 0) ? (
-        <p>You haven't rated any titles yet.</p>
-      ) : (
-        <div className="ratings-list">
-          {ratings.map(item => (
-            <div key={item.titleId} className="rating-item">
-              {item.posterUrl && <img src={item.posterUrl} alt={item.title} className="rating-poster" />}
-              <div className="rating-details">
-                <h3>{item.title}</h3>
-                <p>Your rating: {item.rating}/10 ⭐</p>
-                <button className="delete-rating-btn" onClick={() => handleDeleteRating(item.titleId)}>
-                  Delete Rating
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
       <p>Rating management functionality is available on individual title pages.</p>
       <div className="user-ratings" style={{
         display: 'flex',
         flexDirection: 'column',
         marginTop: '20px'
       }}>
-        {userRatings.length > 0 ? (
-          userRatings.map((rating, index) => (
+        {ratings.length > 0 ? (
+          ratings.map((rating, index) => (
             <DisplayTitleItem 
-              key={rating.id || index} 
+              key={rating.titleId || index} 
               tconst={rating.titleId} 
               suppressDate={true} 
             />

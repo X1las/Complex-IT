@@ -102,13 +102,18 @@ export function useBookmarks() {
   const [loading, setLoading] = useState(false);
 
   const loadBookmarks = async () => {
-    if (!username) return;
+    if (!username) {
+      console.log('No username available, skipping bookmark fetch');
+      return;
+    }
     
+    console.log('Loading bookmarks for user:', username);
     setLoading(true);
     setError(null);
 
     try {
       const data = await fetchBookmarks(username);
+      console.log('Successfully fetched bookmarks:', data);
       setBookmarks(data); 
     } catch (err) {
       console.error('Error fetching bookmarks:', err);
@@ -142,6 +147,24 @@ const Bookmarks = () => {
       removeBookmarkFromState(titleId);
     }
   };
+
+  // Debug logging
+  console.log('Bookmarks component rendered:', {
+    user,
+    bookmarks,
+    error,
+    loading,
+    bookmarksCount: bookmarks?.length
+  });
+
+  if (!user) {
+    return (
+      <div className="bookmarks-page">
+        <h2>Bookmarks</h2>
+        <p>Please log in to view your bookmarks.</p>
+      </div>
+    );
+  }
 
   if (loading) return <div className="bookmarks-page"><p>Loading bookmarks...</p></div>;
   if (error) return <div className="bookmarks-page"><p>Error: {error}</p></div>;

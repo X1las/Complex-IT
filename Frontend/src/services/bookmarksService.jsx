@@ -7,6 +7,8 @@ export const fetchBookmarks = async (username) => {
     throw new Error('Username is required to fetch bookmarks');
   }
 
+  console.log('fetchBookmarks called for username:', username);
+
   try {
     const token = localStorage.getItem('authToken');
     
@@ -14,6 +16,8 @@ export const fetchBookmarks = async (username) => {
       console.error('No auth token found');
       throw new Error('Not authenticated - please login again');
     }
+    
+    console.log('Making request to:', `${NL_API}/api/users/${username}/bookmarks`);
     
     const res = await fetch(`${NL_API}/api/users/${username}/bookmarks`, { 
       method: 'GET',
@@ -24,13 +28,18 @@ export const fetchBookmarks = async (username) => {
       credentials: 'include'
     });
 
+    console.log('Response status:', res.status);
+
     if (!res.ok) {
-      throw new Error(`Failed to fetch bookmarks: ${res.status}`);
+      const errorText = await res.text().catch(() => 'Unable to read error');
+      console.error('Failed to fetch bookmarks:', res.status, errorText);
+      throw new Error(`Failed to fetch bookmarks: ${res.status} - ${errorText}`);
     }
 
     const bookmarksData = await res.json();
+    console.log('Raw bookmarks data:', bookmarksData);
+    
     const items = Array.isArray(bookmarksData.items) ? bookmarksData.items : [];
-
     console.log('Processed bookmark items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
     
     // Fetch title data for each bookmark
