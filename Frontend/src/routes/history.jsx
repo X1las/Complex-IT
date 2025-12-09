@@ -160,9 +160,8 @@ const History = () => {
         <div key={item.titleId + item.viewedAt} className='posterContainer'>
           <img src={item.posterUrl} alt={item.title} className="historyPoster" />
           <div >
-            <Link to={`/title/${item.titleId}`}><h3>{item.title}</h3></Link>
+            <Link to={`/title/${item.titleId}`}><h3 className="historyTitle">{item.title}</h3></Link>
             <p className="historyDetails" style={{fontSize: '12px' }}>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
-            {/* <button onClick={() => removeHistoryItem(item.id)}>Remove</button>  ved ikke om, vi skal lave sådan en function*/ } 
           </div>
         </div>
      ))

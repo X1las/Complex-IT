@@ -12,6 +12,8 @@ function App() {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const {user} = useAuth();
+      const { logout } = useAuth();
+    const handleLogout = () => {logout();};
 
   /* console.log('Current user in App component:', user); */
   const onSearchSubmit = (e) => {
@@ -27,7 +29,15 @@ function App() {
             <form onSubmit={onSearchSubmit} style={{display:'inline'}}> 
               <input className='searchField' type="text" value={search} onChange={e => setSearch(e.target.value)} />
             </form>
-            <div><Link to={user ? `/profile/${user.username}` : `/login`}> <img className='profileplaceholder' src={icon} alt="profilePic" /></Link></div>
+          <div className='profileholder'>
+              <Link to={user ? `/profile/${user.username}` : `/login`}> 
+                <img className='profileIcon' src={icon} alt="profilePic" />
+              </Link>            
+            
+          </div>
+          <div className='btnLogout'>
+              <button className='Logout'onClick={handleLogout}> <Link to={`/`}>Logout</Link></button>
+            </div>
         </nav>
         <Outlet />
     </>

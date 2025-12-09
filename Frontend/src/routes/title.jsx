@@ -7,6 +7,7 @@ import '../css/title.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/image.png';
 import icon from '../assets/icon.png';
+import { useAddBookmarks } from './bookmarks';
 
 const Title = () => {
   const { id: titleId } = useParams();
@@ -19,8 +20,10 @@ const Title = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { addToBookmarks } = useAddBookmarks();
 
   const fetchTitleDetails = async (titleId) => {
+    
     try {
       setLoading(true);
       console.log('Fetching title:', titleId);
@@ -107,10 +110,9 @@ const Title = () => {
     }
   };
 
-  const addToBookmarks = () => {
-    // TODO: Add title to user bookmarks
-    setIsBookmarked(!isBookmarked);
-  };
+  const BookmarkHandler = async (titleId) => {
+  return addToBookmarks(titleId)
+}
 
   // const fetchSimilarTitles = () => {
   //   // TODO: Fetch similar/related titles
@@ -230,8 +232,8 @@ const Title = () => {
       {/* Right Side Info Card */}
       <aside className="info-card">
         <button 
-          className={`bookmark-button ${isBookmarked ? 'bookmarked' : ''}`}
-          onClick={addToBookmarks}
+          className={`bookmark-button`}
+          onClick={() => { BookmarkHandler(titleId); console.log(`Bookmark button clicked ${titleId}`); }}
         >
           {isBookmarked ? '★' : '☆'} Bookmark
         </button>
