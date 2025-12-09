@@ -18,17 +18,19 @@ body {
 
 .top {
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
-    padding: 10px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 50px;
     color: antiquewhite;
     justify-content: center;
     display: flex;
     align-items: center;
+    border-bottom: 2px solid rgba(255, 195, 67, 0.5);
 }
 .buttonContainer {
     display: flex;
     justify-content: space-evenly;
-    margin: 50px;
+    margin: 10px auto;
+    padding: 20px;
 }
 a{color: rgba(255, 195, 67, 0.95);}
 
@@ -36,7 +38,13 @@ a{color: rgba(255, 195, 67, 0.95);}
 .btnProfile {
     background-color: rgb(49, 49, 49);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
-
+    padding: 24px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    flex: 1;
+    text-align: center;
 }
 .btnProfile:hover {
     background-color: rgb(60, 60, 60);
@@ -45,87 +53,137 @@ a{color: rgba(255, 195, 67, 0.95);}
     transition: all 0.3s ease;
 }
 .contentContainer {
-    display: flex;
-    flex-direction: row;
-    border: green 4px solid;
+    padding: 20px;
 }
-.bookmarksContainer {
-    padding: 10px;
-    border: rgb(13, 13, 26) 4px solid;
-    width: 700px;
-    margin: 5px;
-    
-    
+
+.outlet {
+    background: rgba(24, 24, 24, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    min-height: 400px;
 }
+
+.bookmarks-page {
+    width: 100%;
+}
+
+.bookmarks-page h2 {
+    margin-top: 0px;
+    margin-bottom: 24px;
+    font-size: 1.8rem;
+    color: #fff;
+    border-bottom: 2px solid rgba(255, 195, 67, 0.5);
+    padding-bottom: 12px;
+}
+
+.bookmarks-page p {
+    color: #aaa;
+    font-size: 1.1rem;
+}
+
 .bookmarkPosterContainer {
-
-    width: 600px;
-    height: 120px;
+    display: flex;
+    gap: 22px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
     position: relative;
-    top: 0px;
-    padding: 10px;
-    margin: 10px auto 10px;
-    border-radius: 3px;
-    background-color: rgb(34, 34, 34);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
 }
 
-.bookmarkTitle{
+.bookmarkPosterContainer:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bookmarkPoster {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bookmarkContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0px;
+    padding-right: 10px;
+}
+
+.bookmarkContent a {
+    text-decoration: none;
+}
+
+.bookmarkTitle {
     font-size: 18px;
-    text-align: left;
-    margin: 5px 100px;
-    width: 300px;
-    min-height: 30px;
-    height: auto;
+    font-weight: 600;
     color: rgba(255, 195, 67, 0.95);
-    background-color: rgb(48, 48, 48);
-    padding: 10px;
-    border-radius: 3px;
-    border: #333 1px solid;
-    transition: all .3s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
-
+    margin: 0px;
+    padding: 12px 16px;
+    background: rgba(255, 195, 67, 0.1);
+    border: 1px solid rgba(255, 195, 67, 0.3);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: clip;
 }
 
-.bookmarkTitle:hover{
-    color: rgba(48, 48, 48);
-    background-color: rgb(255, 195, 67, 0.95);
-    transition: all .3s ease;
-
+.bookmarkTitle:hover {
+    color: #fff;
+    background: rgba(255, 195, 67, 0.2);
+    border-color: rgba(255, 195, 67, 0.5);
 }
-.bookmarkPoster{
-    position: relative;
-    border-radius: 4px;
-    width: auto;
-    height: 120px;
-    float: left;
-    margin-right: 10px;
-    
+
+.bookmarkRating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.rating-star {
+    color: #ffd700;
+    font-size: 1.2rem;
+}
+
+.rating-value {
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .removeBtn {
     position: absolute;
-    left: 510px;
-    top: 15px; 
-    padding: 8px 12px;
-    background-color: rgba(255, 195, 67, 0.95);
-    color: #000;
-    border: none;
-    border-radius: 4px;
+    top: 102px;
+    right: 6px;
+    padding: 8px 16px;
+    background: rgba(220, 53, 69, 0.2);
+    color: #fff;
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+    font-weight: 600;
+    font-size: 0.9rem;
     transition: all 0.2s ease;
 }
+
 .removeBtn:hover {
-    background-color: rgb(60, 60, 60);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset; 
-    transition: all 0.2s ease;
-}
-.outlet {
-    margin: 5px;
-    padding: 10px;
-    border: purple 4px solid;
-    width: 400px;
+    background: rgba(220, 53, 69, 0.4);
+    border-color: rgba(220, 53, 69, 0.8);
+    transform: translateY(-1px);
 }

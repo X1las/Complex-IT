@@ -1,16 +1,13 @@
-
-
-
 .historyTitle{
-    font-size: 12px;
-    margin: 0 auto;
-    width: 300px;
+    font-size: 19px;
+    margin: auto;
+    width: 880px;
     color: rgba(255, 195, 67, 0.95);
     background-color: rgb(34, 34, 34);
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
     padding: 10px;
-    border-radius: 3px;
+    border-radius: 8px;
     min-height: 50px;
     transition: all .3s ease;
 }
@@ -21,7 +18,7 @@
 
 }
 .historyPosterContainer{
-    width: 300px;
+    width: 68px;
     position: relative;
     top: 0px;
     padding: 10px;
@@ -33,15 +30,16 @@
 }
 .historyDetails{
     margin-top: -20px;
-    color: rgba(200, 200, 200, 0.8);
+    margin-right: 60px;
+    color: rgba(200, 200, 200, 0.562);
 }
 
 .historyPoster{
     border-radius: 4px;
     width: auto;
-    height: 60px;
+    height: 68px;
     float: left;
-    margin: 5px 0 0 25px;
+    margin: 2px 0 0 25px;
 }
 /* .bookmark {
     position: absolute;
