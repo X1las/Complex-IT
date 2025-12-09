@@ -5,6 +5,7 @@ import '../css/history.css';
 import '../css/bookmarks.css';
 import {NL_API} from './search';
 import { useAuth } from '../context/AuthContext.jsx';
+import DisplayTitleItem from '../services/titlefunctions.jsx';
 
 export  const useAddTitleToHistory = () => {
   const {user} = useAuth();
@@ -58,82 +59,53 @@ function useUser() {
 }
 
 function useHistory() {
-
   const username = useUser();
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-  async function fetchHistory() {
-    if (!username) return;
-    
-    setLoading(true);
-    setError(null);
+    async function fetchHistory() {
+      if (!username) return;
+      
+      setLoading(true);
+      setError(null);
 
-    try {
-      const token = localStorage.getItem('authToken');
-      
-      if (!token) {
-        console.error('No auth token found');
-        setError('Not authenticated - please login again');
-        return;
-      }
-      
-      const res = await fetch(`${NL_API}/api/users/${username}/history`, { 
+      try {
+        const token = localStorage.getItem('authToken');
         
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-
-      const historyData = await res.json();
-
-      const items = Array.isArray(historyData.items) ? historyData.items : [];
-
-      console.log('Processed history items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
-      const titlelist = items.map(item => item.titleId);
-
-      const titleDataArray = await Promise.all(titlelist.map(async (titleId) => {
-        const url = `${NL_API}/api/titles/${titleId}`;
-        const resp = await fetch(url);
-        if (!resp.ok) {
-          console.error(`Failed to fetch title data for ${titleId}:`, resp.status);
-          return null;
+        if (!token) {
+          console.error('No auth token found');
+          setError('Not authenticated - please login again');
+          return;
         }
-        const titleData = await resp.json();
-        return titleData;
-      }));
+        
+        const res = await fetch(`${NL_API}/api/users/${username}/history`, { 
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
 
-      // Merge history items with title data, keeping viewedAt and other fields
-      const data = items.map((item, idx) => {
-        const titleData = titleDataArray[idx];
-        return {
-          ...item,
-          title: titleData?.title ?? titleData?.Title ?? item.titleName ?? item.titleId,
-          posterUrl: titleData?.posterUrl ?? titleData?.PosterUrl ?? '',
-          viewedAt: item.viewedAt 
-        };
-      });
+        const historyData = await res.json();
+        const items = Array.isArray(historyData.items) ? historyData.items : [];
+        
+        console.log('Processed history items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
+        setHistory(items);
 
-      console.log('Fetched title data for history items:', data);
-      setHistory(data);
-      
-
-    } catch (err) {
-      console.error('Error fetching history:', err);
-      setError('Error fetching history');
-    } finally {
-      setLoading(false);
+      } catch (err) {
+        console.error('Error fetching history:', err);
+        setError('Error fetching history');
+      } finally {
+        setLoading(false);
+      }
     }
-  }
-  fetchHistory();
-}, [username]);
-  return { history, error, loading };
+    fetchHistory();
+  }, [username]);
   
+  return { history, error, loading };
 }
 
 
@@ -153,18 +125,14 @@ const History = () => {
   if (error) return <div className="pagestuff" style={{ top: '500px' }}>Error: {error} Try to sign out and sign in again.</div>;
 
   return (
-    <div className='container'>
-      <h2>User History</h2>
-      {(!history || history.length === 0) ? (<p>No history available.</p>) : (
+    <div className='history-container' style={{ padding: '20px' }}>
+      <h2 style={{ color: 'white', marginBottom: '20px' }}>Your Viewing History</h2>
+      {(!history || history.length === 0) ? (
+        <p style={{ color: 'white' }}>No history available.</p>
+      ) : (
         history.map(item => (
-        <div key={item.titleId + item.viewedAt} className='posterContainer'>
-          <img src={item.posterUrl} alt={item.title} className="historyPoster" />
-          <div >
-            <Link to={`/title/${item.titleId}`}><h3 className="historyTitle">{item.title}</h3></Link>
-            <p className="historyDetails" style={{fontSize: '12px' }}>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
-          </div>
-        </div>
-     ))
+          <DisplayTitleItem suppressRating={true} key={item.titleId + item.viewedAt} tconst={item.titleId} />
+        ))
       )}
     </div>
   );

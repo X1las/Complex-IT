@@ -1,5 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { submitRating, deleteRating } from '../services/ratingService';
+import { useAuth } from '../context/AuthContext';
+import '../App.css';
+import '../css/ratings.css';
+import DisplayTitleItem from '../services/titlefunctions.jsx';
+
+const NL_API = 'https://www.newtlike.com:3000';
 
 // Star Rating Widget Component
 export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, onRatingDelete }) => {
@@ -40,12 +46,92 @@ export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, on
   );
 };
 
+const FetchUserRatings = async (username) => {
+  try {
+    const token = localStorage.getItem('authToken');
+    console.log('Fetching ratings for username:', username);
+    console.log('Using token:', token ? 'Token found' : 'No token');
+    console.log('API URL:', `${NL_API}/api/users/${username}/ratings`);
+    
+    const res = await fetch(`${NL_API}/api/users/${username}/ratings`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+    
+    console.log('Response status:', res.status);
+    console.log('Response ok:', res.ok);
+    
+    if (!res.ok) {
+      console.error('Failed to fetch ratings:', res.status);
+      const errorText = await res.text();
+      console.error('Error response:', errorText);
+      return [];
+    }
+    const data = await res.json();
+    console.log('Received data:', data);
+    return data.items || [];
+  } catch (err) {
+    console.error('Error fetching ratings:', err);
+    return [];
+  }
+};
+
 // Ratings page component
 const Ratings = () => {
+  const { user } = useAuth();
+  const [userRatings, setUserRatings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      console.log('useEffect triggered, user:', user);
+      if (user && user.username) {
+        try {
+          setLoading(true);
+          console.log('Starting to fetch ratings...');
+          const ratings = await FetchUserRatings(user.username);
+          console.log('Fetched ratings:', ratings);
+          setUserRatings(ratings);
+        } catch (err) {
+          setError('Failed to load ratings');
+          console.error('Error loading ratings:', err);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        console.log('No user or username available');
+        setLoading(false);
+      }
+    };
+    fetchRatings();
+  }, [user]);
+
+  if (loading) return <div className="ratings-container"><p>Loading ratings...</p></div>;
+  if (error) return <div className="ratings-container"><p>Error: {error}</p></div>;
+  if (!user) return <div className="ratings-container"><p>Please log in to view your ratings.</p></div>;
+
   return (
     <div className="ratings-container">
-      <h1>Ratings</h1>
+      <h2>Your Ratings</h2>
       <p>Rating management functionality is available on individual title pages.</p>
+      <div className="user-ratings" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '20px'
+      }}>
+        {userRatings.length > 0 ? (
+          userRatings.map((rating, index) => (
+            <DisplayTitleItem suppressDate={true} key={rating.id || index} tconst={rating.titleId} />
+          ))
+        ) : (
+          <p>You haven't rated any titles yet.</p>
+        )}
+      </div>
     </div>
   );
 };

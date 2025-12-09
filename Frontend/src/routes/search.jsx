@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import '../App.css';
 import {useAddTitleToHistory} from './history.jsx';
+import DisplayTitleItem from '../services/titlefunctions.jsx';
 
 export  const NL_API = 'https://www.newtlike.com:3000';
 export  const TMDB_API = 'https://api.themoviedb.org';
@@ -128,29 +129,20 @@ const HistoryHandler = async (titleId) => {
     return <div className='pagestuff'>No results found for "{q || ''}"</div>;
   }
 
+  console.log('Search results:', items); // Debug log
+  console.log('DisplayTitleItem component:', DisplayTitleItem); // Debug log
+
   return (
-    <div className='imgContainer'>
-      {(items || []).map(movie => (
-        <div className='displayMovie' key={movie.id}>
-          <div className='moviePoster'>
-            
-          <Link to={`/title/${movie.id}`} onClick={() => HistoryHandler(movie.id)}>
-          <img src={movie.poster_url} alt={movie.title} />
-          </Link>
-            
-          </div>
-          <Link to={`/title/${movie.id}`} className='textholder' onClick={() => HistoryHandler(movie.id)} >
-           
-            <p className='movieTitle'>{movie.title}</p>           
-            <div className='movieDescription'>
-              <p>Rating: {movie.rating || 'N/A'}</p>
-              <p className="year">Year: {movie.year || 'N/A'}</p>
-              <p>Type: {movie.titleType || 'N/A'}</p>
-            </div>
-          
-         </Link>
-        </div>
-      ))}
+    <div className='search-results-container' style={{ padding: '20px', backgroundColor: '#1a1a1a', minHeight: '100vh' }}>
+      <h2 style={{ color: 'white', marginBottom: '20px' }}>Search Results for "{q}"</h2>
+      {(items || []).length === 0 ? (
+        <div style={{ color: 'white' }}>No results found</div>
+      ) : (
+        (items || []).map(movie => {
+          console.log('Rendering movie:', movie.id); // Debug log
+          return <DisplayTitleItem key={movie.id} tconst={movie.id} />;
+        })
+      )}
     </div>
   );
 };
