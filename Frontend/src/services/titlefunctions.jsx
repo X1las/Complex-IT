@@ -6,7 +6,7 @@ import '../css/titlefunctions.css';
 
 const NL_API = 'https://www.newtlike.com:3000';
 
-const DisplayTitleItem = ({ tconst, suppressDate=false, suppressRating=false }) => {
+const DisplayTitleItem = ({ tconst, suppressDate = false, suppressRating = false }) => {
     const [title, setTitle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,30 +15,20 @@ const DisplayTitleItem = ({ tconst, suppressDate=false, suppressRating=false }) 
     const { HistoryHandler } = useAddTitleToHistory();
     const { user } = useAuth();
 
-    console.log('DisplayTitleItem component rendered with tconst:', tconst);
-
     useEffect(() => {
-        console.log('useEffect triggered with tconst:', tconst);
-
         const fetchTitle = async () => {
             try {
                 setLoading(true);
-                console.log('Fetching title for tconst:', tconst);
-                console.log('API URL:', `${NL_API}/api/titles/${tconst}`);
-
+                
                 const response = await fetch(`${NL_API}/api/titles/${tconst}`);
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-
                 if (!response.ok) {
                     throw new Error(`Failed to fetch title: ${response.status}`);
                 }
                 const titleData = await response.json();
-                console.log('Received title data:', titleData);
                 setTitle(titleData);
 
-                // Check user-specific data only if user is logged in
-                if (user && user.username) {
+                // Fetch user-specific data only if user is logged in
+                if (user?.username) {
                     // Fetch history data unless suppressed
                     if (!suppressDate) {
                         try {
@@ -51,22 +41,13 @@ const DisplayTitleItem = ({ tconst, suppressDate=false, suppressRating=false }) 
                             });
                             if (historyResp.ok) {
                                 const historyData = await historyResp.json();
-                                console.log('Received history data:', historyData);
                                 const historyItems = historyData.items || [];
                                 const viewedItem = historyItems.find(item => item.titleId === tconst);
-                                console.log('Found viewed item:', viewedItem);
-                                setVisitedAt(viewedItem ? viewedItem.viewedAt : null);
-                            } else {
-                                console.log('No history found or failed to fetch history:', historyResp.status);
-                                setVisitedAt(null);
+                                setVisitedAt(viewedItem?.viewedAt || null);
                             }
                         } catch (historyErr) {
                             console.error('Error fetching history:', historyErr);
-                            setVisitedAt(null);
                         }
-                    } else {
-                        console.log('suppressDate is true, skipping visitedAt fetch');
-                        setVisitedAt(null);
                     }
 
                     // Fetch rating data unless suppressed
@@ -81,25 +62,15 @@ const DisplayTitleItem = ({ tconst, suppressDate=false, suppressRating=false }) 
                             });
                             if (ratingsResp.ok) {
                                 const ratingsData = await ratingsResp.json();
-                                console.log('Received ratings data:', ratingsData);
                                 const ratingItems = ratingsData.items || [];
                                 const userTitleRating = ratingItems.find(item => item.titleId === tconst);
-                                console.log('Found user rating for this title:', userTitleRating);
-                                setUserRating(userTitleRating ? userTitleRating.rating : null);
-                            } else {
-                                console.log('No ratings found or failed to fetch ratings:', ratingsResp.status);
-                                setUserRating(null);
+                                setUserRating(userTitleRating?.rating || null);
                             }
                         } catch (ratingErr) {
                             console.error('Error fetching rating:', ratingErr);
-                            setUserRating(null);
                         }
-                    } else {
-                        console.log('suppressRating is true, skipping userRating fetch');
-                        setUserRating(null);
                     }
                 }
-
             } catch (err) {
                 setError(err.message);
                 console.error('Error fetching title:', err);
@@ -111,16 +82,13 @@ const DisplayTitleItem = ({ tconst, suppressDate=false, suppressRating=false }) 
         if (tconst) {
             fetchTitle();
         } else {
-            console.log('No tconst provided');
             setLoading(false);
         }
-    }, [tconst]);
+    }, [tconst, user?.username, suppressDate, suppressRating]);
 
     if (loading) return <div className="title-loading">Loading...</div>;
     if (error) return <div className="title-error">Error: {error}</div>;
     if (!title) return null;
-
-    console.log('Rendering with userRating:', userRating, 'visitedAt:', visitedAt);
 
     return (
         <div className='title-item-container'>
