@@ -3,44 +3,43 @@ import {  Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 import '../css/history.css';
 import '../css/bookmarks.css';
-import {NL_API} from './search';
-import { useAuth } from '../context/AuthContext.jsx';
 
-export  const useAddTitleToHistory = () => {
-  const {user} = useAuth();
+const NL_API = 'https://www.newtlike.com:3000';
+
+// Custom hook for adding titles to history
+export const useAddTitleToHistory = () => {
+  const { user } = useAuth();
 
   const addToHistory = async (titleId) => {
-    if (!user) {
+    if (!user?.username) {
       console.error('No user logged in');
-      return;
+      return false;
     }
 
     try {
       const token = localStorage.getItem('authToken');
-      
       if (!token) {
         console.error('No auth token found');
-        return;
+        return false;
       }
-      const url = `${NL_API}/api/users/${user.username}/history/${titleId}`;
 
-      const response = await fetch(url, { 
+      const response = await fetch(`${NL_API}/api/users/${user.username}/history/${titleId}`, { 
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({username:user.username, titleId:titleId}), credentials: 'include'
+        body: JSON.stringify({ username: user.username, titleId }),
+        credentials: 'include'
       });
 
-      console.log('Add to history response status:', response.status);
-
       if (!response.ok) {
-        const txt = await response.text().catch(() => '');
-        console.error('Failed to add to history:', response.status, txt.slice(0, 300));
-        return;
+        const errorText = await response.text().catch(() => '');
+        console.error('Failed to add to history:', response.status, errorText.slice(0, 300));
+        return false;
       }
-         console.log(`Added ${titleId} to history for ${user.username}`);
+
+      console.log(`Added ${titleId} to history for ${user.username}`);
       return true;
     } catch (error) {
       console.error('Error adding to history:', error);
@@ -48,17 +47,17 @@ export  const useAddTitleToHistory = () => {
     }
   };
 
-  return { addToHistory };
+  return { addToHistory, HistoryHandler: addToHistory };
 };
 
+// Get current user helper
 function useUser() {
-  const {user} = useAuth();
-  const username = user ? user.username : null;
-  return username;
+  const { user } = useAuth();
+  return user?.username || null;
 }
 
+// Custom hook for fetching user history
 function useHistory() {
-
   const username = useUser();
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
@@ -68,93 +67,49 @@ function useHistory() {
   const handleLogout = () => {logout();};
 
   useEffect(() => {
-  async function fetchHistory() {
-    if (!username) return;
-    
-    setLoading(true);
-    setError(null);
-
-    try {
-      const token = localStorage.getItem('authToken');
+    async function fetchHistory() {
+      if (!username) return;
       
-      if (!token) {
-        console.error('No auth token found');
-        setError('Not authenticated - please login again');
-        return;
-      }
-      
-      const res = await fetch(`${NL_API}/api/users/${username}/history`, { 
-        
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-      //logging out if 401 or 403 == unauthorized
-     if (res.status == 401 || res.status === 403) {
-        handleLogout();
-        console.log('Unauthorized access - logging out');
-        nav('/');
-      }
+      setLoading(true);
+      setError(null);
 
-      const historyData = await res.json();
-
-      const items = Array.isArray(historyData.items) ? historyData.items : [];
-
-      console.log('Processed history items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
-      const titlelist = items.map(item => item.titleId);
-
-      const titleDataArray = await Promise.all(titlelist.map(async (titleId) => {
-        const url = `${NL_API}/api/titles/${titleId}`;
-        const resp = await fetch(url);
-        if (!resp.ok) {
-          console.error(`Failed to fetch title data for ${titleId}:`, resp.status);
-          return null;
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setError('Not authenticated - please login again');
+          return;
         }
-        const titleData = await resp.json();
-        return titleData;
-      }));
+        
+        const response = await fetch(`${NL_API}/api/users/${username}/history`, { 
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
 
-      // Merge history items with title data, keeping viewedAt and other fields
-      const data = items.map((item, idx) => {
-        const titleData = titleDataArray[idx];
-        return {
-          ...item,
-          title: titleData?.title ?? titleData?.Title ?? item.titleName ?? item.titleId,
-          posterUrl: titleData?.posterUrl ?? titleData?.PosterUrl ?? '',
-          viewedAt: item.viewedAt 
-        };
-      });
+        const historyData = await response.json();
+        const items = Array.isArray(historyData.items) ? historyData.items : [];
+        setHistory(items);
 
-      console.log('Fetched title data for history items:', data);
-      setHistory(data);
-      
-
-    } catch (err) {
-      console.error('Error fetching history:', err);
-      setError('Error fetching history');
-    } finally {
-      setLoading(false);
+      } catch (err) {
+        console.error('Error fetching history:', err);
+        setError('Error fetching history');
+      } finally {
+        setLoading(false);
+      }
     }
-  }
-  fetchHistory();
-}, [username]);
-  return { history, error, loading };
+    
+    fetchHistory();
+  }, [username]);
   
+  return { history, error, loading };
 }
 
-
-/* 
-function removeHistoryItem(itemId) {
-  const clearHistory = () => {};
-} */
-
+// Main History component
 const History = () => {
-
   const { history, error, loading } = useHistory();
-
   const user = useUser();
 
   if (!user) return <div>Please log in to see your history.</div>;
@@ -162,9 +117,11 @@ const History = () => {
   if (error) return <div className="pagestuff" style={{ top: '500px' }}>Error: {error} Try to sign out and sign in again.</div>;
 
   return (
-    <div className='container'>
-      <h2>User History</h2>
-      {(!history || history.length === 0) ? (<p>No history available.</p>) : (
+    <div className='history-container' style={{ padding: '20px' }}>
+      <h2 style={{ color: 'white', marginBottom: '20px' }}>Your Viewing History</h2>
+      {(!history || history.length === 0) ? (
+        <p style={{ color: 'white' }}>No history available.</p>
+      ) : (
         history.map(item => (
         <div key={item.titleId + item.viewedAt} className='posterContainer'>
           <img src={item.posterUrl} alt={item.title} className="historyPoster" />

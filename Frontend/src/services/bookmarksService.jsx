@@ -1,10 +1,8 @@
 // Bookmarks API service functions
+
 const NL_API = 'https://www.newtlike.com:3000';
 
-
 export const fetchBookmarks = async (username) => {
-  
-
   if (!username) {
     throw new Error('Username is required to fetch bookmarks');
   }
@@ -36,9 +34,8 @@ export const fetchBookmarks = async (username) => {
       const errorText = await res.text().catch(() => 'Unable to read error');
       console.error('Failed to fetch bookmarks:', res.status, errorText);
       throw new Error(`Failed to fetch bookmarks: ${res.status} - ${errorText}`);
-    } 
-       
-    
+    }
+
     const bookmarksData = await res.json();
     console.log('Raw bookmarks data:', bookmarksData);
     

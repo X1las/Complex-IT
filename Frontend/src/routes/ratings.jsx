@@ -87,6 +87,7 @@ export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, on
   );
 };
 
+// Main Ratings component - uses DisplayTitleItem for consistent UI
 const Ratings = () => {
   const { ratings, error, loading } = useUserRatings();
   const { user } = useAuth();

@@ -153,9 +153,31 @@ public class UserRatingDataService
             return;
         }
         
-        var (averageRating, totalVotes) = CalculateTitleRating(titleId);
-        title.Rating = averageRating;
-        title.Votes = totalVotes;
+        // Get original IMDB rating
+        var imdbRating = db.ImdbRating.FirstOrDefault(r => r.TitleId == titleId);
+        
+        // Get user ratings average
+        var (userAvgRating, userVoteCount) = CalculateTitleRating(titleId);
+        
+        // Calculate combined average
+        if (imdbRating != null && imdbRating.UserRating > 0 && userAvgRating > 0)
+        {
+            // Both IMDB and user ratings exist - combine them
+            title.Rating = Math.Round((imdbRating.UserRating + userAvgRating) / 2, 1);
+            title.Votes = imdbRating.NumUserRatings + userVoteCount;
+        }
+        else if (imdbRating != null && imdbRating.UserRating > 0)
+        {
+            // Only IMDB rating exists
+            title.Rating = imdbRating.UserRating;
+            title.Votes = imdbRating.NumUserRatings;
+        }
+        else if (userAvgRating > 0)
+        {
+            // Only user ratings exist
+            title.Rating = userAvgRating;
+            title.Votes = userVoteCount;
+        }
         
         db.SaveChanges();
     }

@@ -9,6 +9,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { user, login } = useAuth();
 
@@ -39,14 +40,10 @@ const Login = () => {
 
     if (!credentials.username.trim()) {
       newErrors.username = 'Username is required';
-    } else if (credentials.username.length < 4) {
-      newErrors.username = 'Username must be at least 4 characters';
     }
 
     if (!credentials.password) {
       newErrors.password = 'Password is required';
-    } else if (credentials.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
     }
 
     setErrors(newErrors);
@@ -64,7 +61,6 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // hvis det ikke fungere sådan her skal der stå ${API_URL}/api/users/login i fetch
       const response = await fetch(`${NL_API}/api/users/login`, {
         method: 'POST',
         headers: {
@@ -134,7 +130,7 @@ const Login = () => {
             Password:
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             name="password"
             value={credentials.password}
@@ -145,6 +141,16 @@ const Login = () => {
           {errors.password && (
             <span className="field-error">{errors.password}</span>
           )}
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={(e) => setShowPassword(e.target.checked)}
+            disabled={isLoading}
+          />
+          <span>Show password</span>
         </div>
 
         <button 

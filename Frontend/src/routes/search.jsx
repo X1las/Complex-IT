@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useAddTitleToHistory } from './history.jsx';
+import DisplayTitleItem from '../services/titlefunctions.jsx';
 import '../App.css';
-import {useAddTitleToHistory} from './history.jsx';
 
-export  const NL_API = 'https://www.newtlike.com:3000';
-export  const TMDB_API = 'https://api.themoviedb.org';
-export  const API_KEY = '6d931505602649b6ba683649d9af5d82';
+export const NL_API = 'https://www.newtlike.com:3000';
+export const TMDB_API = 'https://api.themoviedb.org';
+export const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
  async function searchNL(query) {
   // return empty array if no query provided
@@ -42,7 +43,6 @@ return allData || [];
 // TMDB fallback
 async function searchTMDB(tconst) {
   const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
-
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
@@ -52,13 +52,13 @@ async function searchTMDB(tconst) {
   
   return (movie?.poster_path || tv?.poster_path) || null;
 }
-// Get poster from our own database
+
+// Get poster from local database
 async function getPosterFromNewtlike(tconst) {
   try {
-    const url = `${NL_API}/api/titles/${(tconst)}`;
-    const response = await fetch(encodeURI(url));
-    
+    const response = await fetch(`${NL_API}/api/titles/${encodeURIComponent(tconst)}`);
     if (!response.ok) return null;
+
     const data = await response.json();
     return data.posterUrl || null;
   } catch (err) {
@@ -67,6 +67,7 @@ async function getPosterFromNewtlike(tconst) {
   }
 }
 
+// Search with poster URLs
 async function searchTitlePosters(query) {
   const items = await searchNL(query);
   
@@ -106,8 +107,10 @@ const Search = () => {
 
   useEffect(() => {
     if (!q || q.trim() === '') {
+      setItems([]);
       return;
     }
+
     setIsLoading(true);
     setError(null);
 
@@ -117,16 +120,14 @@ const Search = () => {
       .finally(() => setIsLoading(false));
   }, [q]);
 
-
-const HistoryHandler = async (titleId) => {
-  return addToHistory(titleId)
-}
-
+  const handleTitleClick = async (titleId) => {
+    return addToHistory(titleId);
+  };
 
   if (isLoading) 
     return <div className='pagestuff'>Loading...</div>;
   if (error) {
-    console.error('Search fejl:', error);
+    console.error('Search error:', error);
     return <div className='pagestuff'>No results found for "{q || ''}"</div>;
   }
 
@@ -148,8 +149,7 @@ const HistoryHandler = async (titleId) => {
               <p>Rating: {movie.rating || 'N/A'}</p>
               <p >Year: {movie.year || 'N/A'}</p>
               <p>Type: {movie.titleType || 'N/A'}</p>
-{/*               <p className="year">{movie.plot || 'N/A'}</p>
- */}              <p className="year">{maxTegn(movie.plot)}</p>
+              <p className="year">{maxTegn(movie.plot)}</p>
             </div>
           
          </Link>

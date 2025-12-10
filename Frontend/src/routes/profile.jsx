@@ -1,5 +1,4 @@
 import '../css/profile.css';
-import { useEffect } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import {useBookmarks} from './bookmarks.jsx';
