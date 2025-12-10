@@ -6,6 +6,7 @@ body {
   text-align: center;
   background-color: rgb(43, 43, 43);
   justify-content: center ;
+  
 
 }
 h1
@@ -17,9 +18,8 @@ h1
 }
 
 
-.imgContainer
+.movieContainer
 {
-    top: 200px;
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
@@ -36,29 +36,29 @@ h1
     align-items: center;
     border-radius: 5px;
     border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.03);
+    background: rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
     margin: 15px;
     padding: 15px;
+    height: auto;
+    min-width: 600px;
+    max-width: 80vw;
     width: auto;
-    height: 250px;
-    min-width: 500px;
 
 }
 .moviePoster
 {
-    padding: 5px;
-    height: 200px;
-    width: 170px;
-    margin-right: 5px;
+    height: auto;
+    width: 200px;
+    margin: 0 20px;
     border-radius: 5px;
     justify-content: center;
 }
 img
  {
     border-radius: 5px;
-    height: 200px;
     width: auto;
+    height: 255px;
 }
 .textholder
 {
@@ -70,13 +70,15 @@ img
     border: 1px solid rgba(255,255,255,0.08);
     background: rgba(24,24,24,0.4);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) outset;
-    width: 70%;
+    width: 80%;
     margin: 20px;
-    height: 240px;
+    height: auto;
 
 }
 .movieTitle
 {
+    color: rgb(214, 214, 214);
+    width: auto;
     font-size: 150%;
     font-weight: bold;
     border-bottom: 2px solid rgba(255, 195, 67, 0.95);
@@ -105,17 +107,17 @@ img
 
 .profileholder:hover + .btnLogout
 {
-    display: block;
+    display: inline-block;
     position: absolute;
-    left: 94%;
     top:55px;
+    right: 0px;
 
 }
 .btnLogout:hover
 {
-    display: block;
+    display: inline-block;
     position: absolute;
-    left: 94%;
+    right: 0px;
     top:55px;
 
     

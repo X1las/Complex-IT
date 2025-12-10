@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {  Link } from 'react-router-dom';
+import {  Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 import '../css/history.css';
 import '../css/bookmarks.css';
@@ -63,6 +63,9 @@ function useHistory() {
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { logout } = useAuth();
+  const nav = useNavigate();
+  const handleLogout = () => {logout();};
 
   useEffect(() => {
   async function fetchHistory() {
@@ -89,6 +92,12 @@ function useHistory() {
         },
         credentials: 'include'
       });
+      //logging out if 401 or 403 == unauthorized
+     if (res.status == 401 || res.status === 403) {
+        handleLogout();
+        console.log('Unauthorized access - logging out');
+        nav('/');
+      }
 
       const historyData = await res.json();
 
@@ -159,9 +168,9 @@ const History = () => {
         history.map(item => (
         <div key={item.titleId + item.viewedAt} className='posterContainer'>
           <img src={item.posterUrl} alt={item.title} className="historyPoster" />
-          <div >
-            <Link to={`/title/${item.titleId}`}><h3 className="historyTitle">{item.title}</h3></Link>
-            <p className="historyDetails" style={{fontSize: '12px' }}>Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</p>
+          <div className="historyTitle">
+            <Link to={`/title/${item.titleId}`}><span ><p className='Htitle'>{item.title}</p></span>
+            <div className="historyDetails">Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</div></Link>
           </div>
         </div>
      ))

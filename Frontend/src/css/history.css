@@ -1,24 +1,47 @@
-
-
-
 .historyTitle{
-    font-size: 12px;
-    margin: 0 auto;
-    width: 300px;
+    font-size: 14px;
+    margin: 5px auto ;
+    height:auto;
+    width: 350px;
     color: rgba(255, 195, 67, 0.95);
     background-color: rgb(34, 34, 34);
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
-    padding: 10px;
-    border-radius: 3px;
+    padding: 15px;
+    border-radius: 6px;
     min-height: 50px;
     transition: all .3s ease;
 }
-.historyTitle:hover{
+.Htitle{
+    position: relative;
+    margin: -5px 0 10px 50px;
+    font-weight: bold;
+    width: 280px;
+    color: rgba(255, 195, 67, 0.95);
+    background-color: rgb(48, 48, 48);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;  
+    border-radius: 6px;
+    padding: 10px;
+     
+}
+/*  .rating{
+    font-size: 14px;
+    margin: 0 auto;
+    width: 350px;
+    height:140px;
+    color: rgba(255, 195, 67, 0.95);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+    padding: 15px;
+    border-radius: 6px;
+    min-height: 50px;
+    transition: all .3s ease;
+}  */
+.Htitle:hover{
     color: rgba(48, 48, 48);
     background-color: rgb(255, 195, 67, 0.95);
     transition: all .3s ease;
-
 }
 .historyPosterContainer{
     width: 300px;
@@ -32,16 +55,22 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
 }
 .historyDetails{
-    margin-top: -20px;
+    position: relative;
+    margin: 0px auto 0 30px;
+    width: 170px;
     color: rgba(200, 200, 200, 0.8);
+    padding:10px auto 0px auto;
 }
 
 .historyPoster{
     border-radius: 4px;
-    width: auto;
-    height: 60px;
+    width: 50px;
+    height: 70px;
     float: left;
-    margin: 5px 0 0 25px;
+    margin: 10px 0 0 10px;
+    position: relative;
+    object-fit: cover;
+
 }
 /* .bookmark {
     position: absolute;

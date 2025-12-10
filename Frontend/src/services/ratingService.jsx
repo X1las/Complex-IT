@@ -1,5 +1,4 @@
 // Rating API service functions
-
 export const fetchUserRating = async (user, titleId) => {
   if (!user || !titleId) return 0;
   try {
@@ -65,7 +64,7 @@ export const submitRating = async (user, titleId, rating) => {
         'Authorization': `Bearer ${token}`, 
         'Content-Type': 'application/json' 
       },
-      body: JSON.stringify({ username, titleId, rating })
+      body: JSON.stringify({ Username: username, TitleId: titleId, Rating: rating })
     });
     
     if (!res.ok) {
@@ -106,5 +105,72 @@ export const deleteRating = async (user, titleId) => {
   } catch (err) {
     console.error('Error deleting rating:', err);
     return false;
+  }
+};
+
+export const fetchAllUserRatings = async (username) => {
+  if (!username) {
+    throw new Error('Username is required to fetch ratings');
+  }
+
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      console.error('No auth token found');
+      throw new Error('Not authenticated - please login again');
+    }
+    
+    const res = await fetch(`https://newtlike.com:3000/api/users/${username}/ratings`, { 
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch ratings: ${res.status}`);
+    }
+
+    const ratingsData = await res.json();
+    const items = Array.isArray(ratingsData.items) ? ratingsData.items : [];
+
+    console.log('Processed rating items:', items);
+    
+    // Fetch title data for each rating
+    const titleDataArray = await Promise.all(items.map(async (item) => {
+      try {
+        const url = `https://newtlike.com:3000/api/titles/${item.titleId}`;
+        const resp = await fetch(url);
+        if (!resp.ok) {
+          console.error(`Failed to fetch title data for ${item.titleId}:`, resp.status);
+          return null;
+        }
+        return await resp.json();
+      } catch (err) {
+        console.error(`Error fetching title ${item.titleId}:`, err);
+        return null;
+      }
+    }));
+
+    // Merge rating items with title data
+    const ratingsWithTitles = items.map((item, idx) => {
+      const titleData = titleDataArray[idx];
+      return {
+        ...item,
+        title: titleData?.title ?? titleData?.Title ?? item.titleName ?? item.titleId,
+        posterUrl: titleData?.posterUrl ?? titleData?.PosterUrl ?? '',
+        rating: item.rating || item.Rating || 0
+      };
+    });
+
+    console.log('Fetched title data for ratings:', ratingsWithTitles);
+    return ratingsWithTitles;
+
+  } catch (err) {
+    console.error('Error fetching ratings:', err);
+    throw err;
   }
 };

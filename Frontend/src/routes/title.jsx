@@ -7,7 +7,7 @@ import '../css/title.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/image.png';
 import icon from '../assets/icon.png';
-import { useAddBookmarks } from './bookmarks';
+import { useBookmarkState } from './bookmarks';
 
 const Title = () => {
   const { id: titleId } = useParams();
@@ -17,10 +17,9 @@ const Title = () => {
   const [castData, setCastData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const { addToBookmarks } = useAddBookmarks();
+  const { isBookmarked, loading: bookmarkLoading, toggleBookmark } = useBookmarkState(titleId);
 
   const fetchTitleDetails = async (titleId) => {
     
@@ -110,10 +109,6 @@ const Title = () => {
     }
   };
 
-  const BookmarkHandler = async (titleId) => {
-  return addToBookmarks(titleId)
-}
-
   // const fetchSimilarTitles = () => {
   //   // TODO: Fetch similar/related titles
   // };
@@ -139,15 +134,13 @@ const Title = () => {
     return <div className="error">Title not found</div>;
   }
 
-
-
   /* console.log('Current user in App component:', user); */
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (!search.trim()) return;
     navigate(`/search/${(search)}`);
   }
-
+console.log('DET ER HER ', castData);
   return (
     <div className="title-page">
       {/* Top Navigation Bar */}
@@ -156,12 +149,19 @@ const Title = () => {
             <form onSubmit={onSearchSubmit} style={{display:'inline'}}> 
               <input className='searchField' type="text" value={search} onChange={e => setSearch(e.target.value)} />
             </form>
-            <div><Link to={user ? `/profile/${user.username}` : `/login`}> <img className='profileplaceholder' src={icon} alt="profilePic" /></Link></div>
+            <div className='profileholder'>
+              <Link to={user ? `/profile/${user.username}` : `/login`}> 
+                <img className='profileIcon' src={icon} alt="profilePic" />
+              </Link>
+            </div>
         </nav>
 
-      {/* Header Row */}
+      {/* Header Row - Title and Rating */}
       <header className="title-header">
         <h1 className="title-name">{titleData.title}</h1>
+      </header>
+
+      <div className="rating-row">
         <div className="rating-section">
           <span className="rating">★ {titleData.rating}</span>
           <span className="rating-count">({titleData.votes?.toLocaleString()} votes)</span>
@@ -179,12 +179,12 @@ const Title = () => {
             fetchTitleDetails(titleId); // Refresh title data to get updated rating
           }}
         />
-      </header>
+      </div>
 
-      {/* Main Content - Two Column Layout */}
-      <div className="main-content">
+      {/* Main Content Grid */}
+      <div className="content-grid">
         {/* Left Column - Poster */}
-        <div className="left-column">
+        <div className="poster-column">
           {(titleData.posterUrl || tmdbData?.poster_path) ? (
             <img 
               src={titleData.posterUrl || `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`} 
@@ -196,8 +196,8 @@ const Title = () => {
           )}
         </div>
 
-        {/* Right Column - Details */}
-        <div className="right-column">
+        {/* Middle Column - Description and Basic Info */}
+        <div className="description-column">
           {/* Runtime and Year Box */}
           <div className="meta-box">
             <span className="runtime">{titleData.runtimeMinutes} min</span>
@@ -209,62 +209,70 @@ const Title = () => {
             <h3>Overview</h3>
             <p>{titleData.plot || tmdbData?.overview || 'No plot available.'}</p>
           </div>
-
-          {/* Cast Section */}
-          <div className="cast-section">
-            <h3>Cast</h3>
-            <div className="cast-list">
-              {castData.length > 0 ? (
-                castData.map((member, index) => (
-                  <div key={index} className="cast-member">
-                    <span className="cast-name">{member.fullname || member.name}</span>
-                    {member.character && <span className="cast-character"> as {member.character}</span>}
-                  </div>
-                ))
-              ) : (
-                <p>No cast information available.</p>
-              )}
-            </div>
-          </div>
         </div>
+
+        {/* Right Sidebar - Bookmark & Metadata */}
+        <aside className="info-sidebar">
+          <button 
+            className={`bookmark-button ${isBookmarked ? 'bookmarked' : ''}`}
+            onClick={toggleBookmark}
+            disabled={bookmarkLoading}
+          >
+            {bookmarkLoading ? 'Loading...' : (isBookmarked ? '★ Bookmarked' : '☆ Bookmark Movie')}
+          </button>
+
+          <div className="metadata-list">
+            <div className="metadata-item">
+              <span className="metadata-label">Release Date</span>
+              <span className="metadata-value">{titleData.releaseDate || 'N/A'}</span>
+            </div>
+            <div className="metadata-item">
+              <span className="metadata-label">Age Rating</span>
+              <span className="metadata-value">{titleData.isAdult ? 'Mature' : 'General'}</span>
+            </div>
+            <div className="metadata-item">
+              <span className="metadata-label">Mature Content</span>
+              <span className="metadata-value">{titleData.isAdult}</span>
+            </div>
+            <div className="metadata-item">
+              <span className="metadata-label">Box Office</span>
+              <span className="metadata-value">N/A</span>
+            </div>
+            <div className="metadata-item">
+              <span className="metadata-label">Director</span>
+              <span className="metadata-value">N/A</span>
+            </div>
+            {titleData.endYear && (
+              <div className="metadata-item">
+                <span className="metadata-label">Season/Episode</span>
+                <span className="metadata-value">{titleData.endYear}</span>
+              </div>
+            )}
+          </div>
+        </aside>
       </div>
 
-      {/* Right Side Info Card */}
-      <aside className="info-card">
-        <button 
-          className={`bookmark-button`}
-          onClick={() => { BookmarkHandler(titleId); console.log(`Bookmark button clicked ${titleId}`); }}
-        >
-          {isBookmarked ? '★' : '☆'} Bookmark
-        </button>
-
-        <div className="metadata-list">
-          <div className="metadata-item">
-            <span className="metadata-label">Release Date:</span>
-            <span className="metadata-value">{titleData.releaseDate || 'N/A'}</span>
-          </div>
-          <div className="metadata-item">
-            <span className="metadata-label">Type:</span>
-            <span className="metadata-value">{titleData.titleType}</span>
-          </div>
-          <div className="metadata-item">
-            <span className="metadata-label">Mature Content:</span>
-            <span className="metadata-value">{titleData.isAdult}</span>
-          </div>
-          <div className="metadata-item">
-            <span className="metadata-label">Website:</span>
-            <span className="metadata-value">
-              {titleData.websiteUrl ? <a href={titleData.websiteUrl} target="_blank" rel="noopener noreferrer">Visit</a> : 'N/A'}
-            </span>
-          </div>
-          {titleData.endYear && (
-            <div className="metadata-item">
-              <span className="metadata-label">End Year:</span>
-              <span className="metadata-value">{titleData.endYear}</span>
-            </div>
+      {/* Cast Section - Full Width Below */}
+      <div className="cast-section">
+        <h3>Cast</h3>
+        <div className="cast-grid">
+          {castData.length > 0 ? (
+            castData.map((member, index) => (
+              <Link to={`/person/${member.crewId}`} key={index} className="cast-member">
+                <div className="cast-portrait">
+                  <img src={icon} alt={member.fullname || member.name} />
+                </div>
+                <div className="cast-info">
+                  <div className="cast-role">{member.character || 'Role'}</div>
+                  <div className="cast-name">{member.fullname || member.name}</div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p>No cast information available.</p>
           )}
         </div>
-      </aside>
+      </div>
     </div>
   );
 };
