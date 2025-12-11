@@ -138,8 +138,6 @@ const Title = () => {
 console.log('DET ER HER ', castData);
   return (
     <div className="title-page">
-      {/* Top Navigation Bar */}
-
 
       {/* Header Row - Title and Rating */}
       <header className="title-header">
