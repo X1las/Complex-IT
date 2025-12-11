@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAddTitleToHistory } from './history.jsx';
 import DisplayTitleItem from '../services/titlefunctions.jsx';
 import '../App.css';
@@ -8,7 +8,7 @@ export const NL_API = 'https://www.newtlike.com:3000';
 export const TMDB_API = 'https://api.themoviedb.org';
 export const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
- async function searchNL(query) {
+async function searchNL(query) {
   // return empty array if no query provided
      if (!query || query.trim() === '') return [];
 
@@ -30,10 +30,11 @@ export const API_KEY = '6d931505602649b6ba683649d9af5d82';
       const item = items[index];
       return {
         ...item,
-        plot: titleData.plot || 'N/A',
+        plot: titleData.plot || 'No description available',
         rating: titleData.rating || 'N/A',
         year: titleData.year || 'N/A',
-        titleType: titleData.titleType || 'N/A'
+        titleType: titleData.titleType || 'N/A',
+        id: titleData.id ||'no id'
       };
     });
 console.log('Search results from NL:', allData);
@@ -92,7 +93,7 @@ async function searchTitlePosters(query) {
   return resultsWithPosters;
 }
  
-const maxTegn = (text, max = 220) => {
+export const maxTegn = (text, max = 220) => {
   if (text === null) return '';
   const tekst = String(text).trim();
   if (tekst.length <= max) return tekst;

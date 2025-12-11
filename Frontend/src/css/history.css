@@ -1,13 +1,18 @@
+.history-container{
+    width: 90%;
+    margin: 5px;
+    height: auto;
+}
 .historyTitle{
     font-size: 14px;
-    margin: 5px auto ;
+    margin: 5px 0 ;
     height:auto;
-    width: 350px;
+    width: 100%;
     color: rgba(255, 195, 67, 0.95);
     background-color: rgb(34, 34, 34);
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
-    padding: 15px;
+    padding: 15px 15px 15px 15px;
     border-radius: 6px;
     min-height: 50px;
     transition: all .3s ease;
@@ -16,7 +21,7 @@
     position: relative;
     margin: -5px 0 10px 50px;
     font-weight: bold;
-    width: 280px;
+    width: auto;
     color: rgba(255, 195, 67, 0.95);
     background-color: rgb(48, 48, 48);
     border: 1px solid rgba(255,255,255,0.08);
@@ -25,19 +30,7 @@
     padding: 10px;
      
 }
-/*  .rating{
-    font-size: 14px;
-    margin: 0 auto;
-    width: 350px;
-    height:140px;
-    color: rgba(255, 195, 67, 0.95);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
-    padding: 15px;
-    border-radius: 6px;
-    min-height: 50px;
-    transition: all .3s ease;
-}  */
+
 .Htitle:hover{
     color: rgba(48, 48, 48);
     background-color: rgb(255, 195, 67, 0.95);
@@ -72,15 +65,3 @@
     object-fit: cover;
 
 }
-/* .bookmark {
-    position: absolute;
-    top: 110px;
-    right: 145px;
-    padding: 6px 8px;
-    background-color: rgba(255, 195, 67, 0.95);
-    color: #000;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-} */

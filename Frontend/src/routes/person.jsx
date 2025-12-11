@@ -5,13 +5,15 @@ import '../css/general.css';
 import { NL_API,TMDB_API,API_KEY } from './search';
 
 const KnownForItem = ({ item, profilePath }) => {
+  console.log('KnownForItem profilePath:', item);
+  
   return (
     <div className="known-for-item">
-      <Link to={`/title/${item.id}`} state={{ profilePath }}>
+      {/* <Link to={`/title/${item.id}`} state={{ profilePath }}> */}
         <h3>{item.title || item.name}</h3>
         <img src={ item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : null } 
         alt="" />
-      </Link>
+      {/* </Link> */}
     </div>
   );
 }

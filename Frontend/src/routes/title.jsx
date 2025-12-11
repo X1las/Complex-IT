@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { fetchUserRating } from '../services/ratingService';
 import { StarRatingWidget } from './ratings';
 import '../css/title.css';
+import '../App.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/image.png';
 import icon from '../assets/icon.png';
