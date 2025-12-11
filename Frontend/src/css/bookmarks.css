@@ -1,8 +1,5 @@
 
-.contentContainer {
-    display: flex;
-    flex-direction: row;
-}
+
 h2 {
     margin-top: 0px;
     margin-bottom: 24px;
@@ -23,6 +20,18 @@ h2 {
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
     border-radius: 8px;
     overflow: scroll;
+}
+@media (max-width: 1150px) {
+.bookmarksContainer {
+        width: auto;
+        height: auto;
+        margin: 0;
+    }    
+    .bookmarkPosterContainer {
+        width: 200%;
+        margin: 0;
+
+    }
 }
 .bookmarksContainer::-webkit-scrollbar {
     display: none; /* Hides the scrollbar for Chrome, Safari, and Opera*/

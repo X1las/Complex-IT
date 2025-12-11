@@ -156,7 +156,7 @@ const History = () => {
       ) : (
         history.map(item => (
         <div key={item.titleId + item.viewedAt} className='posterContainer'>
-          <img src={item.posterUrl ? item.posterUrl : null} alt={item.title} className="historyPoster" />
+          <img src={item.posterUrl ? item.posterUrl : null} alt={'Image'} className="historyPoster" />
           <div className="historyTitle">
             <Link to={`/title/${item.titleId}`}><span ><p className='Htitle'>{item.title}</p></span>
             <div className="historyDetails">Viewed at: {new Date(item.viewedAt).toLocaleDateString()}</div></Link>

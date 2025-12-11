@@ -138,12 +138,12 @@ const Search = () => {
         <div className='displayMovie' key={movie.id}>
           <div className='moviePoster'>
             
-            <Link to={`/title/${movie.id}`} onClick={() => HistoryHandler(movie.id)}>
+            <Link to={`/title/${movie.id}`} onClick={() => handleTitleClick(movie.id)}>
             <img src={movie.poster_url} alt={movie.title} />
             </Link>
             
           </div>
-          <Link to={`/title/${movie.id}`} className='textholder' onClick={() => HistoryHandler(movie.id)} >
+          <Link to={`/title/${movie.id}`} className='textholder' onClick={() => handleTitleClick(movie.id)} >
            
             <p className='movieTitle'>{movie.title}</p>           
             <div className='movieDescription'>

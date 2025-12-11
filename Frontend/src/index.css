@@ -2,7 +2,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; 
   line-height: 1.5;
   font-weight: 400;
-  background-color: rgb(43, 43, 43);
+  background-color: rgb(39, 39, 39);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -74,7 +74,11 @@ nav {
   border-color: rgba(255, 195, 67, 0.95);
   box-shadow: 2px 0 6px rgba(255, 195, 67, 0.95);
 }
-
+@media (max-width: 1150px) {
+    .searchField {
+    width: 300px;
+    }
+}
 /* nav css */
 .pagestuff {
   top: 100px;

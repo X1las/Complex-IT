@@ -1,9 +1,10 @@
 
 body {
     max-width: 1680px;
-    margin: 70px 0 0 0 ;
+    margin: 80px auto 0 auto; ;
     padding:0;
-    background-color: rgb(43, 43, 43);color:white; 
+    background-color: rgb(39, 39, 39);
+    color:white; 
     min-width: 1080px;
 
 }
@@ -14,7 +15,7 @@ body {
     height: auto;
     margin: 20px auto 0 auto;
     font-family: Arial, sans-serif;
-    background-color: #333;
+    background-color: #222222;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;    border-radius: 5px;
     
 }
@@ -59,6 +60,7 @@ a{color: rgba(255, 195, 67, 0.95)}
 }
 
 .outlet {
+    display: flex;
     overflow: scroll;
     margin: 5px;
     padding: 10px;
@@ -74,4 +76,38 @@ a{color: rgba(255, 195, 67, 0.95)}
 }
 .outlet {
     overflow: -moz-scrollbars-none; /* Hides the scrollbar for Firefox*/
+}
+@media (max-width: 1150px) {
+    body{
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+    }
+    .top{
+        width: 100vw;
+        margin: 0 ;
+    }
+    .buttonContainer{
+        justify-content: center;
+        width: 100vw;
+    }
+    .profile {
+        padding: 20px;
+        margin: 10vw 0 ;
+        
+    }
+    .contentContainer {
+        width: 100vw;        
+        flex-direction: column-reverse;
+        margin: 20px 0;
+        height: auto;
+    }
+    .outlet {
+       
+        margin: 20px 0;
+        width: auto;
+        height: auto;
+        justify-content: center;
+    }
+    
 }
