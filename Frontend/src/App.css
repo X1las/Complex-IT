@@ -44,7 +44,6 @@ h1
     min-width: 600px;
     max-width: 80vw;
     width: auto;
-
 }
 a
 {
@@ -97,7 +96,9 @@ img
     border: 1px solid rgba(255,255,255,0.08);
     background: rgba(24,24,24,0.4);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) outset;
-    width: 80%;
+    width: 70%;
+    margin: 20px;
+    height: 240px;
 }
 .movieTitle
 {
@@ -113,8 +114,8 @@ img
 {
     margin-top:0px;
     text-align:  left;
-    font-size: 1em;    
-    padding: 0px;
+    font-size: 1em;
+    padding: 10px;
 }
 .profileholder
 {
@@ -145,7 +146,8 @@ img
   cursor: pointer;
   width: 50px;
   height: 50px;
-  border-radius: 8px;
+  border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
+  transition: bord
   object-fit: cover;
 }
 .btnLogout
