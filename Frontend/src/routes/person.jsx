@@ -3,91 +3,90 @@ import { useParams, Link } from 'react-router-dom';
 import '../css/person.css';
 import '../css/general.css';
 import { NL_API,TMDB_API,API_KEY } from './search';
+import DisplayTitleItem from '../services/titleFunctions';
 
-const KnownForItem = ({ item, profilePath }) => {
-  console.log('KnownForItem profilePath:', item);
-  
-  return (
-    <div className="known-for-item">
-      {/* <Link to={`/title/${item.id}`} state={{ profilePath }}> */}
-        <h3>{item.title || item.name}</h3>
-        <img src={ item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : null } 
-        alt="" />
-      {/* </Link> */}
-    </div>
-  );
-}
+// Comprehensive function to get all actor/person data from both internal API and TMDB
+const getPerson = async ( nconst ) => {
+
+  console.log('Fetching comprehensive person data for:', nconst);
+
+  try {
+    const internalData = await fetch(`${NL_API}/api/crew/${nconst}`).then(response => {
+      if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);      
+      return response.json();
+    });
+
+    if (internalData) {
+      console.log('Fetched internal person data:', internalData);
+    }
+
+    const externalData = await fetch(`${TMDB_API}/3/find/${nconst}?external_source=imdb_id&api_key=${API_KEY}`).then(response => {
+      if (!response.ok) throw new Error(`TMDB find API failed: ${response.status}`);
+      return response.json();
+    });
+
+    if (internalData) {
+      console.log('Fetched external person data:', externalData);
+    }
+
+    const knownFor = await fetch(`${NL_API}/api/crew/${nconst}/titles`).then(response => {
+      if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);
+      return response.json();
+    });
+
+    if (internalData) {
+      console.log('Fetched known for data:', knownFor);
+    }
+
+    const mergedData = await Promise.all([internalData, externalData, knownFor]).then(([internal, external, knownFor]) => {
+      const tmdbPerson = external.person_results?.[0] || null;
+      return {
+        ...internal,
+        ...tmdbPerson,
+        knownFor
+      };
+    });
+
+    console.log('Merged person data:', mergedData);
+    
+    return mergedData;
+  } catch (error) {
+    console.error('Error in comprehensive person fetch:', error);
+    return null;
+  }
+};
 
 const Person = () => {
   const [personData, setPersonData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [personDataInternal, setPersonDataInternal] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) return;
+      
       setLoading(true);
       setError(null);
-
-      console.log('Fetching data for ID:', id); // Debug log
+      console.log('Fetching comprehensive actor data for ID:', id);
 
       try {
-        // Fetch internal data
-        console.log('Fetching internal data from:', `${NL_API}/crew/${id}`);
-        const internalRes = await fetch(`${NL_API}/api/crew/${id}`);
-        console.log('Internal response status:', internalRes.status);
-
-        if (internalRes.ok) {
-          const internalData = await internalRes.json();
-          console.log('Internal data:', internalData);
-          setPersonDataInternal(internalData);
-        } else {
-          console.log('Internal API failed with status:', internalRes.status);
+        const data = await getPerson(id);
+        setPersonData(data);
+        
+        if (!data) {
+          setError('No person data found');
         }
-
-        // Fetch external data
-        console.log('Fetching external data from TMDB...');
-        const externalRes = await fetch(`${TMDB_API}/3/find/${id}?external_source=imdb_id&api_key=${API_KEY}`);
-        console.log('External response status:', externalRes.status);
-
-        if (externalRes.ok) {
-          const externalData = await externalRes.json();
-          console.log('External data:', externalData);
-          setPersonData(externalData.person_results?.[0] || externalData.movie_results?.[0] || null);
-
-          // fetch person details if person_results is available
-          if (externalData.person_results?.length > 0) {
-            const personId = externalData.person_results[0].id;
-            console.log('Fetching person details for ID:', personId);
-            const personDetailsRes = await fetch(`${TMDB_API}/3/person/${personId}?api_key=${API_KEY}`);
-            console.log('Person details response status:', personDetailsRes.status);
-
-            if (personDetailsRes.ok) {
-              const personDetailsData = await personDetailsRes.json();
-              console.log('Person details data:', personDetailsData);
-              const personCombinedData = { ...personDetailsData, ...externalData.person_results[0] };
-              setPersonData(personCombinedData);
-            } else {
-              console.log('Person details API failed with status:', personDetailsRes.status);
-            }
-          }
-        } else {
-          console.log('External API failed with status:', externalRes.status);
-        }
+        
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching actor data:', error);
         setError(error.message);
       } finally {
         setLoading(false);
       }
-
-
     };
 
-    if (id) {
-      fetchData();
-    }
+    fetchData();
   }, [id]);
 
   if (loading) {
@@ -109,17 +108,32 @@ const Person = () => {
           }
           alt="No Image Available" />
         <div className="poster-content-box">
-          <h1 className="poster-title">{personData?.name || personDataInternal?.fullname}</h1>
-          <p className='poster-description'>{personData?.biography || personDataInternal?.biography}</p>
+          <h1 className="poster-title">{personData?.name}</h1>
+          <p className='poster-description'>{personData?.biography}</p>
+          {personData?.birthYear && (
+            <p className="birth-year">Born: {personData.birthYear}</p>
+          )}
+          {personData?.deathYear && (
+            <p className="death-year">Died: {personData.deathYear}</p>
+          )}
+          {personData?.known_for_department && (
+            <p className="known-for-department">Known for: {personData.known_for_department}</p>
+          )}
         </div>
       </div>
       <div className="known-for">
         <h2>Known For</h2>
-        <ul>
-          {personData?.known_for?.map((item) => (
-            <KnownForItem key={item.id} item={item} profilePath={personData?.profile_path}/>
-          )) || null}
-        </ul>
+        <div className="known-for-container">
+          {/* Display internal known for titles */}
+          {personData?.knownFor?.items.map((item, index) => (
+            <DisplayTitleItem key={`internal-${item.titleId || index}`} tconst={item.titleId} />
+          ))}
+          
+          {/* Show message if no data available */}
+          {(!personData?.knownFor?.length && !personData?.knownForTitles?.length) && (
+            <div>No known for titles available</div>
+          )}
+        </div>
       </div>
     </div>
   );

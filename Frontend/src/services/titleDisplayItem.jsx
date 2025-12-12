@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAddTitleToHistory } from '../routes/history';
 import { useAuth } from '../context/AuthContext';
-import '../css/titlefunctions.css';
+import '../css/titleFunctions.css';
 
 const NL_API = 'https://www.newtlike.com:3000';
 const TMDB_API_KEY = 'f7cb406cd3ce48761cb8749ec2be8e89';

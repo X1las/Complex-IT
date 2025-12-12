@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { submitRating, deleteRating, fetchAllUserRatings } from '../services/ratingService';
-import DisplayTitleItem from '../services/titlefunctions.jsx';
+import DisplayTitleItem from '../services/titleFunctions.jsx';
 import '../App.css';
 import '../css/history.css';
 

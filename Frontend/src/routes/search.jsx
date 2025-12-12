@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAddTitleToHistory } from './history.jsx';
-import DisplayTitleItem from '../services/titlefunctions.jsx';
+import DisplayTitleItem from '../services/titleFunctions.jsx';
 import '../App.css';
 
 export const NL_API = 'https://www.newtlike.com:3000';
