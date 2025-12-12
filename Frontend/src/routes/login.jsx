@@ -98,7 +98,7 @@ const Login = () => {
   };
 
   return (
-    <Container className="login-container pagestuff" style={{ padding: '50px' }}>
+    <Container className="login-container" style={{ padding: '50px' }}>
       <Card style={{ width: '100%', maxWidth: '450px' }} className="shadow">
         <Card.Body className="p-4">
           <h1 className="text-center mb-4">Login</h1>
