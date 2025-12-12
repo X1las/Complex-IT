@@ -5,6 +5,7 @@ import { fetchUserRating } from '../services/ratingService';
 import { useTitleDetails } from '../services/titleFunctions';
 import { StarRatingWidget } from './ratings';
 import { useBookmarkState } from './bookmarks';
+import { Button } from 'react-bootstrap';
 import icon from '../assets/icon.png';
 import '../css/title.css';
 import '../App.css';
@@ -16,7 +17,7 @@ const Title = () => {
   const { isBookmarked, loading: bookmarkLoading, toggleBookmark } = useBookmarkState(titleId);
   
   // Use custom hook for fetching title details
-  const { titleData, tmdbData, castData, loading, error } = useTitleDetails(titleId);
+  const { titleData, tmdbData, castData, loading, error, refetch } = useTitleDetails(titleId);
 
   // Fetch user rating when component mounts or user/titleId changes
   useEffect(() => {
@@ -56,11 +57,11 @@ const Title = () => {
           userRating={userRating}
           onRatingChange={(rating) => {
             setUserRating(rating);
-            // Rating updated - page will reflect changes on next reload
+            refetch(); // Refetch title data to update rating/votes
           }}
           onRatingDelete={() => {
             setUserRating(0);
-            // Rating deleted - page will reflect changes on next reload
+            refetch(); // Refetch title data to update rating/votes
           }}
         />
       </div>
@@ -97,13 +98,15 @@ const Title = () => {
 
         {/* Right Sidebar - Bookmark & Metadata */}
         <aside className="info-sidebar">
-          <button 
-            className={`bookmark-button ${isBookmarked ? 'bookmarked' : ''}`}
+          <Button 
+            variant={isBookmarked ? 'warning' : 'outline-warning'}
+            className="w-100 mb-4 bookmark-btn"
             onClick={toggleBookmark}
             disabled={bookmarkLoading}
+            size="lg"
           >
             {bookmarkLoading ? 'Loading...' : (isBookmarked ? '★ Bookmarked' : '☆ Bookmark Movie')}
-          </button>
+          </Button>
 
           <div className="metadata-list">
             <div className="metadata-item">

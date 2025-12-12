@@ -465,11 +465,9 @@ WITH search_words AS (
     WHERE TRIM(word) <> ''
 ),
 word_matches AS (
-    -- Find titles matching each word with field weighting
     SELECT 
         wi.title_id,
         COUNT(DISTINCT wi.lexeme) AS matched_words,
-        -- Weight matches: title words count more than plot words
         SUM(CASE 
             WHEN wi.field = 't' THEN 3.0  -- title words are most important
             WHEN wi.field = 'p' THEN 1.0  -- plot words have standard weight
@@ -481,6 +479,13 @@ word_matches AS (
 ),
 total_words AS (
     SELECT COUNT(*) AS cnt FROM search_words
+),
+vote_stats AS (
+    SELECT 
+        AVG(COALESCE(t.votes, 0)) AS avg_votes,
+        AVG(COALESCE(t.rating, 0)) AS avg_rating
+    FROM word_matches wm
+    JOIN titles t ON t.id = wm.title_id
 ),
 relevance_ranked AS (
     SELECT 
@@ -497,10 +502,20 @@ relevance_ranked AS (
         t.rating,
         t.votes,
         -- Calculate relevance score for ordering
-        (wm.weighted_score * (wm.matched_words::FLOAT / GREATEST(tw.cnt, 1))) AS relevance_score
+        (wm.weighted_score * (wm.matched_words::FLOAT / GREATEST(tw.cnt, 1))) AS relevance_score,
+        -- Bayesian weighted rating: (v/(v+m)) * R + (m/(v+m)) * C
+        -- Where v = votes, m = avg votes, R = rating, C = avg rating
+        -- prevents low-vote titles from dominating
+        CASE 
+            WHEN vs.avg_votes > 0 THEN
+                ((COALESCE(t.votes, 0)::FLOAT / (COALESCE(t.votes, 0) + vs.avg_votes)) * COALESCE(t.rating, 0)) +
+                ((vs.avg_votes / (COALESCE(t.votes, 0) + vs.avg_votes)) * vs.avg_rating)
+            ELSE COALESCE(t.rating, 0)
+        END AS weighted_rating
     FROM word_matches wm
     JOIN titles t ON t.id = wm.title_id
     CROSS JOIN total_words tw
+    CROSS JOIN vote_stats vs
     WHERE tw.cnt > 0
 )
 SELECT 
@@ -517,6 +532,6 @@ SELECT
     rating,
     votes
 FROM relevance_ranked
-ORDER BY relevance_score DESC, rating DESC NULLS LAST, title ASC
+ORDER BY relevance_score DESC, weighted_rating DESC, rating DESC NULLS LAST, title ASC
 LIMIT max_results;
 $$ LANGUAGE sql STABLE;
