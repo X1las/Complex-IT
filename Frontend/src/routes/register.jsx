@@ -133,7 +133,7 @@ const Register = () => {
   };
 
   return (
-    <Container className="register-container pagestuff" style={{ padding: '50px' }}>
+    <Container className="register-container">
       <Card style={{ width: '100%', maxWidth: '450px' }} className="shadow">
         <Card.Body className="p-4">
           <h1 className="text-center mb-4">Register</h1>

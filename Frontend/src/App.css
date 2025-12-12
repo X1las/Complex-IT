@@ -12,10 +12,7 @@ h1
   margin: 0px;
   font-size: 5.2em;
   line-height: 1.1;
-
 }
-
-
 .movieContainer
 {
     display: flex;
@@ -25,7 +22,6 @@ h1
     min-width: 500px;
     max-width: 1280px;   
 }
-
 .displayMovie
 {
     display: flex;
@@ -51,7 +47,7 @@ h1
     justify-content: center;
 }
 img
- {
+{
   border-radius: 5px;
   height: 100%;
   width: 100%;
@@ -71,7 +67,6 @@ img
     width: 80%;
     margin: 20px;
     height: auto;
-
 }
 .movieTitle
 {
@@ -92,7 +87,6 @@ img
 }
 .profileholder
 {
-
   margin-top: 5px;
   width: 50px;
   height: 50px;
@@ -108,7 +102,6 @@ img
     position: absolute;
     top:55px;
     right: 0px;
-
 }
 .btnLogout:hover
 {
@@ -125,12 +118,14 @@ img
   border-radius: 8px;
   object-fit: cover;
 }
-.btnLogout {
+.btnLogout
+{
     margin: 0px;
     display: none;
     padding: 8px 12px 8px 12px;
 }
-.Logout{
+.Logout
+{
     background-color: rgb(49, 49, 49);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
     padding: 8px 12px 8px 12px;
