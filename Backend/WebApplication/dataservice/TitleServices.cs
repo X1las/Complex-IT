@@ -44,16 +44,14 @@ public class TitleDataService
     {
         using var db = new ImdbContext();
         
-        var titleQuery = db.Title
-            .Where(t => t.Title!.ToLower().Contains(query.ToLower()) || 
-                       (t.Plot != null && t.Plot.ToLower().Contains(query.ToLower())))
-            .AsQueryable();
+        // Use optimized simple_search function that leverages word_index
+        var sql = @"SELECT * FROM simple_search({0}, 100)";
         
-        var totalCount = titleQuery.Count();
-        
-        var results = titleQuery
-            .OrderBy(t => t.Title)
+        var results = db.Title
+            .FromSqlRaw(sql, query)
             .ToList();
+        
+        var totalCount = results.Count;
         
         return (results, totalCount);
     }

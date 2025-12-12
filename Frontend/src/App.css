@@ -6,7 +6,6 @@ body {
   text-align: center;
   background-color: rgb(43, 43, 43);
   justify-content: center ;
-
 }
 h1
 {
@@ -16,7 +15,6 @@ h1
 
 }
 
-
 .imgContainer
 {
     top: 200px;
@@ -25,8 +23,7 @@ h1
     flex-direction: column;
     margin: 0 auto;
     min-width: 500px;
-    max-width: 1280px;
-    
+    max-width: 1280px;   
 }
 
 .displayMovie
@@ -43,7 +40,6 @@ h1
     width: auto;
     height: 250px;
     min-width: 500px;
-
 }
 .moviePoster
 {
@@ -73,7 +69,6 @@ img
     width: 70%;
     margin: 20px;
     height: 240px;
-
 }
 .movieTitle
 {
@@ -89,7 +84,6 @@ img
     text-align:  left;
     font-size: 1em;
     padding: 10px;
-
 }
 .profileholder
 {
@@ -109,7 +103,6 @@ img
     position: absolute;
     left: 94%;
     top:55px;
-
 }
 .btnLogout:hover
 {
@@ -117,8 +110,6 @@ img
     position: absolute;
     left: 94%;
     top:55px;
-
-    
 }
 .profileIcon
 {
@@ -132,8 +123,6 @@ img
     margin: 0px;
     display: none;
     padding: 8px 12px 8px 12px;
-
-
 }
 .Logout{
     background-color: rgb(49, 49, 49);
