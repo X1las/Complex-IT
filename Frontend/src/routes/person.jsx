@@ -11,20 +11,32 @@ const getPerson = async ( nconst ) => {
   console.log('Fetching comprehensive person data for:', nconst);
 
   try {
-    const internalData = fetch(`${NL_API}/api/crew/${nconst}`).then(response => {
-      if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);
+    const internalData = await fetch(`${NL_API}/api/crew/${nconst}`).then(response => {
+      if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);      
       return response.json();
     });
 
-    const externalData = fetch(`${TMDB_API}/3/find/${nconst}?external_source=imdb_id&api_key=${API_KEY}`).then(response => {
+    if (internalData) {
+      console.log('Fetched internal person data:', internalData);
+    }
+
+    const externalData = await fetch(`${TMDB_API}/3/find/${nconst}?external_source=imdb_id&api_key=${API_KEY}`).then(response => {
       if (!response.ok) throw new Error(`TMDB find API failed: ${response.status}`);
       return response.json();
     });
 
-    const knownFor = fetch(`${NL_API}/api/crew/${nconst}/titles`).then(response => {
+    if (internalData) {
+      console.log('Fetched external person data:', externalData);
+    }
+
+    const knownFor = await fetch(`${NL_API}/api/crew/${nconst}/titles`).then(response => {
       if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);
       return response.json();
     });
+
+    if (internalData) {
+      console.log('Fetched known for data:', knownFor);
+    }
 
     const mergedData = await Promise.all([internalData, externalData, knownFor]).then(([internal, external, knownFor]) => {
       const tmdbPerson = external.person_results?.[0] || null;
