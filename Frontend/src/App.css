@@ -13,7 +13,13 @@ h1
   font-size: 5.2em;
   line-height: 1.1;
 }
-
+.movieContainer
+{
+    margin-top:50px;
+    text-align:  left;
+    font-size: 1em;    
+    padding: 0px;
+}
 .imgContainer
 {
     margin-top:50px;
@@ -45,6 +51,12 @@ h1
     min-width: 600px;
     max-width: 80vw;
     width: auto;
+
+}
+a
+{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
 }
 a
 {
@@ -105,8 +117,8 @@ img
 {
     margin-top:0px;
     text-align:  left;
-    font-size: 1em;
-    padding: 10px;
+    font-size: 1em;    
+    padding: 0px;
 }
 .profileholder
 {

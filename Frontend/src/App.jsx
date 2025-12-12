@@ -75,31 +75,3 @@ function App() {
 
 export default App
 
-/* 
-   <Navbar fixed="bottom" bg="light" variant="light">
-        <Container className="bg-body-tertiary justify-content-between">
-            <Navbar.Brand ><Link to="/"><img src={logo} height="100" alt="Logo" /></Link></Navbar.Brand>
-          
-          <Form onSubmit={onSearchSubmit}>
-              <Row>
-                <Col xs="auto"> 
-                <Form.Control className='searchField' placeholder={`${search}`} type="text" value={search} onChange={e => setSearch(e.target.value)} />
-                </Col>
-              </Row>
-          </Form>
-            
-          <div className='profileholder'>
-              <Link to={user ? `/profile/${user.username}` : `/login`}> 
-                <img className='profileIcon' src={icon} alt="profilePic" />
-              </Link>            
-            
-          </div>
-          
-          <div className='btnLogout'>
-            {(!user) ? (<p></p>) : (
-              <button className='Logout'onClick={handleLogout}> <Link to={`/`}>Logout</Link></button>
-          )}
-              </div>
-          
-        </Container>
-      </Navbar> */
