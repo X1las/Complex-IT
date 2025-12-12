@@ -1,0 +1,144 @@
+/* DisplayTitleItem component styling - fully scalable */
+.title-item-container {
+  width: 100%;
+  margin: 0 0 10px;
+  height: auto;
+
+}
+
+.title-item-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 5px;
+  background-color: rgb(34, 34, 34);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+  margin: 10px 0;
+  padding: 5px;
+  max-width: 370px;
+  width: 100%;
+  height: 130px;
+}
+
+.title-poster {
+  padding: 0;
+  width: 90px;
+  height: 120px;
+  max-width: 40%;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+
+.title-poster img {
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.title-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  color: rgba(255, 195, 67, 0.95);
+  background-color: rgb(48, 48, 48);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+  border-radius: 6px;
+  flex: 1;
+  margin: 5px 5px auto 0;
+  text-decoration: none;
+  color: inherit;
+  height: auto;
+  width: 100%;
+
+}
+
+.title-names {
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 2px solid rgba(255, 195, 67, 0.95);
+  color:rgba(255, 195, 67, 0.95);
+  border-radius: 2px;
+  margin: 0;
+  height: 25px;
+  line-height: 1.1;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+}
+
+.title-details {
+  display: flex;
+  flex-direction: row;
+  text-align:center;
+  margin: 5px 0 0 0;
+  border-radius: 5px;
+  text-align: left;
+  font-size: 11px;
+  flex-grow: 1;
+}
+
+.title-details p {
+  text-align:center;
+  margin: 0 5px 0 5px;
+  display:flex;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: rgba(255, 195, 67, 0.2);
+  border-radius: 5px;
+  margin: 0 5px;
+  padding: 2px;
+}
+
+/* Mobile responsive adjustments */
+/* @media (max-width: 767px) {
+  .title-item-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 3%;
+    margin: 3%;
+  }
+  
+  .title-poster {
+    margin-right: 0;
+    margin-bottom: 3%;
+    height: 40vh;
+    max-width: 80%;
+  }
+  
+  .title-link {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .title-name {
+    text-align: center;
+    margin: 2% 0 3% 0;
+    font-size: 2.5vw;
+  }
+  
+  .title-details {
+    text-align: center;
+    padding: 2%;
+    font-size: 1.5vw;
+  }
+} */
+
+/* Loading and error states */
+.title-loading,
+.title-error {
+  padding: 3vw;
+  text-align: center;
+  font-size: 0.8vw;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 2%;
+}
+
+.title-error {
+  color: #dc3545;
+  background: #f8d7da;
+}
