@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAddTitleToHistory } from '../routes/history';
 import { useAuth } from '../context/AuthContext';
-import '../css/titlefunctions.css';
+import '../css/titleDisplayItem.css';
 
 const NL_API = 'https://www.newtlike.com:3000';
 

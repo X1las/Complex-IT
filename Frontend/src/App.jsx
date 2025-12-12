@@ -2,7 +2,7 @@ import { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css' 
 import logo from './assets/image.png';
-import icon from './assets/icon.png'; 
+import icon from './assets/icon.png';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 import Container from 'react-bootstrap/Container';
@@ -27,7 +27,7 @@ function App() {
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (!search.trim()) return;
-    navigate(`/search/${(search)}`);
+    navigate(`/search/${(search)}`);                                                                                                                   
   }
 
   return (
