@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Container, Form, Button, Alert, Card, InputGroup } from 'react-bootstrap';
 import '../css/register.css';
-import {NL_API} from './search.jsx';
+import { NL_API } from './search.jsx';
 
 const Register = () => {
   const [formData, setFormData] = useState({ 
@@ -132,104 +133,110 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <h1>Register</h1>
-      
-      {successMessage && (
-        <div className="success-message">
-          {successMessage}
-        </div>
-      )}
-
-      {apiError && (
-        <div className="error-message">
-          {apiError}
-        </div>
-      )}
-
-      <form onSubmit={handleRegister} className="register-form">
-        <div className="form-group">
-          <label htmlFor="username">
-            Username:
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            disabled={isLoading}
-            className={errors.username ? 'error' : ''}
-            autoComplete="username"
-          />
-          {errors.username && (
-            <span className="field-error">{errors.username}</span>
+    <Container className="register-container pagestuff" style={{ padding: '50px' }}>
+      <Card style={{ width: '100%', maxWidth: '450px' }} className="shadow">
+        <Card.Body className="p-4">
+          <h1 className="text-center mb-4">Register</h1>
+          
+          {successMessage && (
+            <Alert variant="success" dismissible onClose={() => setSuccessMessage('')}>
+              {successMessage}
+            </Alert>
           )}
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="password">
-            Password:
-          </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            disabled={isLoading}
-            className={errors.password ? 'error' : ''}
-            autoComplete="new-password"
-          />
-          {errors.password && (
-            <span className="field-error">{errors.password}</span>
+          {apiError && (
+            <Alert variant="danger" dismissible onClose={() => setApiError('')}>
+              {apiError}
+            </Alert>
           )}
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="confirmPassword">
-            Confirm Password:
-          </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            disabled={isLoading}
-            className={errors.confirmPassword ? 'error' : ''}
-            autoComplete="new-password"
-          />
-          {errors.confirmPassword && (
-            <span className="field-error">{errors.confirmPassword}</span>
-          )}
-        </div>
+          <Form onSubmit={handleRegister}>
+            <Form.Group className="mb-3" controlId="username">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                isInvalid={!!errors.username}
+                autoComplete="username"
+                placeholder="Choose a username"
+              />
+              {errors.username && (
+                <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                  {errors.username}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={(e) => setShowPassword(e.target.checked)}
-            disabled={isLoading}
-          />
-          <span>Show password</span>
-        </div>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                isInvalid={!!errors.password}
+                autoComplete="new-password"
+                placeholder="Create a password"
+              />
+              {errors.password && (
+                <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                  {errors.password}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-        <button 
-          type="submit" 
-          disabled={isLoading}
-          className="register-button"
-        >
-          {isLoading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
+            <Form.Group className="mb-3" controlId="confirmPassword">
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                isInvalid={!!errors.confirmPassword}
+                autoComplete="new-password"
+                placeholder="Confirm your password"
+              />
+              {errors.confirmPassword && (
+                <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                  {errors.confirmPassword}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-      <div className="login-link">
-        <p>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
-      </div>
-    </div>
+            <Form.Group className="mb-3" controlId="showPassword">
+              <Form.Check
+                type="checkbox"
+                label="Show passwords"
+                checked={showPassword}
+                onChange={(e) => setShowPassword(e.target.checked)}
+                disabled={isLoading}
+              />
+            </Form.Group>
+
+            <Button 
+              variant="success"
+              type="submit" 
+              disabled={isLoading}
+              className="w-100"
+              size="lg"
+            >
+              {isLoading ? 'Registering...' : 'Register'}
+            </Button>
+          </Form>
+
+          <div className="text-center mt-3">
+            <p className="mb-0">
+              Already have an account? <Link to="/login">Login here</Link>
+            </p>
+          </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 
