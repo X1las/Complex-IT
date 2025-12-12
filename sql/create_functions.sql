@@ -432,3 +432,62 @@ GROUP BY words_for_matches.word
 ORDER BY frequency DESC, word
 LIMIT max_results;
 $$ LANGUAGE sql;
+
+-- WORD INDEX OPTIMIZATION - INDEXES
+CREATE INDEX IF NOT EXISTS idx_word_index_title_id ON word_index(title_id);
+CREATE INDEX IF NOT EXISTS idx_word_index_lower_word ON word_index(LOWER(word));
+CREATE INDEX IF NOT EXISTS idx_word_index_field_word ON word_index(field, LOWER(word));
+
+CREATE OR REPLACE FUNCTION simple_search(
+    search_query TEXT,
+    max_results INT DEFAULT 50
+)
+RETURNS TABLE (
+    id VARCHAR,
+    title VARCHAR,
+    plot TEXT,
+    year VARCHAR,
+    titletype VARCHAR,
+    rating DOUBLE PRECISION,
+    relevance_score DOUBLE PRECISION
+) AS $$
+WITH search_words AS (
+    -- Split query into individual words and normalize
+    SELECT DISTINCT LOWER(TRIM(word)) AS word
+    FROM regexp_split_to_table(search_query, '\s+') AS word
+    WHERE TRIM(word) <> ''
+),
+word_matches AS (
+    -- Find titles matching each word with field weighting
+    SELECT 
+        wi.title_id,
+        COUNT(DISTINCT wi.word) AS matched_words,
+        -- Weight matches: title words count more than plot words
+        SUM(CASE 
+            WHEN wi.field = 't' THEN 3.0  -- title words are most important
+            WHEN wi.field = 'p' THEN 1.0  -- plot words have standard weight
+            ELSE 0.5                       -- other fields have less weight
+        END) AS weighted_score
+    FROM word_index wi
+    JOIN search_words sw ON LOWER(wi.word) = sw.word
+    GROUP BY wi.title_id
+),
+total_words AS (
+    SELECT COUNT(*) AS cnt FROM search_words
+)
+SELECT 
+    t.id,
+    t.title,
+    t.plot,
+    t.year,
+    t.titletype,
+    t.rating,
+    -- Calculate relevance score: combines match ratio and field weighting
+    (wm.weighted_score * (wm.matched_words::FLOAT / GREATEST(tw.cnt, 1))) AS relevance_score
+FROM word_matches wm
+JOIN titles t ON t.id = wm.title_id
+CROSS JOIN total_words tw
+WHERE tw.cnt > 0
+ORDER BY relevance_score DESC, t.rating DESC NULLS LAST, t.title ASC
+LIMIT max_results;
+$$ LANGUAGE sql STABLE;
