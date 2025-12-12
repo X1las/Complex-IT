@@ -33,9 +33,7 @@ const checkLogin = async () => {
     })
   
         //logging out if 401 or 403 == unauthorized
-        console.log('KIG HER !!!!', res);
         if (res.status == 401 || res.status == 403) {
-        alert('Session expired, please log in again.');
         logout();
         console.log('Unauthorized access - logging out');
         nav('/');
