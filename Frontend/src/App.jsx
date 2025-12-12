@@ -53,6 +53,7 @@ function App() {
                 />
               </Col>
             </Row>
+          </Form>
 
           <Nav>
             <NavDropdown  title={<img className="profileIcon" src={icon} alt="profilePic" />} id="nav-dropdown" align="end" >

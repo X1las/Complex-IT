@@ -22,13 +22,6 @@ h1
 }
 .imgContainer
 {
-    margin-top:50px;
-    text-align:  left;
-    font-size: 1em;    
-    padding: 0px;
-}
-.imgContainer
-{
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
@@ -51,6 +44,12 @@ h1
     min-width: 600px;
     max-width: 80vw;
     width: auto;
+
+}
+a
+{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
 }
 a
 {
@@ -98,9 +97,7 @@ img
     border: 1px solid rgba(255,255,255,0.08);
     background: rgba(24,24,24,0.4);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) outset;
-    width: 70%;
-    margin: 20px;
-    height: auto;
+    width: 80%;
 }
 .movieTitle
 {
