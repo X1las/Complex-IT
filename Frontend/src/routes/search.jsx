@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAddTitleToHistory } from './history.jsx';
 import DisplayTitleItem from '../services/titlefunctions.jsx';
 import '../App.css';
@@ -8,18 +8,40 @@ export const NL_API = 'https://www.newtlike.com:3000';
 export const TMDB_API = 'https://api.themoviedb.org';
 export const API_KEY = '6d931505602649b6ba683649d9af5d82';
 
-// Search local database
 async function searchNL(query) {
-  if (!query || query.trim() === '') return [];
+  // return empty array if no query provided
+     if (!query || query.trim() === '') return [];
 
-  const response = await fetch(`${NL_API}/api/titles?search=${encodeURIComponent(query)}`);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  
-  const data = await response.json();
-  return data.items || [];
+     // fetch initial search results (paginated list with basic info)
+    const response = await fetch(encodeURI(`${NL_API}/api/titles?search=${query}`));
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const titleData = await response.json();
+    //const data = await response.json();
+    const items = Array.isArray(titleData.items) ? titleData.items : [];
+  // Fetch full details for each title 
+    const dataArray = await Promise.all(items.map(async (item) => {
+    const titleRes = await fetch(encodeURI(`${NL_API}/api/titles/${item.id}`));
+      
+      return await titleRes.json();
+    }));
+  // Merge item data with detailed title data
+    const allData = dataArray.map((titleData, index) => {
+      const item = items[index];
+      return {
+        ...item,
+        plot: titleData.plot || 'No description available',
+        rating: titleData.rating || 'N/A',
+        year: titleData.year || 'N/A',
+        titleType: titleData.titleType || 'N/A',
+        id: titleData.id ||'no id'
+      };
+    });
+console.log('Search results from NL:', allData);
+return allData || [];
+
 }
-
-// TMDB fallback for posters
+// TMDB fallback
 async function searchTMDB(tconst) {
   const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
   const response = await fetch(url);
@@ -37,7 +59,7 @@ async function getPosterFromNewtlike(tconst) {
   try {
     const response = await fetch(`${NL_API}/api/titles/${encodeURIComponent(tconst)}`);
     if (!response.ok) return null;
-    
+
     const data = await response.json();
     return data.posterUrl || null;
   } catch (err) {
@@ -70,8 +92,13 @@ async function searchTitlePosters(query) {
   
   return resultsWithPosters;
 }
-
-// Main Search component
+ 
+export const maxTegn = (text, max = 220) => {
+  if (text === null) return '';
+  const tekst = String(text).trim();
+  if (tekst.length <= max) return tekst;
+  return tekst.slice(0, max).trimEnd() + ' …';
+};
 const Search = () => {
   const { q } = useParams();
   const [items, setItems] = useState([]);
@@ -99,28 +126,36 @@ const Search = () => {
   };
 
   if (isLoading) 
-    return <div style={{ padding: 20 }}>Loading...</div>;
+    return <div className='pagestuff'>Loading...</div>;
   if (error) {
     console.error('Search error:', error);
     return <div className='pagestuff'>No results found for "{q || ''}"</div>;
   }
 
   return (
-    <div className='search-results-container' style={{ 
-      padding: '20px', 
-      backgroundColor: '#1a1a1a', 
-      minHeight: '100vh' 
-    }}>
-      <h2 style={{ color: 'white', marginBottom: '20px' }}>
-        Search Results for "{q}"
-      </h2>
-      {(items || []).length === 0 ? (
-        <div style={{ color: 'white' }}>No results found</div>
-      ) : (
-        items.map(movie => (
-          <DisplayTitleItem key={movie.id} tconst={movie.id} />
-        ))
-      )}
+    <div className='movieContainer'>
+      {(items || []).map(movie => (
+        <div className='displayMovie' key={movie.id}>
+          <div className='moviePoster'>
+            
+            <Link to={`/title/${movie.id}`} onClick={() => handleTitleClick(movie.id)}>
+            <img src={movie.poster_url} alt={movie.title} />
+            </Link>
+            
+          </div>
+          <Link to={`/title/${movie.id}`} className='textholder' onClick={() => handleTitleClick(movie.id)} >
+           
+            <p className='movieTitle'>{movie.title}</p>           
+            <div className='movieDescription'>
+              <p>Rating: {movie.rating || 'N/A'}</p>
+              <p >Year: {movie.year || 'N/A'}</p>
+              <p>Type: {movie.titleType || 'N/A'}</p>
+              <p className="year">{maxTegn(movie.plot)}</p>
+            </div>
+          
+         </Link>
+        </div>
+      ))}
     </div>
   );
 };

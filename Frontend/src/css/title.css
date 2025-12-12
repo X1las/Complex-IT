@@ -330,6 +330,7 @@
 
 .cast-portrait img {
   width: 100%;
+  
   height: 100%;
   object-fit: cover;
 }
@@ -389,7 +390,7 @@
   }
 
   .title-name {
-    font-size: 2rem;
+    font-size: 10rem;
   }
 
   .cast-grid {

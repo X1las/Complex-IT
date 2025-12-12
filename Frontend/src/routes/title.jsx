@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { fetchUserRating } from '../services/ratingService';
 import { StarRatingWidget } from './ratings';
 import '../css/title.css';
+import '../App.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/image.png';
 import icon from '../assets/icon.png';
@@ -133,28 +134,10 @@ const Title = () => {
   if (!titleData) {
     return <div className="error">Title not found</div>;
   }
-
-  /* console.log('Current user in App component:', user); */
-  const onSearchSubmit = (e) => {
-    e.preventDefault();
-    if (!search.trim()) return;
-    navigate(`/search/${(search)}`);
-  }
-
+  
+console.log('DET ER HER ', castData);
   return (
     <div className="title-page">
-      {/* Top Navigation Bar */}
-      <nav>
-            <div ><Link to="/"><img className='imgPlaceholder' src={logo} alt="Logo" /></Link></div>
-            <form onSubmit={onSearchSubmit} style={{display:'inline'}}> 
-              <input className='searchField' type="text" value={search} onChange={e => setSearch(e.target.value)} />
-            </form>
-            <div className='profileholder'>
-              <Link to={user ? `/profile/${user.username}` : `/login`}> 
-                <img className='profileIcon' src={icon} alt="profilePic" />
-              </Link>
-            </div>
-        </nav>
 
       {/* Header Row - Title and Rating */}
       <header className="title-header">
@@ -218,7 +201,7 @@ const Title = () => {
             onClick={toggleBookmark}
             disabled={bookmarkLoading}
           >
-            {bookmarkLoading ? '⏳' : (isBookmarked ? '★ Bookmarked' : '☆ Bookmark Movie')}
+            {bookmarkLoading ? 'Loading...' : (isBookmarked ? '★ Bookmarked' : '☆ Bookmark Movie')}
           </button>
 
           <div className="metadata-list">
@@ -258,7 +241,7 @@ const Title = () => {
         <div className="cast-grid">
           {castData.length > 0 ? (
             castData.map((member, index) => (
-              <div key={index} className="cast-member">
+              <Link to={`/person/${member.crewId}`} key={index} className="cast-member">
                 <div className="cast-portrait">
                   <img src={icon} alt={member.fullname || member.name} />
                 </div>
@@ -266,7 +249,7 @@ const Title = () => {
                   <div className="cast-role">{member.character || 'Role'}</div>
                   <div className="cast-name">{member.fullname || member.name}</div>
                 </div>
-              </div>
+              </Link>
             ))
           ) : (
             <p>No cast information available.</p>

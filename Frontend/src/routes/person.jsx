@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import '../css/person.css';
 import '../css/general.css';
 import { NL_API,TMDB_API,API_KEY } from './search';
 
-const KnownForItem = ({ item }) => {
+const KnownForItem = ({ item, profilePath }) => {
+  console.log('KnownForItem profilePath:', item);
+  
   return (
     <div className="known-for-item">
-      <h3>{item.title || item.name}</h3>
-      <img src={
-        item.poster_path
-          ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-          : null
-      } alt="" />
+      {/* <Link to={`/title/${item.id}`} state={{ profilePath }}> */}
+        <h3>{item.title || item.name}</h3>
+        <img src={ item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : null } 
+        alt="" />
+      {/* </Link> */}
     </div>
   );
 }
@@ -116,7 +117,7 @@ const Person = () => {
         <h2>Known For</h2>
         <ul>
           {personData?.known_for?.map((item) => (
-            <KnownForItem key={item.id} item={item} />
+            <KnownForItem key={item.id} item={item} profilePath={personData?.profile_path}/>
           )) || null}
         </ul>
       </div>

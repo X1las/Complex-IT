@@ -1,7 +1,9 @@
 /* DisplayTitleItem component styling - fully scalable */
 .title-item-container {
   width: 100%;
-  margin: 0 auto;
+  margin: 0 0 10px;
+  height: auto;
+
 }
 
 .title-item-card {
@@ -9,24 +11,23 @@
   flex-direction: row;
   align-items: center;
   border-radius: 5px;
+  background-color: rgb(34, 34, 34);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) inset;
-  margin: 2%;
-  padding: 2%;
-  width: auto;
-  height: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+  margin: 10px 0;
+  padding: 5px;
+  max-width: 370px;
+  width: 100%;
+  height: 130px;
 }
 
 .title-poster {
-  padding: 1%;
-  height: 25vh;
-  width: auto;
+  padding: 0;
+  width: 90px;
+  height: 120px;
   max-width: 40%;
-  aspect-ratio: 17/20;
-  margin-right: 2%;
+  margin-right: 5px;
   border-radius: 5px;
-  flex-shrink: 0;
 }
 
 .title-poster img {
@@ -41,43 +42,58 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2vw;
-  border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(24, 24, 24, 0.4);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4) outset;
+  padding: 10px;
+  color: rgba(255, 195, 67, 0.95);
+  background-color: rgb(48, 48, 48);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) inset;
+  border-radius: 6px;
   flex: 1;
-  margin: 1.5%;
+  margin: 5px 5px auto 0;
   text-decoration: none;
   color: inherit;
   height: auto;
+  width: 100%;
+
 }
 
-.title-name {
-  font-size: 1.2vw;
+.title-names {
+  font-size: 12px;
   font-weight: bold;
   border-bottom: 2px solid rgba(255, 195, 67, 0.95);
+  color:rgba(255, 195, 67, 0.95);
   border-radius: 2px;
-  margin: 1.5% 1.5% 2% 1.5%;
+  margin: 0;
+  height: 25px;
   line-height: 1.1;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
 }
 
 .title-details {
-  margin-top: 0;
+  display: flex;
+  flex-direction: row;
+  text-align:center;
+  margin: 5px 0 0 0;
+  border-radius: 5px;
   text-align: left;
-  font-size: 0.8vw;
-  padding: 1.5%;
+  font-size: 11px;
   flex-grow: 1;
 }
 
 .title-details p {
-  margin: 1% 0;
+  text-align:center;
+  margin: 0 5px 0 5px;
+  display:flex;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: rgba(255, 195, 67, 0.2);
+  border-radius: 5px;
+  margin: 0 5px;
+  padding: 2px;
 }
 
 /* Mobile responsive adjustments */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .title-item-card {
     flex-direction: column;
     text-align: center;
@@ -108,7 +124,7 @@
     padding: 2%;
     font-size: 1.5vw;
   }
-}
+} */
 
 /* Loading and error states */
 .title-loading,

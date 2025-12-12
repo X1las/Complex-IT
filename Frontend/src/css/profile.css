@@ -1,25 +1,30 @@
+
 body {
-  max-width: 1680px;
-  margin: 70px 0 0 0 ;
-  padding:0;
-  background-color: rgb(43, 43, 43);color:white; 
-  height: 100%;
+    max-width: 1680px;
+    margin: 80px auto 0 auto; ;
+    padding:0;
+    background-color: rgb(39, 39, 39);
+    color:white; 
+    min-width: 1080px;
+
 }
 
 .profile {
     padding: 20px;
-    margin-top: -600px;
     width: 1080px;
-    margin: 0 auto 600px auto;
+    height: auto;
+    margin: 20px auto 0 auto;
     font-family: Arial, sans-serif;
-    background-color: #333;
+    background-color: #222222;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;    border-radius: 5px;
+    
 }
 
 .top {
+    font-size: 12px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
     padding: 15px;
-    border-radius: 50px;
+    border-radius: 20px;
     color: antiquewhite;
     justify-content: center;
     display: flex;
@@ -28,23 +33,19 @@ body {
 }
 .buttonContainer {
     display: flex;
-    justify-content: space-evenly;
-    margin: 10px auto;
-    padding: 20px;
+    position: relative;
+    justify-content: right;
+    margin: 20px 0px 0px 0;
 }
-a{color: rgba(255, 195, 67, 0.95);}
+a{color: rgba(255, 195, 67, 0.95)}
 
 
 .btnProfile {
     background-color: rgb(49, 49, 49);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
-    padding: 24px;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: 1px solid transparent;
-    flex: 1;
-    text-align: center;
+    color: rgba(255, 195, 67, 0.95);
+    width: 185px;
+
 }
 .btnProfile:hover {
     background-color: rgb(60, 60, 60);
@@ -53,137 +54,60 @@ a{color: rgba(255, 195, 67, 0.95);}
     transition: all 0.3s ease;
 }
 .contentContainer {
-    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    height: 64vh;
 }
 
 .outlet {
-    background: rgba(24, 24, 24, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    min-height: 400px;
-}
-
-.bookmarks-page {
-    width: 100%;
-}
-
-.bookmarks-page h2 {
-    margin-top: 0px;
-    margin-bottom: 24px;
-    font-size: 1.8rem;
-    color: #fff;
-    border-bottom: 2px solid rgba(255, 195, 67, 0.5);
-    padding-bottom: 12px;
-}
-
-.bookmarks-page p {
-    color: #aaa;
-    font-size: 1.1rem;
-}
-
-.bookmarkPosterContainer {
     display: flex;
-    gap: 22px;
-    padding: 16px;
-    margin-bottom: 16px;
+    overflow: scroll;
+    margin: 5px;
+    padding: 10px;
+    height: auto;
+    width: 420px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-    position: relative;
 }
-
-.bookmarkPosterContainer:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.outlet::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar for Chrome, Safari, and Opera*/
 }
-
-.bookmarkPoster {
-    width: 80px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 6px;
-    flex-shrink: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.outlet {
+    overflow: -moz-scrollbars-none; /* Hides the scrollbar for Firefox*/
 }
-
-.bookmarkContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 0px;
-    padding-right: 10px;
-}
-
-.bookmarkContent a {
-    text-decoration: none;
-}
-
-.bookmarkTitle {
-    font-size: 18px;
-    font-weight: 600;
-    color: rgba(255, 195, 67, 0.95);
-    margin: 0px;
-    padding: 12px 16px;
-    background: rgba(255, 195, 67, 0.1);
-    border: 1px solid rgba(255, 195, 67, 0.3);
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    overflow: clip;
-    text-overflow: clip;
-}
-
-.bookmarkTitle:hover {
-    color: #fff;
-    background: rgba(255, 195, 67, 0.2);
-    border-color: rgba(255, 195, 67, 0.5);
-}
-
-.bookmarkRating {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: rgba(255, 215, 0, 0.1);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: 6px;
-    width: fit-content;
-}
-
-.rating-star {
-    color: #ffd700;
-    font-size: 1.2rem;
-}
-
-.rating-value {
-    color: #ffd700;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.removeBtn {
-    position: absolute;
-    top: 102px;
-    right: 6px;
-    padding: 8px 16px;
-    background: rgba(220, 53, 69, 0.2);
-    color: #fff;
-    border: 1px solid rgba(220, 53, 69, 0.5);
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
-
-.removeBtn:hover {
-    background: rgba(220, 53, 69, 0.4);
-    border-color: rgba(220, 53, 69, 0.8);
-    transform: translateY(-1px);
+@media (max-width: 1150px) {
+    body{
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+    }
+    .top{
+        width: 100vw;
+        margin: 0 ;
+    }
+    .buttonContainer{
+        justify-content: center;
+        width: 100vw;
+    }
+    .profile {
+        padding: 20px;
+        margin: 10vw 0 ;
+        
+    }
+    .contentContainer {
+        width: 100vw;        
+        flex-direction: column-reverse;
+        margin: 20px 0;
+        height: auto;
+    }
+    .outlet {
+       
+        margin: 20px 0;
+        width: auto;
+        height: auto;
+        justify-content: center;
+    }
+    
 }

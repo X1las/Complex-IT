@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { submitRating, deleteRating, fetchAllUserRatings } from '../services/ratingService';
 import DisplayTitleItem from '../services/titlefunctions.jsx';
 import '../App.css';
-import '../css/ratings.css';
+import '../css/history.css';
 
 // Custom hook to get the current username
 function useUser() {
@@ -99,12 +99,7 @@ const Ratings = () => {
   return (
     <div className="ratings-container">
       <h2>Your Ratings</h2>
-      <p>Rating management functionality is available on individual title pages.</p>
-      <div className="user-ratings" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        marginTop: '20px'
-      }}>
+      <div className="rating">
         {ratings.length > 0 ? (
           ratings.map((rating, index) => (
             <DisplayTitleItem 

@@ -1,5 +1,5 @@
+
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { fetchBookmarks, addBookmark, removeBookmark, checkIfBookmarked } from '../services/bookmarksService';
 import '../css/profile.css';
@@ -100,8 +100,10 @@ export function useBookmarks() {
   const [bookmarks, setBookmarks] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  
 
   const loadBookmarks = async () => {
+    
     if (!username) {
       console.log('No username available, skipping bookmark fetch');
       return;
@@ -113,10 +115,10 @@ export function useBookmarks() {
 
     try {
       const data = await fetchBookmarks(username);
-      console.log('Successfully fetched bookmarks:', data);
+      console.log('Successfully fetched bookmarks:', data.status);
       setBookmarks(data); 
     } catch (err) {
-      console.error('Error fetching bookmarks:', err);
+      console.error('Error fetching bookmarks:', err, data.status);
       setError(err.message || 'Error fetching bookmarks');
     } finally {
       setLoading(false);
@@ -137,25 +139,8 @@ export function useBookmarks() {
 
 // Bookmarks page component for profile route
 const Bookmarks = () => {
-  const { bookmarks, error, loading, removeBookmarkFromState } = useBookmarks();
-  const { removeBookmark: removeBookmarkService } = useRemoveBookmark();
+  const { error, loading } = useBookmarks();
   const { user } = useAuth();
-
-  const handleRemoveBookmark = async (titleId) => {
-    const success = await removeBookmarkService(titleId);
-    if (success) {
-      removeBookmarkFromState(titleId);
-    }
-  };
-
-  // Debug logging
-  console.log('Bookmarks component rendered:', {
-    user,
-    bookmarks,
-    error,
-    loading,
-    bookmarksCount: bookmarks?.length
-  });
 
   if (!user) {
     return (
@@ -171,26 +156,7 @@ const Bookmarks = () => {
 
   return (
     <div className="bookmarks-page">
-      <h2>Bookmarks</h2>
-      {(!bookmarks || bookmarks.length === 0) ? (
-        <p>You don't have any Bookmarks.</p>
-      ) : (
-        bookmarks.map(item => (
-          <div key={item.titleId + item.viewedAt} className='bookmarkPosterContainer'>
-            <img src={item.posterUrl} alt={item.title} className="bookmarkPoster" />
-            <div className="bookmarkContent">
-              <Link to={`/title/${item.titleId}`}>
-                <h3 className='bookmarkTitle'>{item.title}</h3>
-              </Link>
-              <div className="bookmarkRating">
-                <span className="rating-star">★</span>
-                <span className="rating-value">{item.rating || 'N/A'}</span>
-              </div>
-            </div>
-            <button className='removeBtn' onClick={() => handleRemoveBookmark(item.titleId)}>Remove</button>
-          </div>
-        ))
-      )}
+      
     </div>
   );
 }

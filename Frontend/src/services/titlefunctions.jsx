@@ -99,10 +99,10 @@ const DisplayTitleItem = ({ tconst, suppressDate = false, suppressRating = false
                     </Link>
                 </div>
                 <Link to={`/title/${title.id || tconst}`} className='title-link' onClick={() => HistoryHandler(title.id || tconst)}>
-                    <p className='title-name'>{title.title || title.primaryTitle}</p>
+                    <p className='title-names'>{title.title || title.primaryTitle}</p>
                     <div className='title-details'>
                         <p>Rating: {title.rating || 'N/A'}</p>
-                        <p className="year">Year: {title.year || title.startYear || 'N/A'}</p>
+                        <p>Year: {title.year || title.startYear || 'N/A'}</p>
                         <p>Type: {title.titleType || 'N/A'}</p>
                         {userRating && <p>Your Rating: {userRating}/10</p>}
                         {visitedAt && <p>Visited: {new Date(visitedAt).toLocaleDateString()}</p>}

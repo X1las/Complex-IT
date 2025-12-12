@@ -65,7 +65,8 @@ export const fetchBookmarks = async (username) => {
         ...item,
         title: titleData?.title ?? titleData?.Title ?? item.titleName ?? item.titleId,
         posterUrl: titleData?.posterUrl ?? titleData?.PosterUrl ?? '',
-        rating: titleData?.rating ?? titleData?.Rating ?? null,
+        rating: titleData?.rating ?? titleData?.Rating ?? null, 
+        plot: titleData?.plot ?? titleData?.Plot ?? null,
         viewedAt: item.viewedAt 
       };
     });

@@ -612,49 +612,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 1.D-3
-CREATE OR REPLACE FUNCTION update_title_ratings()
-RETURNS TRIGGER
-LANGUAGE plpgsql AS $$
-DECLARE
-  v_title TEXT;
-BEGIN
-  v_title := COALESCE(NEW.title_id, OLD.title_id);
-  
-  -- Create temporary table
-  CREATE TEMP TABLE IF NOT EXISTS avg_ratings (
-    title_id VARCHAR PRIMARY KEY,
-    combined_ratings DOUBLE PRECISION,
-    overall_users_rated INT
-  ) ON COMMIT DROP;
-
-  -- Insert calculated ratings
-  INSERT INTO avg_ratings (title_id, combined_ratings, overall_users_rated)
-  SELECT 
-    title_id, 
-    ROUND((AVG(rating) + AVG(user_rating))/2,1) AS combined_ratings, 
-    COUNT(rating) + AVG(num_user_ratings) AS overall_users_rated
-  FROM user_ratings
-  LEFT JOIN imdb_ratings on title_id = titles_id
-  WHERE title_id = v_title
-  GROUP BY title_id;
-
-  -- Update the titles table
-  UPDATE titles
-  SET rating = combined_ratings,
-      votes = overall_users_rated
-  FROM avg_ratings
-  WHERE titles.id = avg_ratings.title_id
-    AND titles.id = v_title;
-
-  RETURN NULL;
-END;
-$$;
-CREATE OR REPLACE TRIGGER update_title_ratings_on_rating
-AFTER INSERT ON user_ratings
-FOR EACH ROW
-EXECUTE PROCEDURE update_title_ratings();
-
 -- 1.D-4
 CREATE OR REPLACE FUNCTION structured_string_search ("ti" TEXT, "p" TEXT, "ch" TEXT, "pn" TEXT) 
 RETURNS TABLE ("id" VARCHAR, "title" VARCHAR) AS $BODY$
