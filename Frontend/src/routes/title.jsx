@@ -6,7 +6,6 @@ import { StarRatingWidget } from './ratings';
 import '../css/title.css';
 import '../App.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import logo from '../assets/image.png';
 import icon from '../assets/icon.png';
 import { useBookmarkState } from './bookmarks';
 
