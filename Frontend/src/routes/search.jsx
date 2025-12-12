@@ -147,9 +147,9 @@ const Search = () => {
            
             <p className='movieTitle'>{movie.title}</p>           
             <div className='movieDescription'>
-              <p  >Rating: {movie.rating || 'N/A'}</p>
-              <p >Year: {movie.year || 'N/A'}</p>
-              <p>Type: {movie.titleType || 'N/A'}</p>
+              <p style={{padding:'0 0 0 8px'}} >Rating: {movie.rating || 'N/A'}</p>
+              <p style={{padding:'0 0 0 8px'}}>Year: {movie.year || 'N/A'}</p>
+              <p style={{padding:'0 0 0 8px'}}>Type: {movie.titleType || 'N/A'}</p>
               <p className="year">{maxTegn(movie.plot)}</p>
             </div>
           
