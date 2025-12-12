@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAddTitleToHistory } from '../routes/history';
 import { useAuth } from '../context/AuthContext';
 import '../css/titleFunctions.css';
+import { getPerson } from '../routes/person.jsx';
 
 const NL_API = 'https://www.newtlike.com:3000';
 const TMDB_API_KEY = 'f7cb406cd3ce48761cb8749ec2be8e89';
@@ -83,32 +84,31 @@ export const useTitleDetails = (titleId) => {
                     const crewData = await crewRes.json();
                     console.log('Cast data received:', crewData);
 
-                    // Fetch detailed info for each crew member including TMDB profile image
+                    // Fetch detailed info for each crew member using getPerson function
                     if (crewData.items && crewData.items.length > 0) {
                         const detailedCast = await Promise.all(
                             crewData.items.slice(0, 10).map(async (member) => {
                                 try {
+                                    // First get basic crew details from internal API
                                     const detailRes = await fetch(`${NL_API}${member.url}`);
                                     if (detailRes.ok) {
                                         const crewDetails = await detailRes.json();
 
-                                        // Fetch TMDB image for this crew member
+                                        // Use getPerson function to get comprehensive person data
                                         try {
-                                            const tmdbRes = await fetch(
-                                                `https://api.themoviedb.org/3/find/${crewDetails.crewId}?external_source=imdb_id&api_key=${TMDB_API_KEY}`
-                                            );
-                                            if (tmdbRes.ok) {
-                                                const tmdbData = await tmdbRes.json();
-                                                const personData = tmdbData.person_results?.[0];
-                                                if (personData?.profile_path) {
-                                                    crewDetails.profilePath = personData.profile_path;
-                                                }
+                                            const personData = await getPerson(crewDetails.crewId);
+                                            
+                                            if (personData) {
+                                                return personData;
+                                            } else {
+                                                // If getPerson fails, return basic crew details
+                                                return crewDetails;
                                             }
-                                        } catch (tmdbErr) {
-                                            console.log('TMDB fetch failed for crew member:', crewDetails.crewId);
+                                        } catch (personErr) {
+                                            console.log('getPerson failed for crew member:', crewDetails.crewId, personErr.message);
+                                            // Fallback to basic crew details if getPerson fails
+                                            return crewDetails;
                                         }
-
-                                        return crewDetails;
                                     }
                                     return null;
                                 } catch (err) {
