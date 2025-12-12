@@ -134,7 +134,7 @@ const Person = () => {
           ))}
           
           {/* Show message if no data available */}
-          {(!personData?.knownFor?.length && !personData?.knownForTitles?.length) && (
+          {(!personData?.knownFor) && (
             <div>No known for titles available</div>
           )}
         </div>
