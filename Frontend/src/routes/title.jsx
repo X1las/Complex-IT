@@ -79,14 +79,30 @@ const Title = () => {
         const crewData = await crewRes.json();
         console.log('Cast data received:', crewData);
         
-        // Fetch detailed info for each crew member
+        // Fetch detailed info for each crew member including TMDB profile image
         if (crewData.items && crewData.items.length > 0) {
           const detailedCast = await Promise.all(
             crewData.items.slice(0, 10).map(async (member) => {
               try {
                 const detailRes = await fetch(`https://newtlike.com:3000${member.url}`);
                 if (detailRes.ok) {
-                  return await detailRes.json();
+                  const crewDetails = await detailRes.json();
+                  
+                  // Fetch TMDB image for this crew member
+                  try {
+                    const tmdbRes = await fetch(`https://api.themoviedb.org/3/find/${crewDetails.crewId}?external_source=imdb_id&api_key=f7cb406cd3ce48761cb8749ec2be8e89`);
+                    if (tmdbRes.ok) {
+                      const tmdbData = await tmdbRes.json();
+                      const personData = tmdbData.person_results?.[0];
+                      if (personData?.profile_path) {
+                        crewDetails.profilePath = personData.profile_path;
+                      }
+                    }
+                  } catch (tmdbErr) {
+                    console.log('TMDB fetch failed for crew member:', crewDetails.crewId);
+                  }
+                  
+                  return crewDetails;
                 }
                 return null;
               } catch (err) {
@@ -96,7 +112,7 @@ const Title = () => {
             })
           );
           const validCast = detailedCast.filter(c => c !== null);
-          console.log('Detailed cast data:', validCast);         
+          console.log('Detailed cast data with images:', validCast);         
           setCastData(validCast);
         }
       } else {
@@ -243,7 +259,11 @@ console.log('DET ER HER ', castData);
             castData.map((member, index) => (
               <Link to={`/person/${member.crewId}`} key={index} className="cast-member">
                 <div className="cast-portrait">
-                  <img src={icon} alt={member.fullname || member.name} />
+                  <img 
+                    src={member.profilePath ? `https://image.tmdb.org/t/p/w200${member.profilePath}` : icon} 
+                    alt={member.fullname || member.name}
+                    onError={(e) => { e.target.src = icon; }}
+                  />
                 </div>
                 <div className="cast-info">
                   <div className="cast-role">{member.character || 'Role'}</div>
