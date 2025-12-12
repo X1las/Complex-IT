@@ -435,8 +435,8 @@ $$ LANGUAGE sql;
 
 -- WORD INDEX OPTIMIZATION - INDEXES
 CREATE INDEX IF NOT EXISTS idx_word_index_title_id ON word_index(title_id);
-CREATE INDEX IF NOT EXISTS idx_word_index_lower_word ON word_index(LOWER(word));
-CREATE INDEX IF NOT EXISTS idx_word_index_field_word ON word_index(field, LOWER(word));
+CREATE INDEX IF NOT EXISTS idx_word_index_lower_lexeme ON word_index(LOWER(lexeme));
+CREATE INDEX IF NOT EXISTS idx_word_index_field_lexeme ON word_index(field, LOWER(lexeme));
 
 CREATE OR REPLACE FUNCTION simple_search(
     search_query TEXT,
@@ -461,7 +461,7 @@ word_matches AS (
     -- Find titles matching each word with field weighting
     SELECT 
         wi.title_id,
-        COUNT(DISTINCT wi.word) AS matched_words,
+        COUNT(DISTINCT wi.lexeme) AS matched_words,
         -- Weight matches: title words count more than plot words
         SUM(CASE 
             WHEN wi.field = 't' THEN 3.0  -- title words are most important
@@ -469,7 +469,7 @@ word_matches AS (
             ELSE 0.5                       -- other fields have less weight
         END) AS weighted_score
     FROM word_index wi
-    JOIN search_words sw ON LOWER(wi.word) = sw.word
+    JOIN search_words sw ON LOWER(wi.lexeme) = sw.word
     GROUP BY wi.title_id
 ),
 total_words AS (
