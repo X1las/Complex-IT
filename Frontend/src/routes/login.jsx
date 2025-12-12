@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Container, Form, Button, Alert, Card, InputGroup } from 'react-bootstrap';
 import '../css/login.css';
 import { NL_API } from './search';
 
@@ -97,77 +98,83 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container pagestuff" style={{padding:'50px'}}>
-      <h1>Login</h1>
-      
-      {apiError && (
-        <div className="error-message">
-          {apiError}
-        </div>
-      )}
-
-      <form onSubmit={handleLogin} className="login-form">
-        <div className="form-group">
-          <label htmlFor="username">
-            Username:
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={credentials.username}
-            onChange={handleInputChange}
-            disabled={isLoading}
-            className={errors.username ? 'error' : ''}
-          />
-          {errors.username && (
-            <span className="field-error">{errors.username}</span>
+    <Container className="login-container pagestuff" style={{ padding: '50px' }}>
+      <Card style={{ width: '100%', maxWidth: '450px' }} className="shadow">
+        <Card.Body className="p-4">
+          <h1 className="text-center mb-4">Login</h1>
+          
+          {apiError && (
+            <Alert variant="danger" dismissible onClose={() => setApiError('')}>
+              {apiError}
+            </Alert>
           )}
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="password">
-            Password:
-          </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={credentials.password}
-            onChange={handleInputChange}
-            disabled={isLoading}
-            className={errors.password ? 'error' : ''}
-          />
-          {errors.password && (
-            <span className="field-error">{errors.password}</span>
-          )}
-        </div>
+          <Form onSubmit={handleLogin}>
+            <Form.Group className="mb-3" controlId="username">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                name="username"
+                value={credentials.username}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                isInvalid={!!errors.username}
+                placeholder="Enter username"
+              />
+              {errors.username && (
+                <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                  {errors.username}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={(e) => setShowPassword(e.target.checked)}
-            disabled={isLoading}
-          />
-          <span>Show password</span>
-        </div>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={credentials.password}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                isInvalid={!!errors.password}
+                placeholder="Enter password"
+              />
+              {errors.password && (
+                <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                  {errors.password}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-        <button 
-          type="submit" 
-          disabled={isLoading}
-          className="login-button"
-        >
-          {isLoading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+            <Form.Group className="mb-3" controlId="showPassword">
+              <Form.Check
+                type="checkbox"
+                label="Show password"
+                checked={showPassword}
+                onChange={(e) => setShowPassword(e.target.checked)}
+                disabled={isLoading}
+              />
+            </Form.Group>
 
-      <div className="register-link">
-        <p>
-          Don't have an account? <Link to="/register">Register here</Link>
-        </p>
-      </div>
-    </div>
+            <Button 
+              variant="primary"
+              type="submit" 
+              disabled={isLoading}
+              className="w-100"
+              size="lg"
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
+            </Button>
+          </Form>
+
+          <div className="text-center mt-3">
+            <p className="mb-0">
+              Don't have an account? <Link to="/register">Register here</Link>
+            </p>
+          </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 
