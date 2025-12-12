@@ -16,34 +16,29 @@ const getPerson = async ( nconst ) => {
       return response.json();
     });
 
-    if (internalData) {
-      console.log('Fetched internal person data:', internalData);
-    }
-
     const externalData = await fetch(`${TMDB_API}/3/find/${nconst}?external_source=imdb_id&api_key=${API_KEY}`).then(response => {
       if (!response.ok) throw new Error(`TMDB find API failed: ${response.status}`);
       return response.json();
     });
-
-    if (internalData) {
-      console.log('Fetched external person data:', externalData);
-    }
 
     const knownFor = await fetch(`${NL_API}/api/crew/${nconst}/titles`).then(response => {
       if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);
       return response.json();
     });
 
-    if (internalData) {
-      console.log('Fetched known for data:', knownFor);
-    }
+    const tmdbInfo = await fetch(`${TMDB_API}/3/person/${externalData.person_results?.[0]?.id}?api_key=${API_KEY}`).then(response => {
+      if (!response.ok) throw new Error(`TMDB person API failed: ${response.status}`);
+      return response.json();
+    });
 
-    const mergedData = await Promise.all([internalData, externalData, knownFor]).then(([internal, external, knownFor]) => {
+    const mergedData = await Promise.all([internalData, externalData, knownFor, tmdbInfo]).then(([internal, external, knownFor, tmdbInfo]) => {
       const tmdbPerson = external.person_results?.[0] || null;
       return {
+        ...tmdbInfo,
         ...internal,
         ...tmdbPerson,
         knownFor
+        
       };
     });
 
@@ -119,6 +114,15 @@ const Person = () => {
           {personData?.known_for_department && (
             <p className="known-for-department">Known for: {personData.known_for_department}</p>
           )}
+          {personData?.place_of_birth && (
+            <p className="place-of-birth">Place of Birth: {personData.place_of_birth}</p>
+          )}
+          {personData?.averageRating && (
+            <p className="average-rating">Average Rating: {personData.averageRating.toFixed(2)}</p>
+          )}
+          {personData?.popularity && (
+            <p className="popularity">Popularity: {personData.popularity} of 10</p>
+          )}
         </div>
       </div>
       <div className="known-for">
@@ -130,7 +134,7 @@ const Person = () => {
           ))}
           
           {/* Show message if no data available */}
-          {(!personData?.knownFor?.length && !personData?.knownForTitles?.length) && (
+          {(!personData?.knownFor) && (
             <div>No known for titles available</div>
           )}
         </div>
