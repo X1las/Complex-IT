@@ -14,13 +14,19 @@ h1
   line-height: 1.1;
 
 }
-
+.movieContainer
+{
+    margin-top:50px;
+    text-align:  left;
+    font-size: 1em;    
+    padding: 0px;
+}
 .imgContainer
 {
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
-    margin: 0 auto;
+    margin: auto;
     min-width: 500px;
     max-width: 1280px;   
 }
@@ -40,8 +46,12 @@ h1
     min-width: 600px;
     max-width: 80vw;
     width: auto;
-    height: 250px;
-    min-width: 500px;
+
+}
+a
+{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
 }
 .moviePoster
 {
@@ -59,6 +69,16 @@ img
   display: block;
   object-fit: cover;
 }
+
+.btn-outline-dark
+{
+    background-color: rgb(49, 49, 49);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset; 
+    color: rgba(255, 255, 255, 0.95);
+    width: 150px;
+    border-radius: 6px;
+    margin: 4px;
+}
 .textholder
 {
     display: flex;
@@ -70,8 +90,7 @@ img
     background: rgba(24,24,24,0.4);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) outset;
     width: 80%;
-    margin: 20px;
-    height: 240px;
+
 }
 .movieTitle
 {
@@ -87,8 +106,8 @@ img
 {
     margin-top:0px;
     text-align:  left;
-    font-size: 1em;
-    padding: 10px;
+    font-size: 1em;    
+    padding: 0px;
 }
 .profileholder
 {
