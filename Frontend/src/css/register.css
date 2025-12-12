@@ -1,19 +1,12 @@
 .register-container {
   max-width: 450px;
   margin: 50px auto;
-  padding: 50px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.4) inset;
-  border-radius: 8px;
-}
+  padding: 20px;
 
-.register-container .card {
   background-color: #2f2f2f;
   border-radius: 8px;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.05),
               0 8px 24px rgba(0,0,0,0.6);
-  border: none;
 }
 
 .register-container h1 {
@@ -21,7 +14,6 @@
   text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #fff;
 }
 
 .success-message {
@@ -42,8 +34,21 @@
   color: #c00;
 }
 
-.register-container .form-label {
-  color: #fff;
+.register-form {
+  display: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
   font-weight: 500;
   margin-bottom: 8px;
 }
@@ -56,11 +61,10 @@
   border-radius: 6px;
 }
 
-.register-container .form-control:focus {
-  background-color: #1a1a1a;
+.form-group input:focus {
+  outline: none;
   border-color: #fffb00cc;
   box-shadow: 0 0 0 2px rgba(208, 255, 0, 0.25);
-  color: #fff;
 }
 
 .register-container .form-control::placeholder {
@@ -83,14 +87,27 @@
   font-size: 12px;
 }
 
-.register-container .btn-success {
+.password-strength.weak {
+  color: #c00;
+}
+
+.password-strength.medium {
+  color: #ff8c00;
+}
+
+.password-strength.strong {
+  color: #28a745;
+}
+
+.register-button {
+  padding: 14px;
   background-color: #28a745;
   border: none;
   border-radius: 12px;
-  padding: 14px;
+  cursor: pointer;
   font-size: 16px;
   font-weight: 700;
-  transition: all 0.2s;
+  transition: background-color 0.2s;
 }
 
 .register-container .btn-success:hover:not(:disabled) {
