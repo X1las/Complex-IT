@@ -148,13 +148,13 @@ const Title = () => {
               <Link to={`/person/${member.crewId}`} key={index} className="cast-member">
                 <div className="cast-portrait">
                   <img 
-                    src={member.profilePath ? `https://image.tmdb.org/t/p/w200${member.profilePath}` : icon} 
+                    src={member.profile_path ? `https://image.tmdb.org/t/p/w200${member.profile_path}` : icon} 
                     alt={member.fullname || member.name}
                     onError={(e) => { e.target.src = icon; }}
                   />
                 </div>
                 <div className="cast-info">
-                  <div className="cast-role">{member.character || 'Role'}</div>
+                  <div className="cast-role">{member.known_for_department || 'Role'}</div>
                   <div className="cast-name">{member.fullname || member.name}</div>
                 </div>
               </Link>

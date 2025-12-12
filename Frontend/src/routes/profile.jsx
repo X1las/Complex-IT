@@ -6,6 +6,8 @@ import {useRemoveBookmark} from '../routes/bookmarks.jsx';
 import '../css/bookmarks.css'
 import {maxTegn} from './search.jsx';
 import { useEffect } from 'react';
+import { Button, ButtonGroup } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 /* 
 testprofile
 ruccer123
@@ -68,10 +70,25 @@ const Profile = () => {
 
       <div>
           <div className='buttonContainer'>
-            <Link to={`/profile/${id}/history`}><button className='btnProfile'>History</button></Link>
-            <Link to={`/profile/${id}/ratings`}><button className='btnProfile'>Ratings</button></Link>
-            {/* <button className='btnProfile' onClick={handleLogout}> <Link to={`/`}>logout</Link></button>
-            */}</div>
+            <ButtonGroup className="mb-3" style={{ gap: '10px' }}>
+              <Button 
+                as={Link} 
+                to={`/profile/${id}/history`} 
+                className="btnProfile"
+                size="lg"
+              >
+                History
+              </Button>
+              <Button 
+                as={Link} 
+                to={`/profile/${id}/ratings`} 
+                className="btnProfile"
+                size="lg"
+              >
+                Ratings
+              </Button>
+            </ButtonGroup>
+          </div>
         </div>
         <div className='contentContainer'>
         <div className='bookmarksContainer'>
@@ -84,8 +101,17 @@ const Profile = () => {
           
           <div> 
             <Link to={`/title/${item.titleId}`}><h3 className='bookmarkTitle'>{item.title}</h3></Link>
-            <div  className='ratingscore'><p  className='rating-value'>{item.rating || 'N/A'}</p> <p className='plot'>{maxTegn(item.plot, 100)}</p>  
-            <button className='removeBtn' onClick={() => {removeBookmark(item.titleId);}}>Remove</button></div> 
+            <div  className='ratingscore'>
+              <p  className='rating-value'>{item.rating || 'N/A'}</p> 
+              <p className='plot'>{maxTegn(item.plot, 100)}</p>  
+              <Button 
+                variant="danger" 
+                size="sm" 
+                onClick={() => {removeBookmark(item.titleId);}}
+              >
+                Remove
+              </Button>
+            </div> 
           </div>
         </div>
      ))
