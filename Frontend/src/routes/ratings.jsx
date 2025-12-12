@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { submitRating, deleteRating, fetchAllUserRatings } from '../services/ratingService';
-import DisplayTitleItem from '../services/titleDisplayItem.jsx';
+import DisplayTitleItem from '../services/titleFunctions.jsx';
+import { ButtonGroup, Button, Badge } from 'react-bootstrap';
 import '../App.css';
 import '../css/history.css';
 
@@ -65,23 +66,24 @@ export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, on
   if (!user) return null;
 
   return (
-    <div className="user-rating-widget">
-      <div className="star-rating-container">
+    <div className="user-rating-widget d-flex align-items-center gap-2">
+      <ButtonGroup size="sm">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(star => (
-          <button
+          <Button
             key={star}
-            className={`star-button ${star <= (hoveredStar || userRating) ? 'filled' : ''}`}
+            variant={star <= (hoveredStar || userRating) ? 'warning' : 'outline-warning'}
             onClick={() => handleStarClick(star)}
             onMouseEnter={() => setHoveredStar(star)}
             onMouseLeave={() => setHoveredStar(0)}
+            className="star-rating-btn"
           >
             ★
-          </button>
+          </Button>
         ))}
-        <span className="rating-display">{hoveredStar || userRating || 0}/10</span>
-      </div>
+      </ButtonGroup>
+      <Badge bg="secondary" className="rating-badge">{hoveredStar || userRating || 0}/10</Badge>
       {userRating > 0 && (
-        <button className="delete-rating-btn" onClick={handleDelete}>Delete</button>
+        <Button variant="danger" size="sm" onClick={handleDelete}>Delete</Button>
       )}
     </div>
   );

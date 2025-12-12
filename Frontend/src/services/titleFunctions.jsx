@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAddTitleToHistory } from '../routes/history';
 import { useAuth } from '../context/AuthContext';
@@ -15,6 +15,7 @@ export const useTitleDetails = (titleId) => {
     const [castData, setCastData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
 
     useEffect(() => {
         if (!titleId) {
@@ -134,14 +135,19 @@ export const useTitleDetails = (titleId) => {
         };
 
         fetchTitleDetails();
-    }, [titleId]);
+    }, [titleId, refetchTrigger]);
+
+    const refetch = () => {
+        setRefetchTrigger(prev => prev + 1);
+    };
 
     return {
         titleData,
         tmdbData,
         castData,
         loading,
-        error
+        error,
+        refetch
     };
 };
 

@@ -54,6 +54,68 @@
   color: #aaa;
 }
 
+/* Bootstrap Star Rating Customization */
+.user-rating-widget .star-rating-btn {
+  background-color: transparent !important;
+  border-color: #ffc107 !important;
+  color: #888 !important;
+  font-size: 1.2rem;
+  padding: 4px 8px;
+}
+
+.user-rating-widget .star-rating-btn:hover {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+  border-color: #ffc107 !important;
+  color: #ffc107 !important;
+}
+
+/* Rating widget buttons */
+.user-rating-widget .btn-warning {
+  background-color: #ffc107 !important;
+  border-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.user-rating-widget .rating-badge {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  font-size: 1rem;
+  padding: 8px 12px;
+}
+
+.user-rating-widget .btn-danger {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+
+.user-rating-widget .btn-danger:hover {
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
+}
+
+/* Bootstrap Bookmark Button Customization */
+.info-sidebar .bookmark-btn,
+.info-sidebar .btn-warning {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+  border: 2px solid rgba(255, 193, 7, 0.5) !important;
+  color: #fff !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.info-sidebar .bookmark-btn:hover:not(:disabled),
+.info-sidebar .btn-warning:hover:not(:disabled) {
+  background-color: rgba(255, 193, 7, 0.3) !important;
+  border-color: rgba(255, 193, 7, 0.8) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.2);
+}
+
+.info-sidebar .btn-warning.bookmarked {
+  background-color: rgba(255, 193, 7, 0.3) !important;
+  border-color: rgba(255, 193, 7, 0.8) !important;
+}
+
 /* Main Content Grid - 3 Columns */
 .content-grid {
   display: grid;
@@ -93,53 +155,6 @@
   padding: 20px;
 }
 
-.user-rating-widget {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.star-rating-container {
-  display: flex;
-  gap: 2px;
-}
-
-.star-button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #ddd;
-  padding: 0;
-  transition: transform 0.2s;
-}
-
-.star-button:hover {
-  transform: scale(1.1);
-}
-
-.star-button.filled {
-  color: #ffd700;
-}
-
-.rating-display {
-  margin-left: 10px;
-  font-weight: bold;
-}
-
-.delete-rating-btn {
-  padding: 5px 10px;
-  cursor: pointer;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
-.delete-rating-btn:hover {
-  background-color: #c82333;
-}
 
 /* Description Column - Middle */
 .description-column {
@@ -203,36 +218,6 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.bookmark-button {
-  width: 82%;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: 2px solid rgba(255, 195, 67, 0.5);
-  background: rgba(255, 195, 67, 0.1);
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 24px;
-}
-
-.bookmark-button:hover:not(:disabled) {
-  background: rgba(255, 195, 67, 0.3);
-  border-color: rgba(255, 195, 67, 0.8);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 195, 67, 0.2);
-}
-
-.bookmark-button.bookmarked {
-  background: rgba(255, 195, 67, 0.3);
-  border-color: rgba(255, 195, 67, 0.8);
-}
-
-.bookmark-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 
 .metadata-list {
   display: flex;
