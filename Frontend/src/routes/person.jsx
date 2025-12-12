@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import '../css/person.css';
 import '../css/general.css';
 import { NL_API,TMDB_API,API_KEY } from './search';
-import DisplayTitleItem from '../services/titleDisplayItem';
+import DisplayTitleItem from '../services/titleFunctions';
 
 // Comprehensive function to get all actor/person data from both internal API and TMDB
 const getPerson = async ( nconst ) => {
