@@ -98,8 +98,8 @@ const Login = () => {
   };
 
   return (
-    <Container className="login-container" style={{ padding: '50px' }}>
-      <Card style={{ width: '100%', maxWidth: '450px' }} className="shadow">
+    <Container className="login-container" style={{ padding: '75px' }}>
+      <Card>
         <Card.Body className="p-4">
           <h1 className="text-center mb-4">Login</h1>
           
@@ -157,10 +157,10 @@ const Login = () => {
             </Form.Group>
 
             <Button 
-              variant="primary"
+              variant="btn-outline-warning"
               type="submit" 
               disabled={isLoading}
-              className="w-100"
+              className="w-100 btn btn-outline-warning"
               size="lg"
             >
               {isLoading ? 'Logging in...' : 'Login'}
