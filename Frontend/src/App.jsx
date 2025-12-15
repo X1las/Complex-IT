@@ -62,7 +62,7 @@ function App() {
 
           <Nav >
 
-            <NavDropdown menuVariant="dark" title={<img src={icon} alt="profilePic" />} style={{height:"90px", width:"80px", padding:"10px", marginLeft:" 80px"}} id="nav-dropdown" align="end" >
+            <NavDropdown menuVariant="dark" title={<img src={icon} alt="profilePic" className="profileIcon" />} id="nav-dropdown" align="end" style={{  marginLeft: "100px"}}>
                    
               <NavDropdown.Item  as={Link} to={user ? `/profile/${user.username}` : `/login`} ><button style={{width:"100%", margin:0}} className="btn btn-outline-warning" >Your Page</button></NavDropdown.Item>
                 { !user ? null:
