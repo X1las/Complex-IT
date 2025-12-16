@@ -35,15 +35,11 @@ export const useAddTitleToHistory = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text().catch(() => '');
-        console.error('Failed to add to history:', response.status, errorText.slice(0, 300));
         return false;
       }
 
-      console.log(`Added ${titleId} to history for ${user.username}`);
       return true;
     } catch (error) {
-      console.error('Error adding to history:', error);
       return false;
     }
   };
@@ -78,7 +74,6 @@ function useHistory() {
       const token = localStorage.getItem('authToken');
       
       if (!token) {
-        console.error('No auth token found');
         setError('Not authenticated - please login again');
         return;
       }
@@ -96,17 +91,12 @@ function useHistory() {
       const historyData = await res.json();
 
       const items = Array.isArray(historyData.items) ? historyData.items : [];
-
-      console.log('Processed history items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
       const titlelist = items.map(item => item.titleId);
 
       const titleDataArray = await Promise.all(titlelist.map(async (titleId) => {
         const url = `${NL_API}/api/titles/${titleId}`;
         const resp = await fetch(url);
-        if (!resp.ok) {
-          console.error(`Failed to fetch title data for ${titleId}:`, resp.status);
-          return null;
-        }
+        if (!resp.ok) return null;
         const titleData = await resp.json();
         return titleData;
       }));
@@ -122,12 +112,9 @@ function useHistory() {
         };
       });
 
-      console.log('Fetched title data for history items:', data);
       setHistory(data);
-      
 
     } catch (err) {
-      console.error('Error fetching history:', err);
       setError('Error fetching history');
     } finally {
       setLoading(false);

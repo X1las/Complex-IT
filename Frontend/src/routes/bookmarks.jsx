@@ -105,20 +105,16 @@ export function useBookmarks() {
   const loadBookmarks = async () => {
     
     if (!username) {
-      console.log('No username available, skipping bookmark fetch');
       return;
     }
     
-    console.log('Loading bookmarks for user:', username);
     setLoading(true);
     setError(null);
 
     try {
       const data = await fetchBookmarks(username);
-      console.log('Successfully fetched bookmarks:', data.status);
       setBookmarks(data); 
     } catch (err) {
-      console.error('Error fetching bookmarks:', err, data.status);
       setError(err.message || 'Error fetching bookmarks');
     } finally {
       setLoading(false);

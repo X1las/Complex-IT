@@ -90,9 +90,6 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      console.log('Attempting registration for:', formData.username);
-      console.log('API URL:', `${NL_API}/api/users/create`);
-      // hvis det ikke fungere sådan her skal der stå ${NL_API}/api/users/login i fetch
       const response = await fetch(`${NL_API}/api/users/create`, {
         method: 'POST',
         headers: {
@@ -105,9 +102,7 @@ const Register = () => {
         credentials: 'include'
       });
 
-      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || data.Error || data.message || 'Registration failed');
@@ -125,7 +120,6 @@ const Register = () => {
       }, 2000);
       
     } catch (error) {
-      console.error('Registration error:', error);
       setApiError(error.message || 'An error occurred during registration. Please try again.');
     } finally {
       setIsLoading(false);

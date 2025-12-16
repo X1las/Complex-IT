@@ -7,17 +7,12 @@ export const fetchBookmarks = async (username) => {
     throw new Error('Username is required to fetch bookmarks');
   }
 
-  console.log('fetchBookmarks called for username:', username);
-
   try {
     const token = localStorage.getItem('authToken');
     
     if (!token) {
-      console.error('No auth token found');
       throw new Error('Not authenticated - please login again');
     }
-    
-    console.log('Making request to:', `${NL_API}/api/users/${username}/bookmarks`);
     
     const res = await fetch(`${NL_API}/api/users/${username}/bookmarks`, { 
       method: 'GET',
@@ -28,32 +23,22 @@ export const fetchBookmarks = async (username) => {
       credentials: 'include'
     });
 
-    console.log('Response status:', res.status);
-
     if (!res.ok) {
       const errorText = await res.text().catch(() => 'Unable to read error');
-      console.error('Failed to fetch bookmarks:', res.status, errorText);
       throw new Error(`Failed to fetch bookmarks: ${res.status} - ${errorText}`);
     }
 
     const bookmarksData = await res.json();
-    console.log('Raw bookmarks data:', bookmarksData);
-    
     const items = Array.isArray(bookmarksData.items) ? bookmarksData.items : [];
-    console.log('Processed bookmark items:', items.map(i => ({ titleId: i.titleId, viewedAt: i.viewedAt })));
     
-    // Fetch title data for each bookmark
+    
     const titleDataArray = await Promise.all(items.map(async (item) => {
       try {
         const url = `${NL_API}/api/titles/${item.titleId}`;
         const resp = await fetch(url);
-        if (!resp.ok) {
-          console.error(`Failed to fetch title data for ${item.titleId}:`, resp.status);
-          return null;
-        }
+        if (!resp.ok) return null;
         return await resp.json();
       } catch (err) {
-        console.error(`Error fetching title ${item.titleId}:`, err);
         return null;
       }
     }));
@@ -71,18 +56,15 @@ export const fetchBookmarks = async (username) => {
       };
     });
 
-    console.log('Fetched title data for bookmarks:', bookmarksWithTitles);
     return bookmarksWithTitles;
 
   } catch (err) {
-    console.error('Error fetching bookmarks:', err);
     throw err;
   }
 };
 
 export const addBookmark = async (username, titleId) => {
   if (!username) {
-    console.error('No user logged in');
     throw new Error('User must be logged in to add bookmarks');
   }
 
@@ -90,7 +72,6 @@ export const addBookmark = async (username, titleId) => {
     const token = localStorage.getItem('authToken');
     
     if (!token) {
-      console.error('No auth token found');
       throw new Error('Not authenticated - please login again');
     }
     
@@ -107,22 +88,17 @@ export const addBookmark = async (username, titleId) => {
     }); 
 
     if (!response.ok) {
-      const txt = await response.text().catch(() => '');
-      console.error('Failed to add bookmark:', response.status, txt.slice(0, 300));
       throw new Error('Failed to add bookmark');
     } 
     
-    console.log(`Added ${titleId} to bookmarks for ${username}`);
     return true;
   } catch (error) {
-    console.error('Error adding bookmark:', error);
     throw error;
   }
 };
 
 export const removeBookmark = async (username, titleId) => {
   if (!username) {
-    console.error('No user logged in');
     throw new Error('User must be logged in to remove bookmarks');
   }
 
@@ -130,7 +106,6 @@ export const removeBookmark = async (username, titleId) => {
     const token = localStorage.getItem('authToken');
 
     if (!token) {
-      console.error('No auth token found');
       throw new Error('Not authenticated - please login again');
     }
    
@@ -146,14 +121,11 @@ export const removeBookmark = async (username, titleId) => {
     }); 
 
     if (!response.ok) {
-      const txt = await response.text().catch(() => '');
-      console.error('Failed to remove bookmark:', response.status, txt);
       throw new Error('Failed to remove bookmark');
     }
 
     return true;
   } catch (error) {
-    console.error('Error removing bookmark:', error);
     throw error;
   }
 };
@@ -164,10 +136,7 @@ export const checkIfBookmarked = async (username, titleId) => {
   try {
     const token = localStorage.getItem('authToken');
     
-    if (!token) {
-      console.warn('No auth token found');
-      return false;
-    }
+    if (!token) return false;
     
     const res = await fetch(`${NL_API}/api/users/${username}/bookmarks`, { 
       method: 'GET',
@@ -187,7 +156,6 @@ export const checkIfBookmarked = async (username, titleId) => {
     
     return items.some(item => item.titleId === titleId);
   } catch (err) {
-    console.error('Error checking bookmark status:', err);
     return false;
   }
 };

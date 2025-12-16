@@ -27,21 +27,17 @@ export const useTitleDetails = (titleId) => {
             try {
                 setLoading(true);
                 setError(null);
-                console.log('Fetching title:', titleId);
 
-                // Fetch internal data from database
                 const response = await fetch(`${NL_API}/api/titles/${titleId}`);
-                console.log('Database response status:', response.status);
                 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch title details: ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('Title data from database:', data);
                 setTitleData(data);
 
-                // Check what data is missing from database
+
                 const needsPoster = !data.posterUrl;
                 const needsPlot = !data.plot || data.plot.trim() === '';
                 const needsAdditionalInfo = needsPoster || needsPlot;
@@ -54,79 +50,48 @@ export const useTitleDetails = (titleId) => {
                     const externalRes = await fetch(
                         `https://api.themoviedb.org/3/find/${titleId}?external_source=imdb_id&api_key=${TMDB_API_KEY}`
                     );
-                    console.log('TMDB response status:', externalRes.status);
 
                     if (externalRes.ok) {
                         const externalData = await externalRes.json();
-                        console.log('External data from TMDB:', externalData);
                         const tmdbResult = externalData.movie_results?.[0] || externalData.tv_results?.[0] || null;
 
                         if (tmdbResult) {
-                            console.log('TMDB data found:', {
-                                hasPoster: !!tmdbResult.poster_path,
-                                hasOverview: !!tmdbResult.overview
-                            });
                             setTmdbData(tmdbResult);
-                        } else {
-                            console.log('No TMDB data found for this ID');
                         }
-                    } else {
-                        console.log('TMDB API request failed with status:', externalRes.status);
                     }
-                } else {
-                    console.log('All data available from database. Skipping TMDB fetch.');
                 }
 
-                // Fetch cast/crew data
-                console.log('Fetching cast data...');
                 const crewRes = await fetch(`${NL_API}/api/titles/${titleId}/crew`);
                 
                 if (crewRes.ok) {
                     const crewData = await crewRes.json();
-                    console.log('Cast data received:', crewData);
 
-                    // Fetch detailed info for each crew member using getPerson function
                     if (crewData.items && crewData.items.length > 0) {
                         const detailedCast = await Promise.all(
                             crewData.items.slice(0, 10).map(async (member) => {
                                 try {
-                                    // First get basic crew details from internal API
                                     const detailRes = await fetch(`${NL_API}${member.url}`);
                                     if (detailRes.ok) {
                                         const crewDetails = await detailRes.json();
 
-                                        // Use getPerson function to get comprehensive person data
                                         try {
                                             const personData = await getPerson(crewDetails.crewId);
-                                            
-                                            if (personData) {
-                                                return personData;
-                                            } else {
-                                                // If getPerson fails, return basic crew details
-                                                return crewDetails;
-                                            }
+                                            return personData || crewDetails;
                                         } catch (personErr) {
-                                            console.log('getPerson failed for crew member:', crewDetails.crewId, personErr.message);
-                                            // Fallback to basic crew details if getPerson fails
                                             return crewDetails;
                                         }
                                     }
                                     return null;
                                 } catch (err) {
-                                    console.error('Error fetching crew member:', err);
                                     return null;
                                 }
                             })
                         );
                         const validCast = detailedCast.filter(c => c !== null);
-                        console.log('Detailed cast data with images:', validCast);
                         setCastData(validCast);
                     }
-                } else {
-                    console.log('Cast API failed with status:', crewRes.status);
                 }
             } catch (err) {
-                console.error('Error fetching title details:', err);
                 setError(err.message);
                 setTitleData(null);
             } finally {
@@ -172,9 +137,7 @@ const DisplayTitleItem = ({ tconst, suppressDate = false, suppressRating = false
                 const titleData = await response.json();
                 setTitle(titleData);
 
-                // Fetch user-specific data only if user is logged in
                 if (user?.username) {
-                    // Fetch history data unless suppressed
                     if (!suppressDate) {
                         try {
                             const historyResp = await fetch(`${NL_API}/api/users/${user.username}/history`, {
@@ -190,12 +153,9 @@ const DisplayTitleItem = ({ tconst, suppressDate = false, suppressRating = false
                                 const viewedItem = historyItems.find(item => item.titleId === tconst);
                                 setVisitedAt(viewedItem?.viewedAt || null);
                             }
-                        } catch (historyErr) {
-                            console.error('Error fetching history:', historyErr);
-                        }
+                        } catch (historyErr) {}
                     }
 
-                    // Fetch rating data unless suppressed
                     if (!suppressRating) {
                         try {
                             const ratingsResp = await fetch(`${NL_API}/api/users/${user.username}/ratings`, {
@@ -211,14 +171,11 @@ const DisplayTitleItem = ({ tconst, suppressDate = false, suppressRating = false
                                 const userTitleRating = ratingItems.find(item => item.titleId === tconst);
                                 setUserRating(userTitleRating?.rating || null);
                             }
-                        } catch (ratingErr) {
-                            console.error('Error fetching rating:', ratingErr);
-                        }
+                        } catch (ratingErr) {}
                     }
                 }
             } catch (err) {
                 setError(err.message);
-                console.error('Error fetching title:', err);
             } finally {
                 setLoading(false);
             }

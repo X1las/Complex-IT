@@ -8,11 +8,6 @@ import {maxTegn} from './search.jsx';
 import { useEffect } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-/* 
-testprofile
-ruccer123
- */
-
 
 function useTjekifvalidlogin() {
   //const username = useUser();
@@ -34,12 +29,10 @@ const checkLogin = async () => {
       credentials: 'include'
     })
   
-        //logging out if 401 or 403 == unauthorized
-        if (res.status == 401 || res.status == 403) {
-        logout();
-        console.log('Unauthorized access - logging out');
-        nav('/');
-        return <div style={{padding: 20}}>User signed out</div>
+    if (res.status == 401 || res.status == 403) {
+      logout();
+      nav('/');
+      return <div style={{padding: 20}}>User signed out</div>
     }
   };
   checkLogin();
@@ -47,9 +40,8 @@ const checkLogin = async () => {
 }
 
 function useUser () {
-    const {user} = useAuth();
-  // if (user == null) return null;
-   const username = user ? user.username : null;
+  const {user} = useAuth();
+  const username = user ? user.username : null;
   return username;
 }
 

@@ -74,9 +74,7 @@ const Login = () => {
         credentials: 'include'
       });
 
-      console.log('Login response:', response);
       const data = await response.json();
-      console.log('Login data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || data.Error || data.message || 'Login failed');
@@ -90,7 +88,6 @@ const Login = () => {
       navigate('/');
       
     } catch (error) {
-      console.error('Login error:', error);
       setApiError(error.message || 'An error occurred during login. Please try again.');
     } finally {
       setIsLoading(false);

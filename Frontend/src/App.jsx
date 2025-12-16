@@ -20,7 +20,6 @@ function App() {
   const { logout } = useAuth();
   const handleLogout = () => { logout(); };
 
-  /* console.log('Current user in App component:', user); */
   const onSearchSubmit = (e) => {
     e.preventDefault();
     if (!search.trim()) return;

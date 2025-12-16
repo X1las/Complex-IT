@@ -12,20 +12,18 @@ async function searchNL(query) {
   // return empty array if no query provided
      if (!query || query.trim() === '') return [];
 
-     // fetch initial search results (paginated list with basic info)
     const response = await fetch(encodeURI(`${NL_API}/api/titles?search=${query}`));
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
     const titleData = await response.json();
-    //const data = await response.json();
     const items = Array.isArray(titleData.items) ? titleData.items : [];
-  // Fetch full details for each title 
+    
+    
     const dataArray = await Promise.all(items.map(async (item) => {
-    const titleRes = await fetch(encodeURI(`${NL_API}/api/titles/${item.id}`));
-      
+      const titleRes = await fetch(encodeURI(`${NL_API}/api/titles/${item.id}`));
       return await titleRes.json();
     }));
-  // Merge item data with detailed title data
+    
     const allData = dataArray.map((titleData, index) => {
       const item = items[index];
       return {
@@ -37,11 +35,11 @@ async function searchNL(query) {
         id: titleData.id ||'no id'
       };
     });
-console.log('Search results from NL:', allData);
-return allData || [];
-
+    
+    return allData || [];
 }
-// TMDB fallback
+
+
 async function searchTMDB(tconst) {
   const url = `${TMDB_API}/3/find/${tconst}?external_source=imdb_id&api_key=${API_KEY}`;
   const response = await fetch(url);
@@ -63,7 +61,6 @@ async function getPosterFromNewtlike(tconst) {
     const data = await response.json();
     return data.posterUrl || null;
   } catch (err) {
-    console.error(`Error fetching poster for ${tconst}:`, err.message);
     return null;
   }
 }
@@ -99,6 +96,7 @@ export const maxTegn = (text, max = 220) => {
   if (tekst.length <= max) return tekst;
   return tekst.slice(0, max).trimEnd() + ' …';
 };
+
 const Search = () => {
   const { q } = useParams();
   const [items, setItems] = useState([]);
@@ -127,10 +125,8 @@ const Search = () => {
 
   if (isLoading) 
     return <div className='pagestuff'>Loading...</div>;
-  if (error) {
-    console.error('Search error:', error);
+  if (error) 
     return <div className='pagestuff'>No results found for "{q || ''}"</div>;
-  }
 
   return (
     <div className='movieContainer'>

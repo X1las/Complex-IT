@@ -3,10 +3,7 @@ export const fetchUserRating = async (user, titleId) => {
   if (!user || !titleId) return 0;
   try {
     const token = localStorage.getItem('authToken');
-    if (!token) {
-      console.warn('No auth token found');
-      return 0;
-    }
+    if (!token) return 0;
     const username = user.username || user.Username;
     const res = await fetch(`https://newtlike.com:3000/api/users/${username}/ratings/${titleId}`, {
       headers: { 
@@ -18,16 +15,12 @@ export const fetchUserRating = async (user, titleId) => {
       const data = await res.json();
       return data.rating || 0;
     }
-    if (res.status === 404) {
-      return 0; // No rating exists yet
-    }
+    if (res.status === 404) return 0;
     if (res.status === 401) {
-      console.error('Unauthorized - token may be invalid');
       alert('Session expired. Please login again.');
     }
     return 0;
   } catch (err) {
-    console.error('Error fetching rating:', err);
     return 0;
   }
 };
@@ -79,7 +72,6 @@ export const submitRating = async (user, titleId, rating) => {
     
     return true;
   } catch (err) {
-    console.error('Error submitting rating:', err);
     alert('An error occurred while submitting your rating.');
     return false;
   }
@@ -103,7 +95,6 @@ export const deleteRating = async (user, titleId) => {
     
     return res.ok;
   } catch (err) {
-    console.error('Error deleting rating:', err);
     return false;
   }
 };
@@ -117,7 +108,6 @@ export const fetchAllUserRatings = async (username) => {
     const token = localStorage.getItem('authToken');
     
     if (!token) {
-      console.error('No auth token found');
       throw new Error('Not authenticated - please login again');
     }
     
@@ -136,21 +126,15 @@ export const fetchAllUserRatings = async (username) => {
 
     const ratingsData = await res.json();
     const items = Array.isArray(ratingsData.items) ? ratingsData.items : [];
-
-    console.log('Processed rating items:', items);
     
-    // Fetch title data for each rating
+    
     const titleDataArray = await Promise.all(items.map(async (item) => {
       try {
         const url = `https://newtlike.com:3000/api/titles/${item.titleId}`;
         const resp = await fetch(url);
-        if (!resp.ok) {
-          console.error(`Failed to fetch title data for ${item.titleId}:`, resp.status);
-          return null;
-        }
+        if (!resp.ok) return null;
         return await resp.json();
       } catch (err) {
-        console.error(`Error fetching title ${item.titleId}:`, err);
         return null;
       }
     }));
@@ -166,11 +150,9 @@ export const fetchAllUserRatings = async (username) => {
       };
     });
 
-    console.log('Fetched title data for ratings:', ratingsWithTitles);
     return ratingsWithTitles;
 
   } catch (err) {
-    console.error('Error fetching ratings:', err);
     throw err;
   }
 };

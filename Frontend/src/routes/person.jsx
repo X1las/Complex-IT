@@ -7,9 +7,6 @@ import DisplayTitleItem from '../services/titleFunctions';
 
 // Comprehensive function to get all actor/person data from both internal API and TMDB
 const getPerson = async ( nconst ) => {
-
-  console.log('Fetching comprehensive person data for:', nconst);
-
   try {
     const internalData = await fetch(`${NL_API}/api/crew/${nconst}`).then(response => {
       if (!response.ok) throw new Error(`Internal person API failed: ${response.status}`);      
@@ -41,12 +38,9 @@ const getPerson = async ( nconst ) => {
         
       };
     });
-
-    console.log('Merged person data:', mergedData);
     
     return mergedData;
   } catch (error) {
-    console.error('Error in comprehensive person fetch:', error);
     return null;
   }
 };
@@ -63,7 +57,6 @@ const Person = () => {
       
       setLoading(true);
       setError(null);
-      console.log('Fetching comprehensive actor data for ID:', id);
 
       try {
         const data = await getPerson(id);
@@ -74,7 +67,6 @@ const Person = () => {
         }
         
       } catch (error) {
-        console.error('Error fetching actor data:', error);
         setError(error.message);
       } finally {
         setLoading(false);

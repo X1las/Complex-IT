@@ -30,7 +30,6 @@ export function useUserRatings() {
       const data = await fetchAllUserRatings(username);
       setRatings(data); 
     } catch (err) {
-      console.error('Error fetching ratings:', err);
       setError(err.message || 'Error fetching ratings');
     } finally {
       setLoading(false);
