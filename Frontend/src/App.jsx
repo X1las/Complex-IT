@@ -36,14 +36,10 @@ function App() {
           
             <img src={logo} className="logo" alt="Logo" />
           </Navbar.Brand>
-
           
           <Form onSubmit={onSearchSubmit} className="flex-grow-1 mx-3" >
-
             <Row className="g-2">
-
               <Col style={{  justifyContent: "center", display: "flex" }}>
-
                 <Form.Control
                   className="form-control searchField"
                   placeholder="Search"
@@ -54,28 +50,19 @@ function App() {
                   onChange={e => setSearch(e.target.value)}
                 />
               </Col>
-
             </Row>
-
           </Form>
-
           <Nav >
-
             <NavDropdown menuVariant="dark" title={<img src={icon} alt="profilePic" className="profileIcon" />} id="nav-dropdown" align="end" style={{  marginLeft: "100px"}}>
                    
               <NavDropdown.Item  as={Link} to={user ? `/profile/${user.username}` : `/login`} ><button style={{width:"100%", margin:0}} className="btn btn-outline-warning" >Your Page</button></NavDropdown.Item>
                 { !user ? null:
                 <NavDropdown.Item ><button style={{width:"100%", margin:0}} className="btn btn-outline-warning"  onClick={handleLogout}>Logout</button></NavDropdown.Item>
                 }
-              <NavDropdown.Item as={Link} to={`/`} ><button style={{width:"100%", margin:0}} className="btn btn-outline-warning">Andet?</button></NavDropdown.Item>
-
             </NavDropdown>
           </Nav>
-
         </Container>
-
       </Navbar>
-
       <Outlet />
     </>
   )
