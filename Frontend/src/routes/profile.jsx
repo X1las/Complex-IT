@@ -1,11 +1,11 @@
 import '../css/profile.css';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import {useBookmarks} from '../routes/bookmarks.jsx';
-import {useRemoveBookmark} from '../routes/bookmarks.jsx';
+import { useBookmarks } from '../routes/bookmarks.jsx';
+import { removeBookmark } from '../services/bookmarksService';
 import '../css/bookmarks.css'
 import {maxTegn} from './search.jsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -48,8 +48,8 @@ function useUser () {
 const Profile = () => {
     const { id } = useParams();
     const user = useUser();   
-    const { bookmarks } = useBookmarks();
-    const { removeBookmark } = useRemoveBookmark();
+    const { bookmarks, removeBookmarkFromState } = useBookmarks();
+    const [removingId, setRemovingId] = useState(null);
 
     useTjekifvalidlogin();
   if (!localStorage.getItem('authToken')) return <Link to={`/`}>logout<div style={{padding: 20}}>User not found</div></Link>;
@@ -88,25 +88,35 @@ const Profile = () => {
       <h2>Bookmarks</h2>
       {(!bookmarks || bookmarks.length === 0) ? (<p>You don't have any Bookmarks.</p>) : (
         bookmarks.map(item => (
-        <div key={item.titleId + item.viewedAt} className='bookmarkPosterContainer'>
-          <img src={item.posterUrl} alt={item.title} className="bookmarkPoster" />
-          
-          <div> 
-            <Link to={`/title/${item.titleId}`}><h3 className='bookmarkTitle'>{item.title}</h3></Link>
-            <div  className='ratingscore'>
-              <p  className='rating-value'>{item.rating || 'N/A'}</p> 
-              <p className='plot'>{maxTegn(item.plot, 100)}</p>  
-              <Button 
-                variant="danger" 
-                size="sm" 
-                onClick={() => {removeBookmark(item.titleId);}}
-              >
-                Remove
-              </Button>
-            </div> 
+          <div key={item.titleId} className='bookmarkPosterContainer'>
+            <img src={item.posterUrl} alt={item.title} className="bookmarkPoster" />
+            <div>
+              <Link to={`/title/${item.titleId}`}><h3 className='bookmarkTitle'>{item.title}</h3></Link>
+              <div className='ratingscore'>
+                <p className='rating-value'>{item.rating || 'N/A'}</p>
+                <p className='plot'>{maxTegn(item.plot, 100)}</p>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  disabled={removingId === item.titleId}
+                  onClick={async () => {
+                    setRemovingId(item.titleId);
+                    try {
+                      await removeBookmark(user, item.titleId);
+                      removeBookmarkFromState(item.titleId);
+                    } catch (error) {
+                      alert('Failed to remove bookmark');
+                    } finally {
+                      setRemovingId(null);
+                    }
+                  }}
+                >
+                  {removingId === item.titleId ? 'Removing...' : 'Remove'}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-     ))
+        ))
       ) }
     </div>
         </div>

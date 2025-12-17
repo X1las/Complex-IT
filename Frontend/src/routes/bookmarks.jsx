@@ -11,43 +11,6 @@ function useUser() {
   return username;
 }
 
-// Hook for removing bookmarks
-export function useRemoveBookmark() {
-  const username = useUser();
-  
-  const removeBookmarkHandler = async (titleId) => {
-    try {
-      await removeBookmark(username, titleId);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
-  
-  return { removeBookmark: removeBookmarkHandler };
-}
-
-// Hook for adding bookmarks
-export const useAddBookmarks = () => {
-  const { user } = useAuth();
-
-  const addToBookmarks = async (titleId) => {
-    if (!user) {
-      console.error('No user logged in');
-      return false;
-    }
-
-    try {
-      await addBookmark(user.username, titleId);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  return { addToBookmarks };
-};
-
 // Hook for managing bookmark state (check, add, remove, toggle)
 export const useBookmarkState = (titleId) => {
   const { user } = useAuth();
