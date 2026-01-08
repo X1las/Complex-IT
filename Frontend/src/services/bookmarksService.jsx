@@ -5,9 +5,7 @@ const NL_API = 'https://www.newtlike.com:3000';
 export const fetchBookmarks = async (username) => {
   if (!username) {
     throw new Error('Username is required to fetch bookmarks');
-  }
-
-  try {
+  } try {
     const token = localStorage.getItem('authToken');
     
     if (!token) {

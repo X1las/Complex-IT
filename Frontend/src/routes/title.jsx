@@ -48,8 +48,8 @@ const Title = () => {
 
       <div className="rating-row">
         <div className="rating-section">
-          <span className="rating">★ {titleData.rating.toFixed(1) || 'N/A'}</span>
-          <span className="rating-count">({titleData.votes.toLocaleString() || 'N/A'} votes)</span>
+          <span className="rating">★ {titleData.rating?.toFixed(1) || 'N/A'}</span>
+          <span className="rating-count">({titleData.votes?.toLocaleString() || 'N/A'} votes)</span>
         </div>
         <StarRatingWidget 
           user={user}
