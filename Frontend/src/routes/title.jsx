@@ -15,7 +15,7 @@ const Title = () => {
   const { user } = useAuth();
   const [userRating, setUserRating] = useState(0);
   const { isBookmarked, loading: bookmarkLoading, toggleBookmark } = useBookmarkState(titleId);
-  
+
   // Use custom hook for fetching title details
   const { titleData, tmdbData, castData, loading, error, refetch } = useTitleDetails(titleId);
 
@@ -48,8 +48,8 @@ const Title = () => {
 
       <div className="rating-row">
         <div className="rating-section">
-          <span className="rating">★ {titleData.rating}</span>
-          <span className="rating-count">({titleData.votes?.toLocaleString()} votes)</span>
+          <span className="rating">★ {titleData.rating.toFixed(1) || 'N/A'}</span>
+          <span className="rating-count">({titleData.votes.toLocaleString() || 'N/A'} votes)</span>
         </div>
         <StarRatingWidget 
           user={user}
@@ -57,15 +57,16 @@ const Title = () => {
           userRating={userRating}
           onRatingChange={(rating) => {
             setUserRating(rating);
-            refetch(); // Refetch title data to update rating/votes
+            // Refetch title data to get updated rating/votes from backend
+            refetch();
           }}
           onRatingDelete={() => {
             setUserRating(0);
-            refetch(); // Refetch title data to update rating/votes
+            // Refetch title data to get updated rating/votes from backend
+            refetch();
           }}
         />
       </div>
-
       {/* Main Content Grid */}
       <div className="content-grid">
         {/* Left Column - Poster */}
