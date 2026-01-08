@@ -163,7 +163,15 @@ public class UserRatingDataService
         if (imdbRating != null && imdbRating.UserRating > 0 && userAvgRating > 0)
         {
             // Both IMDB and user ratings exist - combine them
-            title.Rating = Math.Round((imdbRating.UserRating + userAvgRating) / 2, 1);
+            if (userAvgRating < imdbRating.UserRating)
+            {
+                title.Rating = Math.Round((imdbRating.UserRating) - (userAvgRating) / (imdbRating.NumUserRatings - userVoteCount), 1);
+            }
+            else
+            {
+                title.Rating = Math.Round((imdbRating.UserRating) + (userAvgRating) / (imdbRating.NumUserRatings + userVoteCount), 1);
+            }
+            
             title.Votes = imdbRating.NumUserRatings + userVoteCount;
         }
         else if (imdbRating != null && imdbRating.UserRating > 0)
