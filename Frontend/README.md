@@ -16,3 +16,9 @@ Note: This will impact Vite dev & build performances.
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Canonical Title Utilities
+
+- **DisplayTitleItem**: Canonical implementation lives in `src/services/titleFunctions.jsx`. Used across routes (`search`, `ratings`, `person`) to render title cards with optional user rating and last-visited date when authenticated.
+- **useTitleDetails**: Provided by `src/services/titleFunctions.jsx`. Fetches internal title data with TMDB fallback for poster/plot and enriches crew via `getPerson()`. Exposes `refetch()` for on-demand reload after mutations (e.g., rating/bookmark changes).
+- **Guidance**: Prefer `titleFunctions.jsx` for title rendering and data hooks. The alternative `src/services/titleDisplayItem.jsx` is a duplicate variant and not referenced by active routes.

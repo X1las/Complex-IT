@@ -153,28 +153,39 @@ public class UserRatingDataService
             return;
         }
         
-        // Get original IMDB rating
+        // Get original IMDB rating from imdb_ratings table
         var imdbRating = db.ImdbRating.FirstOrDefault(r => r.TitleId == titleId);
         
         // Get user ratings average
         var (userAvgRating, userVoteCount) = CalculateTitleRating(titleId);
         
-        // Calculate combined average
-        if (imdbRating != null && imdbRating.UserRating > 0 && userAvgRating > 0)
+        // If imdb_ratings doesn't have baseline data, save it now from titles table
+        if (imdbRating == null && title.Rating.HasValue && title.Votes.HasValue)
         {
-            // Both IMDB and user ratings exist - combine them
-            title.Rating = Math.Round((imdbRating.UserRating + userAvgRating) / 2, 1);
-            title.Votes = imdbRating.NumUserRatings + userVoteCount;
+            imdbRating = new ImdbRatings
+            {
+                TitleId = titleId,
+                UserRating = title.Rating.Value,
+                NumUserRatings = title.Votes.Value
+            };
+            db.ImdbRating.Add(imdbRating);
         }
-        else if (imdbRating != null && imdbRating.UserRating > 0)
+        
+        // Calculate combined average with proper weighted average
+        if (imdbRating != null && userVoteCount > 0)
         {
-            // Only IMDB rating exists
+            var totalVotes = imdbRating.NumUserRatings + userVoteCount;
+            var weightedSum = (imdbRating.UserRating * imdbRating.NumUserRatings) + (userAvgRating * userVoteCount);
+            title.Rating = Math.Round(weightedSum / totalVotes, 1);
+            title.Votes = totalVotes;
+        }
+        else if (imdbRating != null)
+        {
             title.Rating = imdbRating.UserRating;
             title.Votes = imdbRating.NumUserRatings;
         }
-        else if (userAvgRating > 0)
+        else if (userVoteCount > 0)
         {
-            // Only user ratings exist
             title.Rating = userAvgRating;
             title.Votes = userVoteCount;
         }

@@ -51,14 +51,19 @@ export function useUserRatings() {
 // Star Rating Widget Component
 export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, onRatingDelete }) => {
   const [hoveredStar, setHoveredStar] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleStarClick = async (rating) => {
+    setIsUpdating(true);
     const success = await submitRating(user, titleId, rating);
+    setIsUpdating(false);
     if (success && onRatingChange) onRatingChange(rating);
   };
 
   const handleDelete = async () => {
+    setIsUpdating(true);
     const success = await deleteRating(user, titleId);
+    setIsUpdating(false);
     if (success && onRatingDelete) onRatingDelete();
   };
 
@@ -66,23 +71,30 @@ export const StarRatingWidget = ({ user, titleId, userRating, onRatingChange, on
 
   return (
     <div className="user-rating-widget d-flex align-items-center gap-2">
-      <ButtonGroup size="sm">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(star => (
-          <Button
-            key={star}
-            variant={star <= (hoveredStar || userRating) ? 'warning' : 'outline-warning'}
-            onClick={() => handleStarClick(star)}
-            onMouseEnter={() => setHoveredStar(star)}
-            onMouseLeave={() => setHoveredStar(0)}
-            className="star-rating-btn"
-          >
-            ★
-          </Button>
-        ))}
-      </ButtonGroup>
-      <Badge bg="secondary" className="rating-badge">{hoveredStar || userRating || 0}/10</Badge>
-      {userRating > 0 && (
-        <Button variant="danger" size="sm" onClick={handleDelete}>Delete</Button>
+      {isUpdating ? (
+        <span className="text-muted">Updating...</span>
+      ) : (
+        <>
+          <ButtonGroup size="sm">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(star => (
+              <Button
+                key={star}
+                variant={star <= (hoveredStar || userRating) ? 'warning' : 'outline-warning'}
+                onClick={() => handleStarClick(star)}
+                onMouseEnter={() => setHoveredStar(star)}
+                onMouseLeave={() => setHoveredStar(0)}
+                className="star-rating-btn"
+                disabled={isUpdating}
+              >
+                ★
+              </Button>
+            ))}
+          </ButtonGroup>
+          <Badge bg="secondary" className="rating-badge">{hoveredStar || userRating || 0}/10</Badge>
+          {userRating > 0 && (
+            <Button variant="danger" size="sm" onClick={handleDelete} disabled={isUpdating}>Delete</Button>
+          )}
+        </>
       )}
     </div>
   );
